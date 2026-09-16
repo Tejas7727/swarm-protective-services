@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# Kept out of the PUBLIC repo on purpose. GitHub Pages needs a public repo on a
+# free account, and none of the below has to be public for the site to work.
+#
+#   content/          the marketing + sales playbook. Positioning, objection
+#                     handling and the review process — do not hand this to
+#                     competitors. Back it up somewhere private instead.
+#   ClientImages/     the original crew photography. The graded, published
+#                     versions already ship in docs/assets/img/. Only needed
+#                     locally if you re-run build/grade.py.
+#   source-art/       original logo artwork, superseded by brand/.
+#
+# Delete a line below if you decide you want it versioned here.
+content/
+ClientImages/
+source-art/
+site-v1-archive/
