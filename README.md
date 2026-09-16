@@ -1,129 +1,149 @@
-# Swarm Protective Services — brand, site and content package
+# Swarm Protective Services
 
-    brand/            logo system, favicons, social, email, print, brand-kit.html
-    ClientImages/     original crew photography (source of truth, unedited)
-    build/            the site generator — edit here, not in site/
-    site/             the built website. This is what deploys.
-    content/          brand playbook, Google Business, Instagram, TikTok, blog plan, launch checklist
-    site-v1-archive/  the earlier single-page site, kept for reference
-    .claude/          brand skill for Claude Code
+Licensed door staff, event security and close protection across the Greater Toronto Area.
+This repo holds the website, the brand system and the build that generates them.
+
+**Live preview:** https://tejas7727.github.io/swarm-protective-services/
+
+> The preview is deliberately `noindex` — it must never compete with the real domain in search.
+> Building without `--preview` flips that off and points canonicals at `swarmprotective.ca`.
 
 ---
 
-## Start here
+## Layout
 
-1. **`content/00-brand-playbook.md`** — the positioning, the one claim, the voice rules.
-   Everything else is downstream of this page.
-2. **`content/06-launch-checklist.md`** — what must be replaced and confirmed before this goes
-   live. There are real placeholders in the site right now.
-3. **`brand/brand-kit.html`** — open in a browser for every lockup, colourway and usage rule.
+    build/            the generator — edit here, never in docs/
+    docs/             the built site. GitHub Pages serves this folder.
+    brand/            logo system, favicons, social, email, print, brand-kit.html
+    content/          brand playbook, Google Business, Instagram, TikTok, blog plan, launch checklist
+    ClientImages/     original crew photography (input to build/grade.py)
+
+`content/`, `ClientImages/` and `source-art/` are gitignored — Pages needs a public repo on a
+free account and none of them has to be public. See `.gitignore` for how to change that.
 
 ---
 
 ## The site
 
-17 pages, static HTML, no framework, no build step at serve time.
+**One page.** Every nav item is an anchor that scrolls to a section on `index.html`:
 
-    /                              home
-    /services/venue-security.html  bars, nightclubs, lounges
-    /services/event-security.html  concerts, weddings, corporate, film
-    /services/close-protection.html
-    /services/high-risk.html       threat-assessed and armed-capable work
-    /about.html                    the crew, credentials, what we decline
-    /coverage.html                 service area
-    /contact.html                  quote form
-    /journal/                      index + 6 long-form posts
-    /privacy.html  /404.html
+    #venues      nightclub and bar security
+    #events      concerts, weddings, corporate, film
+    #protection  close protection and executive protection
+    #high-risk   threat-assessed work, and the truth about armed security
+    #night       a shift, 19:40 to 03:05
+    #crew        who turns up and what they hold
+    #coverage    service area
+    #answers     FAQ
+    #quote       the form
+
+Plus `privacy.html`, `404.html`, and `journal/` — six long-form posts kept as separate
+documents on purpose. The one-page site converts; the journal is what ranks for the long-tail
+queries the big agencies will not answer honestly. Deleting it would cost the SEO goal.
 
 **Design direction: Blackout.** Near-black surfaces, one gold accent, hairline structure, and
-the crew photography carrying the weight. The signature moment is the hero — the page opens
-black and a hard light wipe brings the crew up, once, on load. Everything else is deliberately
-quiet so that lands.
+the crew photography carrying the weight.
 
-### Editing
+**No prices anywhere.** Quoting happens on request. The journal's cost article cites published
+industry ranges — that is market data, not our rate card, and it is the reason that page ranks.
 
-Never edit `site/*.html` by hand — it is generated and will be overwritten.
+### Motion
+
+Every scroll-linked effect runs on a **CSS scroll timeline**, so it is on the compositor thread
+with no scroll listeners:
+
+| Effect | Trigger |
+|---|---|
+| Hero shutter — a light wipe brings the crew up, once | page load |
+| The muscle bee flying a weaving path across the viewport | `scroll(root)` |
+| Section and row reveals, staggered | `view()` |
+| Image zoom-out inside every frame, parallax on the band | `view()` |
+| Gold progress hairline under the masthead | `scroll(root)` |
+| Ticker of services, pauses on hover | time |
+| Counters on the proof bar | IntersectionObserver |
+| Ken Burns on the hero photo, bee wing-bob, dispatch pulse | time |
+
+Browsers without scroll timelines (Safari < 26) get an IntersectionObserver fallback — JS adds
+`.js-io` to `<html>` and the reveals become transitions. `prefers-reduced-motion` removes the
+bee, the shutter and all movement.
+
+---
+
+## Working on it
+
+Never edit `docs/*.html` by hand — it is generated and will be overwritten.
 
 ```bash
-python build/build.py     # regenerate every page, sitemap, robots, manifest, _headers
-python build/audit.py     # dead links, missing assets, SEO lengths, JSON-LD validity
-python build/og.py        # regenerate the 1200x630 social cards
-python build/grade.py     # re-grade and re-crop the photography from ClientImages/
+python build/build.py            # production build
+python build/build.py --preview https://tejas7727.github.io/swarm-protective-services
+python build/audit.py            # dead links, missing assets, SEO lengths, JSON-LD
+python build/grade.py            # re-grade and re-crop photography from ClientImages/
+python build/og.py               # regenerate the 1200x630 social cards
 ```
 
 | File | What lives there |
 |---|---|
-| `build/common.py` | **`BIZ` — every phone number, licence, domain and social URL.** Shell, nav, footer, org schema. |
-| `build/home.py` | home page |
-| `build/services.py` | the four service pages |
-| `build/pages.py` | about, contact, coverage, privacy, 404 |
+| `build/common.py` | **`BIZ` — every phone number, licence, domain and social URL.** Shell, nav, footer, org schema, relative-path helpers. |
+| `build/home.py` | the single page, section by section |
 | `build/journal.py` | journal index and all posts |
-| `site/assets/css/swarm.css` | the whole design system, hand-edited |
-| `site/assets/js/swarm.js` | ~90 lines, no dependencies |
+| `build/pages.py` | privacy and 404 |
+| `docs/assets/css/swarm.css` | the whole design system, hand-edited |
+| `docs/assets/js/swarm.js` | ~170 lines, no dependencies |
+
+All internal URLs are emitted **relative**, so the same build works at a domain root, under a
+GitHub Pages project path, and from the filesystem. CSS and JS carry a content-hash query
+string, because `_headers` marks assets immutable.
 
 ### Photography
 
-`build/grade.py` reads `ClientImages/`, applies a cinematic split-tone grade (cool shadows,
-warm highlights, crushed but not lost blacks, vignette, film grain) and exports responsive
-WebP at several widths in two modes — `plate` for images you look at, `hero` for images with
-type on top. Adjust the `jobs` list to re-crop; adjust the `cfg` dict in `grade()` to re-grade.
+`build/grade.py` applies a cinematic split-tone grade — cool shadows, warm highlights, crushed
+but not lost blacks, vignette, film grain — and exports responsive WebP in two modes: `plate`
+for images you look at, `hero` for images with type on top. Adjust `jobs` to re-crop, `cfg`
+inside `grade()` to re-grade.
 
-The whole image set is 1.9 MB across every variant; a typical page loads 60–120 KB of it.
+**Adding new client photos:** drop them in `ClientImages/`, add entries to the `jobs` list in
+`grade.py`, run it, then reference the new names from `build/home.py`.
 
-### Deploying
+---
+
+## Deploying
+
+GitHub Pages is already wired to `main` → `/docs`. Push and it redeploys.
+
+For the real domain, Cloudflare Pages reads the same folder:
 
 ```bash
-cd site
+cd docs
 npx wrangler pages deploy . --project-name swarm
 ```
 
-`_headers` sets immutable caching on `/assets/*` plus the usual security headers. `404.html`
-should be wired as the error page.
-
-**The contact form currently confirms on screen and sends nothing.** Wire it before launch —
-`content/06-launch-checklist.md` §4 has both options. The JavaScript already handles POSTing,
-the failure path and a honeypot.
-
 ---
 
-## What is verified
+## Before the real launch
 
-- 17/17 pages: one `<h1>`, unique title and description at Google-safe lengths, no dead
-  internal links, no missing assets, valid JSON-LD, every image has alt text
-- Structured data: `SecurityService` (org), `Service` per service page with price, `FAQPage`,
-  `BlogPosting`, `BreadcrumbList`
-- Contrast on dark: body 15.6:1, secondary 9.5:1, muted 5.9:1, gold 6.8:1, gold on button
-  6.75:1 — all above WCAG AA
-- Checked at 375, 768 and 1440; keyboard-navigable with visible focus; `prefers-reduced-motion`
-  removes the hero wipe and all movement; no console errors
-
----
-
-## Before launch — the blocking items
-
-These are stated as fact on the live site and are currently **placeholders**:
+Placeholders, all in `BIZ` in `build/common.py` — change once, rebuild:
 
 - Ontario security agency licence — `#0000000`
 - Phone — `(647) 555-0173`
 - Domain and email — `swarmprotective.ca`
 - Founding year — `2021`
-- Published rates — $38 / $42 / $95 per hour, confirm against the real price list
 
-All of them live in `BIZ` in `build/common.py`. Change once, rebuild, done.
+Also blocking:
 
-Two more, equally blocking:
-
+- **The contact form sends nothing yet.** `content/06-launch-checklist.md` §4 has both options;
+  the JS already handles POST, failure and a honeypot.
 - **Venue consent.** The crew photographs show identifiable venue signage. Get written
-  permission or re-crop (`build/grade.py`, the `focus` values).
-- **No testimonials anywhere on this site.** That is deliberate — inventing them would break
-  the one thing the brand is built on. `content/01-google-business-profile.md` §8 is the
-  process for collecting real ones from night one; add them once they exist.
+  permission or re-crop via `grade.py`.
+- **No testimonials anywhere** — deliberate. Inventing them would break the one thing the brand
+  is built on. `content/01-google-business-profile.md` §8 is the process for collecting real
+  ones from night one.
 
 ---
 
-## Using this with Claude Code
+## Verified
 
-    cd swarm
-    claude
-
-`.claude/skills/swarm-brand/` loads automatically and carries the colour, type and logo rules.
+10 pages: one `<h1>` each, unique titles and descriptions at Google-safe lengths, no dead links,
+no missing assets, valid JSON-LD (`SecurityService`, `Service` ×4, `FAQPage`, `BlogPosting`,
+`BreadcrumbList`), every image with alt text. Contrast on dark: body 15.6:1, secondary 9.5:1,
+muted 5.9:1, gold 6.8:1 — all above WCAG AA. Checked at 375 / 768 / 1440, keyboard-navigable,
+no console errors.

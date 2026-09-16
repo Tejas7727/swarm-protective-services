@@ -79,6 +79,16 @@ def main():
             if missing_alt:
                 errs.append("%s: %d img without alt" % (rel, missing_alt))
 
+    # A utility class defined in CSS but never applied is a silent no-op. This is
+    # exactly how the first build shipped with no scroll motion at all.
+    css_path = os.path.join(SITE, "assets", "css", "swarm.css")
+    if os.path.exists(css_path):
+        css = open(css_path, encoding="utf-8").read()
+        html_all = "".join(open(p, encoding="utf-8").read() for p in pages)
+        for cls in ("reveal", "parallax", "frame__zoom", "ticker", "beeflight", "rise"):
+            if ("." + cls) in css and ('class="' + cls) not in html_all                     and (" " + cls + '"') not in html_all and (" " + cls + " ") not in html_all:
+                errs.append("css: .%s is styled but never used in any page" % cls)
+
     for k, v in titles.items():
         if len(v) > 1:
             errs.append("duplicate title %r on %s" % (k, v))
