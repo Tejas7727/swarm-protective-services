@@ -12,105 +12,88 @@ This repo holds the website, the brand system and the build that generates them.
 
 ## Layout
 
-    build/            the generator — edit here, never in docs/
+    build/            the generator — edit here, never in docs/*.html
+      cinema/         the home page: template, renderer, asset pipeline, STORYBOARD.md
     docs/             the built site. GitHub Pages serves this folder.
+      assets/cine/    the scroll-film engine (cine.js, cine.css) and its graded imagery
     brand/            logo system, favicons, social, email, print, brand-kit.html
-    content/          brand playbook, Google Business, Instagram, TikTok, blog plan, launch checklist
-    ClientImages/     original crew photography (input to build/grade.py)
+    content/          brand playbook, Google Business, Instagram, TikTok, blog plan, launch
+                      checklist, image prompts
+    ClientImages/     original crew photography; drop generated plates in ClientImages/generated/
 
-`content/`, `ClientImages/` and `source-art/` are gitignored — Pages needs a public repo on a
-free account and none of them has to be public. See `.gitignore` for how to change that.
+`content/`, `ClientImages/`, `source-art/` and `build/cinema/cutouts/` are gitignored — Pages
+needs a public repo on a free account and none of them has to be public.
 
 ---
 
-## The site
+## The home page — "One Night"
 
-**One page.** Every nav item is an anchor that scrolls to a section on `index.html`:
+A scroll film, not a document. The page is one night on the door, 19:40 to 03:05, and scroll is
+the clock. Nine pinned scenes; each arrives as a sheet sliding over the still-pinned scene
+beneath it, so there is no plain scroll between scenes at all. Full script:
+[`build/cinema/STORYBOARD.md`](build/cinema/STORYBOARD.md).
 
-    #venues      nightclub and bar security
-    #events      concerts, weddings, corporate, film
-    #protection  close protection and executive protection
-    #high-risk   threat-assessed work, and the truth about armed security
-    #night       a shift, 19:40 to 03:05
-    #crew        who turns up and what they hold
-    #coverage    service area
-    #answers     FAQ
-    #quote       the form
+| Time | Scene | Scroll drives |
+|---|---|---|
+| 19:40 | The mark | camera pushes through the gold emblem; the crew is visible inside the shield |
+| 20:15 | The crew | real officers cut out and pushed toward camera; the room defocuses behind them |
+| 21:00 | Four promises | Licensed · Insured · Briefed · Reported, each dealing one proof card |
+| 22:30 | The rooms | Venues, Events, Close protection, High-risk — dolly to each, hold, next |
+| 01:15 | The table | three de-escalation beats under a headlight sweep |
+| 02:20 | The truth | "armed bodyguards" struck through in gold, then the legal fact |
+| 03:05 | The report | a sample incident report writes, signs and stamps itself |
+| — | The GTA | routes spread from Toronto to 18 municipalities |
+| — | Call the swarm | ~2,500 gold particles assemble into the bee emblem |
 
-Plus `privacy.html`, `404.html`, and `journal/` — six long-form posts kept as separate
-documents on purpose. The one-page site converts; the journal is what ranks for the long-tail
-queries the big agencies will not answer honestly. Deleting it would cost the SEO goal.
+Nav, menu and the night-clock rail are all anchors on this one page. The quote form opens as a
+dialog from any "Request a quote" (and from `index.html#quote`). `privacy.html`, `404.html` and
+the six-article `journal/` stay as separate documents — the journal is what ranks for long-tail
+search. **No prices anywhere**; quoting happens on request.
 
-**Design direction: Blackout.** Near-black surfaces, one gold accent, hairline structure, and
-the crew photography carrying the weight.
-
-**No prices anywhere.** Quoting happens on request. The journal's cost article cites published
-industry ranges — that is market data, not our rate card, and it is the reason that page ranks.
-
-### Motion
-
-Every scroll-linked effect runs on a **CSS scroll timeline**, so it is on the compositor thread
-with no scroll listeners:
-
-| Effect | Trigger |
-|---|---|
-| Hero shutter — a light wipe brings the crew up, once | page load |
-| The muscle bee flying a weaving path across the viewport | `scroll(root)` |
-| Section and row reveals, staggered | `view()` |
-| Image zoom-out inside every frame, parallax on the band | `view()` |
-| Gold progress hairline under the masthead | `scroll(root)` |
-| Ticker of services, pauses on hover | time |
-| Counters on the proof bar | IntersectionObserver |
-| Ken Burns on the hero photo, bee wing-bob, dispatch pulse | time |
-
-Browsers without scroll timelines (Safari < 26) get an IntersectionObserver fallback — JS adds
-`.js-io` to `<html>` and the reveals become transitions. `prefers-reduced-motion` removes the
-bee, the shutter and all movement.
+**Engine:** GSAP + ScrollTrigger + Lenis from jsDelivr, one clock (GSAP ticker drives Lenis).
+Only transform, opacity, clip-path and canvas draws animate. `prefers-reduced-motion` and no-JS
+both render every scene at rest with the full content.
 
 ---
 
 ## Working on it
 
-Never edit `docs/*.html` by hand — it is generated and will be overwritten.
-
 ```bash
-python build/build.py            # production build
-python build/build.py --preview https://tejas7727.github.io/swarm-protective-services
-python build/audit.py            # dead links, missing assets, SEO lengths, JSON-LD
-python build/grade.py            # re-grade and re-crop photography from ClientImages/
+python build/build.py --preview https://tejas7727.github.io/swarm-protective-services   # the client preview
+python build/build.py                                                                  # production (indexable)
+python build/audit.py            # dead links, missing assets, SEO lengths, JSON-LD, scene hooks
+python build/cinema/assets.py    # re-grade plates, cutouts, clean backgrounds, bee particles
 python build/og.py               # regenerate the 1200x630 social cards
 ```
 
 | File | What lives there |
 |---|---|
-| `build/common.py` | **`BIZ` — every phone number, licence, domain and social URL.** Shell, nav, footer, org schema, relative-path helpers. |
-| `build/home.py` | the single page, section by section |
-| `build/journal.py` | journal index and all posts |
-| `build/pages.py` | privacy and 404 |
-| `docs/assets/css/swarm.css` | the whole design system, hand-edited |
-| `docs/assets/js/swarm.js` | ~170 lines, no dependencies |
+| `build/common.py` | **`BIZ` — phone, licence, domain, email, socials.** Shared shell for journal/privacy. |
+| `build/cinema/index.html` | the one-page template (`{{TOKENS}}` filled by `render.py`) |
+| `build/cinema/render.py` | fills the template: schema, FAQ, GTA map geometry |
+| `build/cinema/assets.py` | photo pipeline for the film |
+| `docs/assets/cine/cine.js` | every scene timeline, the stack, navigation, dialog |
+| `docs/assets/cine/cine.css` | the film's design system; default CSS is each scene's resting state |
 
-All internal URLs are emitted **relative**, so the same build works at a domain root, under a
-GitHub Pages project path, and from the filesystem. CSS and JS carry a content-hash query
-string, because `_headers` marks assets immutable.
+### Adding client photos or generated plates
 
-### Photography
+1. `hyperframes remove-background photo.jpg -o build/cinema/cutouts/<name>.png`
+   (needs ffmpeg on PATH — the winget install lives under
+   `%LOCALAPPDATA%\Microsoft\WinGet\Packages\Gyan.FFmpeg*\ffmpeg-*\bin`)
+2. Add the photo to `PHOTOS` in `build/cinema/assets.py` and run it. You get a graded plate,
+   a graded cutout pixel-aligned to it, and a clean defocused background with the people removed.
+3. Reference the new files in `build/cinema/index.html`, rebuild, audit.
 
-`build/grade.py` applies a cinematic split-tone grade — cool shadows, warm highlights, crushed
-but not lost blacks, vignette, film grain — and exports responsive WebP in two modes: `plate`
-for images you look at, `hero` for images with type on top. Adjust `jobs` to re-crop, `cfg`
-inside `grade()` to re-grade.
-
-**Adding new client photos:** drop them in `ClientImages/`, add entries to the `jobs` list in
-`grade.py`, run it, then reference the new names from `build/home.py`.
+Prompts for the environment plates that would remove the site's one repetition (the garage
+photo appears three times) are in `content/07-image-prompts.md`.
 
 ---
 
 ## Deploying
 
-GitHub Pages is already wired to `main` → `/docs`. Push and it redeploys.
+GitHub Pages serves `main` → `/docs`. Push and it redeploys in about thirty seconds.
 
-For the real domain, Cloudflare Pages reads the same folder:
+For the real domain, Cloudflare Pages reads the same folder (`_headers` is already written):
 
 ```bash
 cd docs
@@ -130,20 +113,23 @@ Placeholders, all in `BIZ` in `build/common.py` — change once, rebuild:
 
 Also blocking:
 
-- **The contact form sends nothing yet.** `content/06-launch-checklist.md` §4 has both options;
-  the JS already handles POST, failure and a honeypot.
-- **Venue consent.** The crew photographs show identifiable venue signage. Get written
-  permission or re-crop via `grade.py`.
-- **No testimonials anywhere** — deliberate. Inventing them would break the one thing the brand
-  is built on. `content/01-google-business-profile.md` §8 is the process for collecting real
-  ones from night one.
+- **The quote form sends nothing yet.** Add `data-endpoint="https://formspree.io/f/…"` (or your
+  own function URL) to `<form … data-form>` in `build/cinema/index.html`; the JS already POSTs,
+  handles failure and blocks the honeypot.
+- **Venue consent.** The crew photographs show identifiable venue signage.
+- **No testimonials anywhere** — deliberate. `content/01-google-business-profile.md` §8 is the
+  process for collecting real ones. The on-page incident report is labelled as a sample.
 
 ---
 
-## Verified
+## Verified (2026-09-16, live URL)
 
-10 pages: one `<h1>` each, unique titles and descriptions at Google-safe lengths, no dead links,
-no missing assets, valid JSON-LD (`SecurityService`, `Service` ×4, `FAQPage`, `BlogPosting`,
-`BreadcrumbList`), every image with alt text. Contrast on dark: body 15.6:1, secondary 9.5:1,
-muted 5.9:1, gold 6.8:1 — all above WCAG AA. Checked at 375 / 768 / 1440, keyboard-navigable,
-no console errors.
+- **Scroll motion** — `scroll-cinema` book detector: **98% desktop / 96% mobile CINEMATIC**,
+  zero console errors; every handoff screenshotted at two points and reviewed.
+- **Interactions** — 27/27: menu and rail land on the right scene with copy on screen, header
+  colour follows the scene, quote dialog opens with focus / validates / confirms / closes on
+  Escape (desktop and mobile), deep links `#high-risk` `#answers` `#quote` from the journal,
+  first Tab reaches a visible skip link.
+- **Build audit** — 10 pages, no dead links or missing assets, valid JSON-LD
+  (`SecurityService`, `Service` ×4, `FAQPage`, `BlogPosting`, `BreadcrumbList`).
+- **Reduced motion** — all nine scenes readable in order, nothing hidden.

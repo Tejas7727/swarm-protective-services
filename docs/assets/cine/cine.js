@@ -8,6 +8,9 @@
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   let reduce = root.classList.contains('reduced');
   let lenis = null;
+  // the head script lifts any #fragment out of the URL before layout, so the browser's own
+  // anchor jump cannot fight the pinned scenes; we travel there once everything is measured
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   const scenes = {};   // declared first: begin() can run synchronously when images are cached
 
   /* ------------------------------------------------------------------ basics */
@@ -186,8 +189,13 @@
       const pinPct = {};
       const len = (d, m, key) => { if (key) pinPct[key] = mob ? m : d; return `+=${mob ? m : d}%`; };
       // a sheet arriving over the pinned scene beneath it
-      const sheet = (sel) => gsap.fromTo(sel, { scale: 0.9, borderRadius: 26, yPercent: 4 },
-        { scale: 1, borderRadius: 0, yPercent: 0, ease: 'power1.out' });
+      // pinned stages get a clip-path sheet: a transform on a pinned element is cached by the pin
+      // when the page loads mid-scene and then re-applied as a permanent offset
+      const sheet = (sel) => (sel.endsWith('.stage')
+        ? gsap.fromTo(sel, { clipPath: 'inset(3% 5% 0% 5% round 26px)' },
+          { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power1.out' })
+        : gsap.fromTo(sel, { scale: 0.9, borderRadius: 26, yPercent: 4 },
+          { scale: 1, borderRadius: 0, yPercent: 0, ease: 'power1.out' }));
       const inHandoff = (trigger, tl) =>
         gsap.timeline({ scrollTrigger: { trigger, start: 'top bottom', end: 'top top', scrub: true } }).add(tl);
 
@@ -318,7 +326,7 @@
           .fromTo($('.room__big', rooms[0]), { xPercent: 30 }, { xPercent: -10, duration: 3.4 }, 0);
         // dolly to each room, then HOLD while its copy lands: a pan that never rests leaves
         // every headline half off-screen
-        const arrive = [1.9];
+        const arrive = [2.95];
         let t = 3.2;
         const MOVE = 1.6, HOLD = 1.5;
         for (let i = 1; i < rooms.length; i++) {
@@ -329,14 +337,16 @@
             .fromTo($('.room__img', room), { clipPath: 'inset(12% 0% 12% 35%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: MOVE, ease: 'power2.inOut' }, t)
             .fromTo($('.room__big', room), { xPercent: 45 }, { xPercent: -10, duration: MOVE + HOLD }, t)
             .fromTo($$('.room__copy > *', room), { opacity: 0, y: 60 }, { opacity: 1, y: 0, stagger: 0.12, duration: 0.7 }, t + MOVE * 0.75);
-          arrive.push(t + MOVE + 0.4);
+          arrive.push(t + MOVE + HOLD * 0.8);
           t += MOVE + HOLD;
         }
         // the last room stays lit: 01:15 slides over it
         tl.to({}, { duration: 0.6 });
-        const dur = tl.duration();
-        scenes.cv = { st: tl.scrollTrigger, tone: (p) => (p < 1.2 / dur ? 'light' : 'dark'),
-          roomAt: arrive.map((a) => a / dur), openAt: 1.6 / dur };
+        // absolute timeline times: the covered-tail padding appended later changes the duration,
+        // so fractions must be taken against the live duration at the moment they are used
+        const live = () => tl.duration();
+        scenes.cv = { st: tl.scrollTrigger, tone: (p) => (p < 1.2 / live() ? 'light' : 'dark'),
+          get roomAt() { return arrive.map((a) => a / live()); }, get openAt() { return 1.6 / live(); } };
       }
 
       /* ---------- D. 01:15 the table -------------------------------------- */
@@ -460,8 +470,7 @@
         if (!veil) { veil = document.createElement('div'); veil.className = 'veil'; stage.appendChild(veil); }
         const c = Math.min(0.6, 100 / pinPct[key]);
         const pad = tl.duration() * c / (1 - c);
-        tl.fromTo(veil, { opacity: 0 }, { opacity: 0.72, duration: pad, ease: 'power1.in' }, tl.duration())
-          .fromTo(stage, { scale: 1 }, { scale: 0.94, duration: pad, ease: 'power1.in' }, '<');
+        tl.fromTo(veil, { opacity: 0 }, { opacity: 0.72, duration: pad, ease: 'power1.in' }, tl.duration());
       }
 
       /* ---------- J. sign-off: the footer assembles under scroll ----------- */
@@ -552,19 +561,30 @@
       });
     };
     lenis.on('scroll', onScroll);
-    ScrollTrigger.addEventListener('refresh', onScroll);
+    ScrollTrigger.addEventListener('refresh', () => { lenis.resize(); onScroll(); });
 
-    document.fonts?.ready.then(() => ScrollTrigger.refresh());
-    addEventListener('load', () => ScrollTrigger.refresh());
-    setTimeout(() => { ScrollTrigger.refresh(); handleHash(); onScroll(); }, 120);
+    const loaded = document.readyState === 'complete' ? Promise.resolve() : new Promise((r) => addEventListener('load', r, { once: true }));
+    Promise.all([document.fonts ? document.fonts.ready : Promise.resolve(), loaded]).then(() => {
+      ScrollTrigger.refresh();
+      requestAnimationFrame(() => requestAnimationFrame(() => { handleHash(); onScroll(); }));
+    });
   }
 
   function handleHash() {
-    const h = location.hash;
+    const h = window.__swarmHash || location.hash;
+    window.__swarmHash = '';
     if (!h) return;
     if (h === '#quote') return openQuote();
     if (!reduce && window.__swarmGo && lenis) {
+      lenis.resize();   // Lenis caches the scroll limit; pins added height since it last measured
       lenis.scrollTo(window.__swarmGo(h), { immediate: true, force: true });
+      // landing directly inside a pin: re-measure once from there, or the fixed stage keeps the
+      // offset it was given before the jump, then correct the scroll to the re-measured target
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        lenis.resize();
+        lenis.scrollTo(window.__swarmGo(h), { immediate: true, force: true });
+      });
     } else {
       $(h)?.scrollIntoView();
     }
