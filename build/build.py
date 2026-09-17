@@ -18,7 +18,9 @@ if "--preview" in sys.argv:
     common.MODE["preview"] = True
     common.MODE["preview_base"] = sys.argv[i + 1] if len(sys.argv) > i + 1 else ""
 
-import home, journal, pages         # noqa: E402
+import journal, pages               # noqa: E402
+sys.path.insert(0, os.path.join(HERE, "cinema"))
+import render as cinema              # noqa: E402
 
 
 def write(rel, text):
@@ -30,7 +32,7 @@ def write(rel, text):
 
 
 def main():
-    files = {"index.html": home.build()}
+    files = {"index.html": cinema.render()}
     files.update(pages.PAGES)
     files.update(journal.pages())
 

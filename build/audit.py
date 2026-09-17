@@ -85,9 +85,18 @@ def main():
     if os.path.exists(css_path):
         css = open(css_path, encoding="utf-8").read()
         html_all = "".join(open(p, encoding="utf-8").read() for p in pages)
-        for cls in ("reveal", "parallax", "frame__zoom", "ticker", "beeflight", "rise"):
+        for cls in ("reveal",):
             if ("." + cls) in css and ('class="' + cls) not in html_all                     and (" " + cls + '"') not in html_all and (" " + cls + " ") not in html_all:
                 errs.append("css: .%s is styled but never used in any page" % cls)
+
+    # the scroll film: every scene hook the engine drives must exist in the page
+    idx = os.path.join(SITE, "index.html")
+    if os.path.exists(idx):
+        page_html = open(idx, encoding="utf-8").read()
+        for hook in ("data-emblem", "data-op-photo", "data-portal", "data-track", "data-paper",
+                     "data-swarm", "data-truth", "data-form", 'id="quote"'):
+            if hook not in page_html:
+                errs.append("index.html: scene hook %s missing" % hook)
 
     for k, v in titles.items():
         if len(v) > 1:

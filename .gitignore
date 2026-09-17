@@ -19,3 +19,6 @@ content/
 ClientImages/
 source-art/
 site-v1-archive/
+
+# raw background-removal output of client photos (inputs to build/cinema/assets.py)
+build/cinema/cutouts/

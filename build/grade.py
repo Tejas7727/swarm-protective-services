@@ -122,8 +122,9 @@ jobs = [
  ("hall-sq",    "hallw",1/1,   (.50,.48), 1.15, "plate", [900,640]),
 ]
 
-for name, key, ar, focus, zoom, mode, widths in jobs:
-    c = crop_box(Image.open(S[key]), focus, ar, zoom)
-    print(name)
-    export(grade(c, mode), name, widths)
-print("done")
+if __name__ == "__main__":
+    for name, key, ar, focus, zoom, mode, widths in jobs:
+        c = crop_box(Image.open(S[key]), focus, ar, zoom)
+        print(name)
+        export(grade(c, mode), name, widths)
+    print("done")
