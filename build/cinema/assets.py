@@ -1,179 +1,127 @@
 # -*- coding: utf-8 -*-
-"""Assets for the "One Night" scroll film.
+"""Scene assets for the push-through film.
 
-    python build/cinema/assets.py
+Takes the art in `source-art/scene-v3/` and writes, into `docs/assets/scene/`:
 
-Reads   ClientImages/  +  build/cinema/cutouts/*.png  (hyperframes remove-background)
-Writes  docs/assets/cine/
-  <name>-plate-<w>.webp   graded full frame (hero grade — type and crew sit on it)
-  <name>-crew-<w>.webp    graded cutout with alpha, pixel-aligned to its plate
-  bee-points.js           particle targets sampled from the bee emblem
-  report.json             aperture centre inside the shield (for the push-through)
+  * every plate as WebP at three widths (the camera only ever magnifies the
+    plate it is pushing into, so three steps is plenty),
+  * the hero cut-out cropped to its alpha, with the rect it occupies in its
+    plate so the engine can put it back exactly where it was,
+  * `scene.json` — the camera manifest: portals, apertures, grades, layers.
+
+The portal is where the next scene sits inside this one; the aperture is the
+opening you see it through (a doorway, a corridor, the road out of an alley).
+The engine zooms the portal up to full frame, so the two together are the cut.
 """
 import json
-import math
 import os
-import sys
 
-from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter, ImageOps
+from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-sys.path.insert(0, os.path.join(ROOT, "build"))
-import grade as G  # noqa: E402
+SRC = os.path.join(ROOT, "source-art", "scene-v3")
+OUT = os.path.join(ROOT, "docs", "assets", "scene")
 
-SRC = os.path.join(ROOT, "ClientImages")
-CUT = os.path.join(HERE, "cutouts")
-OUT = os.path.join(ROOT, "docs", "assets", "cine")
-os.makedirs(OUT, exist_ok=True)
+SCALES = (1.0, 0.72, 0.5)
+QUALITY = 82
 
-PHOTOS = {
-    "wall":  "WhatsApp Image2.jpeg",
-    "hallw": "WhatsApp Image3.jpeg",
-    "hallp": "WhatsApp Image 4.jpeg",
-    "lot":   "WhatsApp Image 2026-09-15 at 6.51.52 AM.jpeg",
-}
-
-
-def tone(im, lo, hi, gamma, lut, strength, sat, contrast, bright):
-    """The grade from build/grade.py without vignette or grain, so a cutout can be
-    toned independently of the frame edges it used to sit in."""
-    im = G.curve(im.convert("RGB"), lo, hi, gamma)
-    lum = ImageOps.grayscale(im)
-    toned = Image.merge("RGB", [lum] * 3).point(lut)
-    base = ImageEnhance.Color(im).enhance(sat)
-    im = Image.blend(base, toned, strength)
-    im = ImageEnhance.Contrast(im).enhance(contrast)
-    return ImageEnhance.Brightness(im).enhance(bright)
-
-
-def grain(im, amount=4, mix=0.2):
-    n = Image.effect_noise(im.size, amount).convert("L")
-    n = Image.merge("RGB", [n] * 3).point(lambda v: 128 + (v - 128) * mix)
-    return ImageChops.overlay(im, n)
-
-
-def save(im, name, widths, q=78):
-    for w in widths:
-        w = min(w, im.width)
-        r = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
-        p = os.path.join(OUT, "%s-%d.webp" % (name, w))
-        r.save(p, "WEBP", quality=q, method=6, alpha_quality=90)
-        print("  %-26s %4dx%-4d %4d KB" % (os.path.basename(p), r.width, r.height, os.path.getsize(p) // 1024))
-
-
-def plates_and_crews():
-    for key, fn in PHOTOS.items():
-        src = Image.open(os.path.join(SRC, fn)).convert("RGB")
-
-        # the plate sits behind: darker, softer, so the crew in front owns the light
-        plate = G.grade(src, "hero")
-        save(plate, key + "-plate", [1600, 960])
-
-        cut = Image.open(os.path.join(CUT, key + ".png")).convert("RGBA")
-        alpha = cut.split()[3]
-        # tighten the matte edge a touch: kill the soft halo the model leaves on dark suits
-        alpha = alpha.point(lambda v: 0 if v < 28 else min(255, int((v - 28) * 1.12)))
-        alpha = alpha.filter(ImageFilter.GaussianBlur(0.6))
-        rgb = tone(cut, lo=.01, hi=.98, gamma=.78, lut=G.LUT_PLATE, strength=.6, sat=.36,
-                   contrast=1.12, bright=1.08)
-        rgb = grain(rgb, 4, .18)
-        crew = rgb.copy()
-        crew.putalpha(alpha)
-        save(crew, key + "-crew", [1600, 960], q=80)
-
-        # clean background: crew removed and filled, pre-blurred and darkened. It is what
-        # the room looks like out of focus once the crew steps toward the camera — with
-        # no ghost doubles, because there is no crew left in it.
-        save(clean_plate(plate, alpha), key + "-bg", [1600, 960], q=72)
+# Each stop: the plate, how it is graded, where the next scene lives inside it.
+# rect  — where the child plate is drawn, in this plate's normalised coordinates
+#         (same aspect as the child, so w and h are the same fraction).
+# aper  — the opening it is seen through, before the camera arrives.
+PLATES = [
+    {
+        "id": "street", "file": "p0-street.png",
+        "focal": [0.50, 0.55], "focalM": [0.62, 0.56],
+        "grade": {"exp": 1.02, "tint": [0.97, 0.99, 1.06], "lift": 0.0},
+        "layers": [{"file": "p0-hero.png", "depth": 1.85, "fade": [0.14, 0.42]}],
+        "portal": {"rect": [0.2275, 0.3900, 0.26, 0.2078],
+                   "aper": [0.315, 0.436, 0.085, 0.116], "feather": 0.9, "depth": 2.4},
+    },
+    {
+        "id": "door", "file": "p1-door.png",
+        "focal": [0.55, 0.44], "focalM": [0.55, 0.42],
+        "grade": {"exp": 0.94, "tint": [1.00, 0.985, 1.00], "lift": 0.0},
+        "portal": {"rect": [0.4225, 0.290, 0.26, 0.26],
+                   "aper": [0.478, 0.225, 0.150, 0.390], "feather": 0.7, "depth": 2.2},
+    },
+    {
+        "id": "floor", "file": "p2-floor.png",
+        "focal": [0.56, 0.48], "focalM": [0.62, 0.46],
+        "grade": {"exp": 0.92, "tint": [1.00, 0.97, 0.96], "lift": 0.0},
+        "layers": [{"file": "p2-officer.png", "depth": 1.8, "fade": [0.10, 0.34]}],
+        "portal": {"rect": [0.5925, 0.275, 0.26, 0.26],
+                   "aper": [0.655, 0.320, 0.135, 0.170], "feather": 0.95, "depth": 2.4},
+    },
+    {
+        "id": "exit", "file": "p3-exit.png",
+        "focal": [0.58, 0.50], "focalM": [0.64, 0.50],
+        "grade": {"exp": 1.00, "tint": [0.96, 0.99, 1.07], "lift": 0.0},
+        "portal": {"rect": [0.680, 0.330, 0.26, 0.26],
+                   "aper": [0.740, 0.375, 0.140, 0.170], "feather": 0.95, "depth": 2.4,
+                   "cross": 0.55, "flood": [1.0, 0.93, 0.82]},
+    },
+    {
+        "id": "dawn", "file": "p4-dawn.png",
+        "focal": [0.50, 0.50], "focalM": [0.52, 0.48],
+        "grade": {"exp": 1.04, "tint": [1.04, 1.00, 0.97], "lift": 0.02},
+    },
+]
 
 
-def clean_plate(plate, alpha):
-    """Normalised-convolution fill: blur(image*known) / blur(known), coarse to fine."""
-    hole = alpha.point(lambda v: 255 if v > 20 else 0).filter(ImageFilter.MaxFilter(21))
-    known = ImageOps.invert(hole)
-    w, h = plate.size
-    small = (w // 4, h // 4)
-    img = plate.resize(small, Image.BILINEAR)
-    k = known.resize(small, Image.BILINEAR)
-    filled = img.copy()
-    for radius in (60, 30, 14, 6):
-        num = ImageChops.multiply(img, Image.merge("RGB", [k] * 3)).filter(ImageFilter.GaussianBlur(radius))
-        den = k.filter(ImageFilter.GaussianBlur(radius))
-        dpx, npx, fpx, kpx = den.load(), num.load(), filled.load(), k.load()
-        for y in range(small[1]):
-            for x in range(small[0]):
-                if kpx[x, y] < 250:
-                    d = dpx[x, y]
-                    if d > 3:
-                        n = npx[x, y]
-                        fpx[x, y] = (min(255, n[0] * 255 // d), min(255, n[1] * 255 // d), min(255, n[2] * 255 // d))
-        img = filled
-    bg = filled.resize((w, h), Image.BICUBIC).filter(ImageFilter.GaussianBlur(10))
-    bg = ImageEnhance.Brightness(bg).enhance(.62)
-    return grain(bg, 5, .22)
+def _export(img, stem, alpha=False):
+    """Write three widths; return the srcset list, widest first."""
+    out = []
+    for s in SCALES:
+        w = int(round(img.width * s / 2) * 2)
+        h = int(round(img.height * s / 2) * 2)
+        name = "%s-%d.webp" % (stem, w)
+        im = img.resize((w, h), Image.LANCZOS) if s != 1.0 else img
+        im.save(os.path.join(OUT, name), "WEBP", quality=QUALITY,
+                method=6, exact=alpha)
+        out.append({"w": w, "h": h, "src": "assets/scene/" + name})
+    return out
 
 
-def bee_points(n_target=2200):
-    """Sample the bee emblem into particle targets. Gold body vs bone wings keep
-    their colour so the assembled swarm reads as the real mark."""
-    im = Image.open(os.path.join(ROOT, "brand", "png", "swarm-emblem-gold.png")).convert("RGBA")
-    scale = 220 / im.width
-    small = im.resize((220, round(im.height * scale)), Image.LANCZOS)
-    px = small.load()
-    pts = []
-    for y in range(small.height):
-        for x in range(small.width):
-            r, g, b, a = px[x, y]
-            if a < 150:
-                continue
-            bone = (r + g + b) / 3 > 190 and abs(r - b) < 45
-            pts.append((x, y, 1 if bone else 0))
-    stride = max(1, len(pts) // n_target)
-    pts = pts[::stride]
-    w, h = small.width, small.height
-    s = max(w, h)
-    flat = []
-    for x, y, c in pts:
-        flat += [round((x - w / 2) / s, 4), round((y - h / 2) / s, 4), c]
-    js = "window.BEE_POINTS=%s;window.BEE_ASPECT=%s;" % (json.dumps(flat, separators=(",", ":")), round(h / w, 4))
-    p = os.path.join(OUT, "bee-points.js")
-    open(p, "w", encoding="utf-8").write(js)
-    print("  bee-points.js              %d particles  %d KB" % (len(pts), os.path.getsize(p) // 1024))
-
-
-def shield_aperture():
-    """Find the deepest empty point inside the emblem's shield. Scaling the emblem
-    around that point pushes the camera through darkness, not into the bee's body."""
-    im = Image.open(os.path.join(ROOT, "brand", "png", "swarm-emblem-gold.png")).convert("RGBA")
-    small = im.resize((240, round(im.height * 240 / im.width)), Image.LANCZOS)
-    solid = small.split()[3].point(lambda v: 255 if v > 60 else 0)
-
-    # mark the outside of the shield by flooding from the corners
-    outside = solid.copy()
-    for seed in [(0, 0), (outside.width - 1, 0), (0, outside.height - 1),
-                 (outside.width - 1, outside.height - 1)]:
-        if outside.getpixel(seed) == 0:
-            ImageDraw.floodfill(outside, seed, 128)
-
-    # interior empty pixels = neither solid nor outside; erode until one blob is left
-    interior = outside.point(lambda v: 255 if v == 0 else 0)
-    last = interior
-    for _ in range(60):
-        nxt = last.filter(ImageFilter.MinFilter(3))
-        if not nxt.getbbox():
-            break
-        last = nxt
-    box = last.getbbox()
-    cx = (box[0] + box[2]) / 2 / small.width
-    cy = (box[1] + box[3]) / 2 / small.height
-    data = {"aperture": [round(cx, 4), round(cy, 4)], "emblemAspect": round(small.height / small.width, 4)}
-    open(os.path.join(OUT, "report.json"), "w").write(json.dumps(data))
-    print("  shield aperture           ", data)
-    return data
+def build():
+    os.makedirs(OUT, exist_ok=True)
+    scene = {"plates": []}
+    for i, spec in enumerate(PLATES):
+        img = Image.open(os.path.join(SRC, spec["file"])).convert("RGB")
+        entry = {
+            "id": spec["id"], "w": img.width, "h": img.height,
+            "sizes": _export(img, spec["id"]),
+            "focal": spec["focal"], "focalM": spec["focalM"], "grade": spec["grade"],
+            "layers": [],
+        }
+        flat = None
+        for layer in spec.get("layers", []):
+            cut = Image.open(os.path.join(SRC, layer["file"])).convert("RGBA")
+            flat = Image.alpha_composite((flat or img).convert("RGBA"), cut).convert("RGB")
+            box = cut.getbbox()                     # crop to the figure
+            crop = cut.crop(box)
+            stem = "%s-%s" % (spec["id"], os.path.splitext(layer["file"])[0].split("-")[-1])
+            entry["layers"].append({
+                "sizes": _export(crop, stem, alpha=True),
+                "rect": [box[0] / cut.width, box[1] / cut.height,
+                         (box[2] - box[0]) / cut.width, (box[3] - box[1]) / cut.height],
+                "depth": layer["depth"], "fade": layer["fade"],
+            })
+        # one flattened frame per plate: what a browser with no WebGL, or a
+        # visitor who asked for no motion, sees as a plain background
+        entry["flat"] = _export(flat, spec["id"] + "-flat")[1]["src"] if flat \
+            else entry["sizes"][1]["src"]
+        if "portal" in spec:
+            entry["portal"] = dict({"depth": 2.2}, **dict(spec["portal"], child=i + 1))
+        scene["plates"].append(entry)
+    with open(os.path.join(OUT, "scene.json"), "w", encoding="utf-8") as fh:
+        json.dump(scene, fh, separators=(",", ":"))
+    return scene
 
 
 if __name__ == "__main__":
-    plates_and_crews()
-    bee_points()
-    shield_aperture()
+    s = build()
+    for p in s["plates"]:
+        print(p["id"], p["w"], "x", p["h"], "layers:", len(p["layers"]),
+              "portal:" if "portal" in p else "end", p.get("portal", {}).get("rect", ""))

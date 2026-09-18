@@ -13,12 +13,14 @@ This repo holds the website, the brand system and the build that generates them.
 ## Layout
 
     build/            the generator — edit here, never in docs/*.html
-      cinema/         the home page: template, renderer, asset pipeline, STORYBOARD.md
+      cinema/         the home page: renderer, asset pipeline, STORYBOARD.md, COPY.md
     docs/             the built site. GitHub Pages serves this folder.
-      assets/cine/    the scroll-film engine (cine.js, cine.css) and its graded imagery
+      assets/cine/    the camera engine (push.js, push.css)
+      assets/scene/   the plates, the cut-out layers and scene.json (the camera manifest)
     brand/            logo system, favicons, social, email, print, brand-kit.html
     content/          brand playbook, Google Business, Instagram, TikTok, blog plan, launch
-                      checklist, image prompts
+                      checklist, image packs
+    source-art/       full-resolution scene art before export
     ClientImages/     original crew photography; drop generated plates in ClientImages/generated/
 
 `content/`, `ClientImages/`, `source-art/` and `build/cinema/cutouts/` are gitignored — Pages
@@ -26,66 +28,79 @@ needs a public repo on a free account and none of them has to be public.
 
 ---
 
-## The home page — "One Night"
+## The home page — "The push"
 
-A scroll film, not a document. The page is one night on the door, 19:40 to 03:05, and scroll is
-the clock. Nine pinned scenes; each arrives as a sheet sliding over the still-pinned scene
-beneath it, so there is no plain scroll between scenes at all. Full script:
-[`build/cinema/STORYBOARD.md`](build/cinema/STORYBOARD.md).
+One camera, one night, five scrolls. Every scene contains a lit opening with the next scene
+already inside it; scrolling pushes the camera through that opening, so the background of one
+stop becomes the foreground of the next. Nothing is ever replaced, so it never reads as a
+slideshow. Full script: [`build/cinema/STORYBOARD.md`](build/cinema/STORYBOARD.md); every line of
+copy, with its scorecard, is in [`build/cinema/COPY.md`](build/cinema/COPY.md).
 
-| Time | Scene | Scroll drives |
-|---|---|---|
-| 19:40 | The mark | camera pushes through the gold emblem; the crew is visible inside the shield |
-| 20:15 | The crew | real officers cut out and pushed toward camera; the room defocuses behind them |
-| 21:00 | Four promises | Licensed · Insured · Briefed · Reported, each dealing one proof card |
-| 22:30 | The rooms | Venues, Events, Close protection, High-risk — dolly to each, hold, next |
-| 01:15 | The table | three de-escalation beats under a headlight sweep |
-| 02:20 | The truth | "armed bodyguards" struck through in gold, then the legal fact |
-| 03:05 | The report | a sample incident report writes, signs and stamps itself |
-| — | The GTA | routes spread from Toronto to 18 municipalities |
-| — | Call the swarm | ~2,500 gold particles assemble into the bee emblem |
+| Stop | Time | Scene | On screen |
+|---|---|---|---|
+| `#call` | live Toronto clock | the street, one officer, venue glow behind him | BIG ON PURPOSE. CALM BY TRAINING. |
+| `#venues` | 22:15 | the door | MOST TROUBLE NEVER GETS IN. |
+| `#events` | 00:40 | the floor | NOTHING WORTH FILMING. |
+| `#protection` | 02:10 | the exit, the car | THE EXIT IS PLANNED BEFORE THE ENTRANCE. |
+| `#report` | 06:00 | dawn, the sample shift report | YOU SLEPT. WE WROTE IT DOWN. |
+| `#book` | — | the morning, pushed in | FORGET ABOUT IT. WE WON'T. |
 
-Nav, menu and the night-clock rail are all anchors on this one page. The quote form opens as a
-dialog from any "Request a quote" (and from `index.html#quote`). `privacy.html`, `404.html` and
-the six-article `journal/` stay as separate documents — the journal is what ranks for long-tail
-search. **No prices anywhere**; quoting happens on request.
+Below the film, as an ordinary document: the answers (FAQ), the service links, dispatch details
+and the coverage list. `privacy.html`, `404.html` and the six-article `journal/` stay separate —
+the journal is what ranks for long-tail search. **No prices anywhere**; quoting happens on request.
 
-**Engine:** GSAP + ScrollTrigger + Lenis from jsDelivr, one clock (GSAP ticker drives Lenis).
-Only transform, opacity, clip-path and canvas draws animate. `prefers-reduced-motion` and no-JS
-both render every scene at rest with the full content.
+**Engine** — `docs/assets/cine/push.js`, about 400 lines, no framework:
+
+- A WebGL2 renderer draws each plate as one quad. Blur is a mip bias, so a focus pull costs
+  nothing; the doorway is a feathered clip rect that opens faster than the scene behind it grows.
+- **Scroll snapping is the browser's** (CSS `scroll-snap-type: y mandatory`,
+  `scroll-snap-stop: always`), so one flick is one stop and every landing is a composed frame.
+- A **critically damped spring** drives the camera from the scroll position, so it arrives a beat
+  later and never jumps. There is no easing between scroll and camera, only mass.
+- Copy is HTML pinned to the viewport; it rides out of a mask as the camera arrives and scales
+  past you as the camera leaves.
+- `prefers-reduced-motion`, no WebGL2 or no JS: every stop becomes a full-bleed still with its
+  copy, natively scrolled. No content is lost.
 
 ---
 
 ## Working on it
 
 ```bash
-python build/build.py --preview https://tejas7727.github.io/swarm-protective-services   # the client preview
+python build/build.py --preview https://tejas7727.github.io/swarm-protective-services   # client preview
 python build/build.py                                                                  # production (indexable)
-python build/audit.py            # dead links, missing assets, SEO lengths, JSON-LD, scene hooks
-python build/cinema/assets.py    # re-grade plates, cutouts, clean backgrounds, bee particles
+python build/audit.py            # dead links, assets, SEO lengths, JSON-LD, film hooks, portal sanity
+python build/cinema/assets.py    # re-export the plates and rewrite scene.json
 python build/og.py               # regenerate the 1200x630 social cards
 ```
 
 | File | What lives there |
 |---|---|
 | `build/common.py` | **`BIZ` — phone, licence, domain, email, socials.** Shared shell for journal/privacy. |
-| `build/cinema/index.html` | the one-page template (`{{TOKENS}}` filled by `render.py`) |
-| `build/cinema/render.py` | fills the template: schema, FAQ, GTA map geometry |
-| `build/cinema/assets.py` | photo pipeline for the film |
-| `docs/assets/cine/cine.js` | every scene timeline, the stack, navigation, dialog |
-| `docs/assets/cine/cine.css` | the film's design system; default CSS is each scene's resting state |
+| `build/cinema/render.py` | the film's copy and markup, schema, FAQ, the quote dialog |
+| `build/cinema/assets.py` | plates, cut-outs, grades, portals — everything in `scene.json` |
+| `docs/assets/cine/push.js` | the camera, the snap, the copy choreography, the dialog |
+| `docs/assets/cine/push.css` | the film's design system; plain mode is the fallback page |
 
-### Adding client photos or generated plates
+### Replacing the scene art
 
-1. `hyperframes remove-background photo.jpg -o build/cinema/cutouts/<name>.png`
+The six plates currently on the site are **placeholders generated locally** — a motion study, not
+the design. `content/08-image-pack-v3.md` is the brief for the real ones: what each frame holds,
+where its opening must sit, and the rules (no text, no weapons, dark left third).
+
+When new art lands:
+
+1. Put the full-resolution files in `source-art/scene-v3/` with the names in `PLATES`
+   (`build/cinema/assets.py`).
+2. Cut out anyone who should pass the camera:
+   `npx hyperframes remove-background p0-street.png --output p0-hero.png`
    (needs ffmpeg on PATH — the winget install lives under
-   `%LOCALAPPDATA%\Microsoft\WinGet\Packages\Gyan.FFmpeg*\ffmpeg-*\bin`)
-2. Add the photo to `PHOTOS` in `build/cinema/assets.py` and run it. You get a graded plate,
-   a graded cutout pixel-aligned to it, and a clean defocused background with the people removed.
-3. Reference the new files in `build/cinema/index.html`, rebuild, audit.
-
-Prompts for the environment plates that would remove the site's one repetition (the garage
-photo appears three times) are in `content/07-image-prompts.md`.
+   `%LOCALAPPDATA%\Microsoft\WinGet\Packages\Gyan.FFmpeg*\ffmpeg-*\bin`), then paint the plate
+   behind them clean.
+3. Measure the opening and write `portal.rect` (where the next plate is drawn) and `portal.aper`
+   (the opening it is seen through) into `PLATES`. `python build/audit.py` checks that the two
+   are concentric and in range.
+4. `python build/build.py` and re-shoot the stops before shipping.
 
 ---
 
@@ -113,23 +128,24 @@ Placeholders, all in `BIZ` in `build/common.py` — change once, rebuild:
 
 Also blocking:
 
-- **The quote form sends nothing yet.** Add `data-endpoint="https://formspree.io/f/…"` (or your
-  own function URL) to `<form … data-form>` in `build/cinema/index.html`; the JS already POSTs,
-  handles failure and blocks the honeypot.
-- **Venue consent.** The crew photographs show identifiable venue signage.
+- **The quote form has no service wired up.** It currently hands the details to the visitor's
+  mail app. Add `data-endpoint="https://formspree.io/f/…"` to the `<form … data-form>` in
+  `build/cinema/render.py` and the JS POSTs instead.
+- **Scene art** — the placeholders above.
+- **Venue consent** if the real crew photographs (identifiable signage) go on the site.
 - **No testimonials anywhere** — deliberate. `content/01-google-business-profile.md` §8 is the
-  process for collecting real ones. The on-page incident report is labelled as a sample.
+  process for collecting real ones. The on-page shift report is labelled a sample.
 
 ---
 
-## Verified (2026-09-16, live URL)
+## Verified (2026-09-17, local build)
 
-- **Scroll motion** — `scroll-cinema` book detector: **98% desktop / 96% mobile CINEMATIC**,
-  zero console errors; every handoff screenshotted at two points and reviewed.
-- **Interactions** — 27/27: menu and rail land on the right scene with copy on screen, header
-  colour follows the scene, quote dialog opens with focus / validates / confirms / closes on
-  Escape (desktop and mobile), deep links `#high-risk` `#answers` `#quote` from the journal,
-  first Tab reaches a visible skip link.
+- **Behaviour** — 12/12 automated checks: the film runs on WebGL2, all six plates load, deep
+  links land on their stop, reverse scrolling returns, the chips rewrite the story lines and
+  preset the quote form, the dialog opens, stops you cannot see are `inert`, no console errors,
+  and reduced motion renders the complete page.
+- **Frames** — every stop and every quarter-step screenshotted at 1440×900 and 390×844, plus 24
+  random in-between positions with snapping disabled, reviewed by eye. 60 fps throughout.
 - **Build audit** — 10 pages, no dead links or missing assets, valid JSON-LD
-  (`SecurityService`, `Service` ×4, `FAQPage`, `BlogPosting`, `BreadcrumbList`).
-- **Reduced motion** — all nine scenes readable in order, nothing hidden.
+  (`SecurityService`, `Service` ×3, `FAQPage`, `BlogPosting`, `BreadcrumbList`), all six film
+  hooks present, portals concentric.

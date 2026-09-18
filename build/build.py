@@ -20,6 +20,7 @@ if "--preview" in sys.argv:
 
 import journal, pages               # noqa: E402
 sys.path.insert(0, os.path.join(HERE, "cinema"))
+import assets as scene_assets        # noqa: E402
 import render as cinema              # noqa: E402
 
 
@@ -32,6 +33,7 @@ def write(rel, text):
 
 
 def main():
+    scene_assets.build()             # plates + camera manifest, before the page reads it
     files = {"index.html": cinema.render()}
     files.update(pages.PAGES)
     files.update(journal.pages())

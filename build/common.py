@@ -39,7 +39,7 @@ NAV = [
     ("#venues",     "Venues",     "Bars, nightclubs, lounges"),
     ("#events",     "Events",     "Concerts, weddings, corporate"),
     ("#protection", "Protection", "Executive and personal details"),
-    ("#crew",       "The crew",   "Who turns up, and what they hold"),
+    ("#report",     "Reporting",  "What lands in your inbox by morning"),
     ("#answers",    "Answers",    "What people ask before booking"),
 ]
 
@@ -153,10 +153,10 @@ def foot_html(depth):
         ("#venues", "Venue and door security"),
         ("#events", "Event security"),
         ("#protection", "Close protection"),
-        ("#high-risk", "High-risk and armed-capable"),
+        ("#report", "Written reporting"),
     ])
     comp = "".join('<li><a href="%s">%s</a></li>' % (u, t) for u, t in [
-        (home(depth, "#crew"), "The crew"),
+        (home(depth, "#answers"), "Answers"),
         (home(depth, "#coverage"), "Where we work"),
         (p + "journal/index.html", "Journal"),
         (home(depth, "#quote"), "Request a quote"),

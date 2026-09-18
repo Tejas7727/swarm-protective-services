@@ -89,14 +89,42 @@ def main():
             if ("." + cls) in css and ('class="' + cls) not in html_all                     and (" " + cls + '"') not in html_all and (" " + cls + " ") not in html_all:
                 errs.append("css: .%s is styled but never used in any page" % cls)
 
-    # the scroll film: every scene hook the engine drives must exist in the page
+    # the film: every hook the camera drives must exist, and every plate it
+    # names must actually be on disk (a missing plate is an invisible scene).
     idx = os.path.join(SITE, "index.html")
     if os.path.exists(idx):
         page_html = open(idx, encoding="utf-8").read()
-        for hook in ("data-emblem", "data-op-photo", "data-portal", "data-track", "data-paper",
-                     "data-swarm", "data-truth", "data-form", 'id="quote"'):
+        for hook in ('id="stage"', 'id="scene-data"', 'class="stop"', 'class="tick"',
+                     "data-mode", "data-time", "data-quote", "data-form", 'id="quote"'):
             if hook not in page_html:
-                errs.append("index.html: scene hook %s missing" % hook)
+                errs.append("index.html: film hook %s missing" % hook)
+        stops = len(re.findall(r'<section class="stop"', page_html))
+        if stops != 6:
+            errs.append("index.html: %d stops, expected 6 (one night, five scrolls)" % stops)
+        m = re.search(r'<script id="scene-data" type="application/json">(.*?)</script>',
+                      page_html, re.S)
+        if not m:
+            errs.append("index.html: no camera manifest")
+        else:
+            try:
+                scene = json.loads(m.group(1))
+            except Exception as exc:
+                errs.append("index.html: unreadable camera manifest — %s" % exc)
+                scene = {"plates": []}
+            for pl in scene.get("plates", []):
+                for size in pl["sizes"] + [s for L in pl.get("layers", []) for s in L["sizes"]]:
+                    if "/" + size["src"] not in assets:
+                        errs.append("scene: missing plate %s" % size["src"])
+                port = pl.get("portal")
+                if port:
+                    r, a = port["rect"], port["aper"]
+                    if not (0 <= r[0] < 1 and 0 <= r[1] < 1 and 0.05 < r[2] < 0.9):
+                        errs.append("scene: %s portal rect out of range" % pl["id"])
+                    ac = (a[0] + a[2] / 2, a[1] + a[3] / 2)
+                    rc = (r[0] + r[2] / 2, r[1] + r[3] / 2)
+                    if abs(ac[0] - rc[0]) > 0.02 or abs(ac[1] - rc[1]) > 0.02:
+                        errs.append("scene: %s aperture is not centred on the next scene "
+                                    "(%.3f,%.3f vs %.3f,%.3f)" % (pl["id"], ac[0], ac[1], rc[0], rc[1]))
 
     for k, v in titles.items():
         if len(v) > 1:

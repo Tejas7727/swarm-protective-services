@@ -1,29 +1,49 @@
-# Swarm — "One Night" · scroll storyboard
+# Swarm — "The push" · one night, one camera, five scrolls
 
-The site is one night on the door, from 19:40 to 03:05. Scroll is the clock. The chapter rail is
-a night clock, not a menu. Every scene has a verb and every pair of scenes has a scrubbed cut.
-Scroll backwards and the night rewinds.
+The home page is a single continuous camera move through one night. Nothing is ever
+replaced: inside every scene there is a lit opening, and the next scene is already
+inside it. Scroll pushes the camera through that opening, so the background of one
+stop becomes the foreground of the next.
 
-| # | Time | Scene | Viewer sees | Scroll drives | Pin (desk / phone) | On screen | Cut to next |
-|---|---|---|---|---|---|---|---|
-| 0 | — | Preloader | The shield outline draws with real asset progress | load % | — | none | The drawn shield becomes the aperture of scene 1 |
-| 1 | 19:40 | **The mark** — *push through* | Gold emblem in front of giant ghost type; camera pushes into the shield | emblem scale 1→14, type counter-scales, shield aperture opens onto the crew | 200 / 150vh | "Last night at your venue" · NOTHING HAPPENED. | **Push-through**: the shield interior becomes scene 2 |
-| 2 | 20:15 | **The crew** — *advance* | Five officers step toward you while the venue falls away behind them | cutout scale up, plate scale down + blur, two lines swap word by word, sign glow blooms | 260 / 190vh | SIZE GETS YOU LOOKED AT. → TRAINING GETS EVERYONE HOME. | **Flood**: sign glow floods to bone |
-| 3 | 21:00 | **Doors open** — *prove* | Four promises; each beat lights one line and lands one receipt | active claim 0→3, proof card deals in | 320 / 240vh | Licensed · Insured · Briefed · Reported | **Portal**: a dark shield-shaped frame opens from the bone page |
-| 4 | 22:30 | **What we cover** — *travel* | Four full-bleed rooms slide past; each photo wipes open as it arrives | horizontal track −300%, per-panel clip + zoom | 380 / vertical 4 × 100vh | Venues · Events · Close protection · High-risk | **Blackout**: the last panel's image contracts to a point |
-| 5 | 01:15 | **The one that would have been a story** — *defuse* | The crew in the car park; a headlight sweep crosses; the frame tightens then relaxes | 3 text beats, light sweep x, vignette | 300 / 210vh | Voices up. → Two officers, two angles. → Nobody touched. Nobody remembers. | **Whiteout**: the headlights flare to white, then to charcoal |
-| 6 | 02:20 | **The truth** — *strike* | "ARMED BODYGUARDS" races across; a gold line strikes it through | rows travel, strike draws, statement assembles | 180 / 140vh | Bodyguards in Canada do not carry firearms. We would rather say it and lose the job. | **Curtain**: the report rises from below |
-| 7 | 03:05 | **The report** — *file* | An incident report writes itself; timestamps tick; the lead signs | lines stamp in, signature path draws, "Filed 03:05" stamp | 240 / 180vh | In your inbox before the crew is in the car. | **Zoom-out**: the report shrinks into a dot on the map |
-| 8 | — | **Where we work** — *spread* | The swarm spreads from Toronto across 18 GTA municipalities | dots and routes light outward, counter to 18 | 200 / 160vh | Toronto and the GTA | **Flat**: into the intermission |
-| 9 | — | Answers — *intermission* | Eight straight answers | unpinned; rows slide in from alternating sides | — | FAQ | **Curtain** into finale |
-| 10 | — | **Call the swarm** — *assemble* | A swarm of gold particles converges into the bee emblem; the offer assembles | particle convergence 0→1, headline scale, buttons draw | 160 / 130vh | CALL THE SWARM. · Request a quote · Call dispatch | The quote panel slides in over the scene (dialog) |
+Five scrolls take you from the street to the morning report. The sixth frame is the
+booking. Everything else — answers, journal, policy — sits below the film as an
+ordinary document.
 
-## Signature moments
-1. **The advance** (scene 2) — real client crew cut out and pushed toward the camera while their
-   venue falls away. Nobody else in the category has the photography to do this.
-2. **The strike** (scene 6) — the category's most common lie, struck through in gold.
-3. **The swarm** (scene 10) — the brand name made literal: particles become the mark.
+## The stops
 
-## Reduced motion / no JS
-Every scene rendered at its resolved state: crew at rest, all claims and proofs listed, panels
-stacked, report complete, all cities lit, emblem assembled. Native scroll. Full content.
+| # | id | Time | Scene | Focal point | Copy | How the camera leaves |
+|---|----|------|-------|-------------|------|-----------------------|
+| 0 | `call` | live Toronto clock | **The street.** One officer, lit from the venue behind him, city bokeh, wet road | his face, dead centre of the eye path | BIG ON PURPOSE. CALM BY TRAINING. + one line + *what needs covering?* + two buttons | Camera pushes past him — he scales, slides right, blurs and is gone — toward the glow of the venue entrance |
+| 1 | `venues` | 22:15 | **The door.** Brass entrance, warm spill, one doorman inside the opening | the lit doorway | MOST TROUBLE NEVER GETS IN. | Through the doorway; the opening widens past the frame before the room fills it |
+| 2 | `events` | 00:40 | **The floor.** Haze, crowd, one officer standing still in it | the officer's silhouette against the light | NOTHING WORTH FILMING. | Past the officer, down the room, toward the lit corridor at the back |
+| 3 | `protection` | 02:10 | **The exit.** Black SUV at a back door, wet asphalt, cold light | the tail lights and the open road beyond | THE EXIT IS PLANNED BEFORE THE ENTRANCE. | The alley mouth blooms to warm white — the night ends in light, not a dissolve |
+| 4 | `report` | 06:00 | **The morning.** Skyline at dawn from an empty road | the sample report card, right | YOU SLEPT. WE WROTE IT DOWN. | The camera keeps drifting into the sunrise |
+| 5 | `book` | — | Same morning, pushed in | the gold button | FORGET ABOUT IT. WE WON'T. + quote, phone, Instagram, TikTok, email | End of film; the document begins |
+
+## Rules this film keeps
+
+- **One focal point per frame.** If two things compete, one of them is deleted.
+- **No photo is used twice.** Six plates, two cut-out layers, nothing repeated.
+- **Copy is sparse.** ≤ 25 words on screen at any stop; ~120 words in the whole film.
+  Word budgets and scorecards are in `COPY.md`.
+- **Every rest position is composed.** CSS scroll-snap lands each flick on a stop;
+  a critically damped spring drives the camera so it arrives a beat later, never jumps,
+  and never leaves you in a half-transition.
+- **The copy belongs to the camera.** It rides up out of a mask as the camera arrives,
+  scales past you as the camera leaves. It is never "revealed on scroll" on a document.
+- **The night is the colour script.** Steel blue street → brass and amber door →
+  deep amber floor → cold blue exit → pale gold morning.
+
+## What a visitor can do
+
+- Answer *what needs covering?* — venue, event or person. The story lines rewrite
+  themselves for that answer, dispatch replies in the HUD, the camera moves on, and the
+  quote form opens preset to it.
+- Jump to any stop from the chapter rail, the menu or a deep link (`#events`).
+- Pointer parallax at rest: the officer sits nearer the camera than the street does.
+
+## If the film cannot run
+
+`prefers-reduced-motion`, no WebGL2, or no JS at all: every stop becomes a full-bleed
+still of its own scene with the copy set on it, in document order, natively scrolled.
+No content is lost — the film is the delivery, not the content.
