@@ -243,7 +243,7 @@ HTML = """<!DOCTYPE html>
 </head>
 <body>
 <a class="skip" href="#answers"><span>Skip to the answers</span></a>
-<canvas id="stage" aria-hidden="true"></canvas>
+<canvas id="stage" data-stage aria-hidden="true"></canvas>
 <div class="grade" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <header class="mast">

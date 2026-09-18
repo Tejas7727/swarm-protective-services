@@ -373,6 +373,9 @@
     pointer.y += (pointer.ty - pointer.y) * Math.min(1, dt * 6);
     render(cur, t);
     paintCopy(cur);
+    // the camera's playhead, published for the book detector and for tests:
+    // nothing else about a canvas changes when the picture inside it does
+    canvas.dataset.frame = cur.toFixed(3);
     fps = fps ? fps * 0.9 + (1 / dt) * 0.1 : 1 / dt;
     W.__push = { p: cur, target: target, stopH: stopH, fps: Math.round(fps),
                  loaded: Object.keys(textures).length };
