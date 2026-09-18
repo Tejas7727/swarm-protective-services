@@ -94,13 +94,19 @@ def main():
     idx = os.path.join(SITE, "index.html")
     if os.path.exists(idx):
         page_html = open(idx, encoding="utf-8").read()
-        for hook in ('id="stage"', 'id="scene-data"', 'class="stop"', 'class="tick"',
-                     "data-mode", "data-time", "data-quote", "data-form", 'id="quote"'):
+        for hook in ('id="stage"', 'id="scene-data"', 'class="beat"', 'class="tick"',
+                     'class="bar"', "data-quote", "data-form", 'id="quote"', 'class="reveal"'):
             if hook not in page_html:
-                errs.append("index.html: film hook %s missing" % hook)
-        stops = len(re.findall(r'<section class="stop"', page_html))
-        if stops != 6:
-            errs.append("index.html: %d stops, expected 6 (one night, five scrolls)" % stops)
+                errs.append("index.html: hook %s missing" % hook)
+        # the offer has to be reachable from anywhere on the page
+        if page_html.count("data-quote") < 4:
+            errs.append("index.html: too few quote entry points")
+        if 'href="tel:' not in page_html:
+            errs.append("index.html: no phone link")
+        beats = len(re.findall(r'<div class="beat"', page_html))
+        steps = len(re.findall(r'<div class="film__step">', page_html))
+        if beats != steps:
+            errs.append("index.html: %d beats but %d scroll steps" % (beats, steps))
         m = re.search(r'<script id="scene-data" type="application/json">(.*?)</script>',
                       page_html, re.S)
         if not m:

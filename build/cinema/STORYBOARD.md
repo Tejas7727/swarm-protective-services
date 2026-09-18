@@ -1,49 +1,37 @@
-# Swarm — "The push" · one night, one camera, five scrolls
+# Swarm — the home page
 
-The home page is a single continuous camera move through one night. Nothing is ever
-replaced: inside every scene there is a lit opening, and the next scene is already
-inside it. Scroll pushes the camera through that opening, so the background of one
-stop becomes the foreground of the next.
+A service page first, with one cinematic section in the middle. The order is the
+argument, not the art direction.
 
-Five scrolls take you from the street to the morning report. The sixth frame is the
-booking. Everything else — answers, journal, policy — sits below the film as an
-ordinary document.
+| # | Section | id | Job | Proof it does it |
+|---|---------|----|-----|------------------|
+| 1 | **Hero** | `top` | Five-second test: logo and company name, *Everything under control.*, what we do and where, quote + phone, credentials | A stranger can say what this is and what to do next without scrolling |
+| 2 | **What we provide** | `services` | Three services, each with three concrete deliverables and its own quote link | No adjectives — ID checks, capacity, guest lists, advance work, reports |
+| 3 | **How we work** | `how` | The objection nobody says out loud: *will the guards be the problem?* | De-escalation refreshers twice a year, licences carried, hands stay down |
+| 4 | **How booking works** | `process` | Remove effort: three steps, two of them ours | Tell us the night → walk-through and written plan → shift and report |
+| 5 | **One night** | `night` | The signature moment: one camera through four scenes of a Saturday | 22:15 the door · 00:40 the floor · 02:10 the exit · 06:00 the report |
+| 6 | **Where we work** | `coverage` | Local relevance for search and for trust | 18 GTA municipalities, plus "ask anyway" |
+| 7 | **Clients and crew** | `people` | Proof and faces — placeholders until real ones exist | Honest: "ask us for references" rather than invented quotes |
+| 8 | **Answers** | `answers` | Objection handling, including price and the armed-guard question | Eight straight answers, FAQ schema |
+| 9 | **Tell us the night** | `book` | The ask, restated with the least friction | Quote, phone, Instagram, TikTok, email |
 
-## The stops
+Always on screen: the header (logo, phone, **Request a quote**) and, on phones, a
+bottom bar with **Call dispatch** and **Request a quote**.
 
-| # | id | Time | Scene | Focal point | Copy | How the camera leaves |
-|---|----|------|-------|-------------|------|-----------------------|
-| 0 | `call` | live Toronto clock | **The street.** One officer, lit from the venue behind him, city bokeh, wet road | his face, dead centre of the eye path | BIG ON PURPOSE. CALM BY TRAINING. + one line + *what needs covering?* + two buttons | Camera pushes past him — he scales, slides right, blurs and is gone — toward the glow of the venue entrance |
-| 1 | `venues` | 22:15 | **The door.** Brass entrance, warm spill, one doorman inside the opening | the lit doorway | MOST TROUBLE NEVER GETS IN. | Through the doorway; the opening widens past the frame before the room fills it |
-| 2 | `events` | 00:40 | **The floor.** Haze, crowd, one officer standing still in it | the officer's silhouette against the light | NOTHING WORTH FILMING. | Past the officer, down the room, toward the lit corridor at the back |
-| 3 | `protection` | 02:10 | **The exit.** Black SUV at a back door, wet asphalt, cold light | the tail lights and the open road beyond | THE EXIT IS PLANNED BEFORE THE ENTRANCE. | The alley mouth blooms to warm white — the night ends in light, not a dissolve |
-| 4 | `report` | 06:00 | **The morning.** Skyline at dawn from an empty road | the sample report card, right | YOU SLEPT. WE WROTE IT DOWN. | The camera keeps drifting into the sunrise |
-| 5 | `book` | — | Same morning, pushed in | the gold button | FORGET ABOUT IT. WE WON'T. + quote, phone, Instagram, TikTok, email | End of film; the document begins |
+## The film, in one section
 
-## Rules this film keeps
+Four beats of one night. Each scene contains a lit opening and the next scene is
+inside it, so the camera pushes through rather than cutting. It lives inside a
+sticky stage with four viewport-tall steps of scroll; `scroll-snap-type: proximity`
+means a flick lands on a beat but never traps the rest of the page.
 
-- **One focal point per frame.** If two things compete, one of them is deleted.
-- **No photo is used twice.** Six plates, two cut-out layers, nothing repeated.
-- **Copy is sparse.** ≤ 25 words on screen at any stop; ~120 words in the whole film.
-  Word budgets and scorecards are in `COPY.md`.
-- **Every rest position is composed.** CSS scroll-snap lands each flick on a stop;
-  a critically damped spring drives the camera so it arrives a beat later, never jumps,
-  and never leaves you in a half-transition.
-- **The copy belongs to the camera.** It rides up out of a mask as the camera arrives,
-  scales past you as the camera leaves. It is never "revealed on scroll" on a document.
-- **The night is the colour script.** Steel blue street → brass and amber door →
-  deep amber floor → cold blue exit → pale gold morning.
+Its images are deliberately quiet — desaturated, darkened, contrast eased (see
+`assets.py: quiet()`), because the copy is what sells, not the photograph.
 
-## What a visitor can do
+If WebGL or motion is unavailable, the four beats become four full-bleed stills with
+the same words, and the rest of the page is unchanged.
 
-- Answer *what needs covering?* — venue, event or person. The story lines rewrite
-  themselves for that answer, dispatch replies in the HUD, the camera moves on, and the
-  quote form opens preset to it.
-- Jump to any stop from the chapter rail, the menu or a deep link (`#events`).
-- Pointer parallax at rest: the officer sits nearer the camera than the street does.
+## Editing
 
-## If the film cannot run
-
-`prefers-reduced-motion`, no WebGL2, or no JS at all: every stop becomes a full-bleed
-still of its own scene with the copy set on it, in document order, natively scrolled.
-No content is lost — the film is the delivery, not the content.
+Every string is in [`content.py`](content.py). Anything marked `PLACEHOLDER`
+(testimonials, crew) shows only in preview builds — fill it in and it publishes.

@@ -16,7 +16,7 @@ The engine zooms the portal up to full frame, so the two together are the cut.
 import json
 import os
 
-from PIL import Image
+from PIL import Image, ImageEnhance
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -70,8 +70,29 @@ PLATES = [
 ]
 
 
+def quiet(img):
+    """Photography here is set dressing, not the message.
+
+    Every plate is pulled back — desaturated, darkened, contrast eased — so the
+    type is the brightest thing on the screen and the picture stays at the edge
+    of the eye. The client's note: "we are not selling a cool site with cool
+    pictures, we are selling bodyguard services."
+    """
+    rgb = img.convert("RGBA") if img.mode == "RGBA" else img
+    a = rgb.split()[3] if rgb.mode == "RGBA" else None
+    base = rgb.convert("RGB")
+    base = ImageEnhance.Color(base).enhance(0.42)
+    base = ImageEnhance.Brightness(base).enhance(0.84)
+    base = ImageEnhance.Contrast(base).enhance(0.94)
+    if a is not None:
+        base = base.convert("RGBA")
+        base.putalpha(a)
+    return base
+
+
 def _export(img, stem, alpha=False):
     """Write three widths; return the srcset list, widest first."""
+    img = quiet(img)
     out = []
     for s in SCALES:
         w = int(round(img.width * s / 2) * 2)
