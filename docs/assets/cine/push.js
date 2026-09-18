@@ -37,15 +37,18 @@
     "gl_Position=vec4(c.x,-c.y,0.0,1.0);v=a;}";
   var FS =
     "#version 300 es\nprecision highp float;\n" +
-    "in vec2 v;out vec4 o;uniform sampler2D u_tex;uniform float u_lod,u_alpha,u_exp,u_feather;\n" +
+    "in vec2 v;out vec4 o;uniform sampler2D u_tex;uniform float u_lod,u_alpha,u_exp,u_feather,u_radial;\n" +
     "uniform vec3 u_tint;uniform vec4 u_clip;uniform vec2 u_res;\n" +
     "void main(){vec4 c=texture(u_tex,v,u_lod);\n" +
     " if(u_lod>0.5){float t=exp2(u_lod)/900.0;\n" +
     "  c=0.25*(texture(u_tex,v+vec2(t,0.0),u_lod)+texture(u_tex,v-vec2(t,0.0),u_lod)\n" +
     "        +texture(u_tex,v+vec2(0.0,t),u_lod)+texture(u_tex,v-vec2(0.0,t),u_lod));}\n" +
     " vec2 p=vec2(gl_FragCoord.x,u_res.y-gl_FragCoord.y);\n" +
-    " vec2 d=min(p-u_clip.xy,u_clip.xy+u_clip.zw-p);\n" +
-    " float m=smoothstep(0.0,1.0,clamp(min(d.x,d.y)/max(u_feather,0.5),0.0,1.0));\n" +
+    " float m;\n" +
+    " if(u_radial>0.5){vec2 h=u_clip.zw*0.5;vec2 q=(p-(u_clip.xy+h))/max(h,vec2(1.0));\n" +
+    "  m=1.0-smoothstep(0.18,1.0,length(q));}\n" +
+    " else{vec2 d=min(p-u_clip.xy,u_clip.xy+u_clip.zw-p);\n" +
+    "  m=smoothstep(0.0,1.0,clamp(min(d.x,d.y)/max(u_feather,0.5),0.0,1.0));}\n" +
     " o=vec4(c.rgb*u_tint*u_exp,c.a)*(u_alpha*m);}";
 
   function shader(type, src) {
@@ -62,7 +65,7 @@
   gl.useProgram(prog);
 
   var U = {};
-  ["u_rect", "u_res", "u_tex", "u_lod", "u_alpha", "u_exp", "u_tint", "u_clip", "u_feather"]
+  ["u_rect", "u_res", "u_tex", "u_lod", "u_alpha", "u_exp", "u_tint", "u_clip", "u_feather", "u_radial"]
     .forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
 
   var buf = gl.createBuffer();
@@ -147,6 +150,7 @@
     var c = o.clip || [-9e4, -9e4, 1.8e5, 1.8e5];
     gl.uniform4f(U.u_clip, c[0], c[1], c[2], c[3]);
     gl.uniform1f(U.u_feather, o.feather || 0.5);
+    gl.uniform1f(U.u_radial, o.radial ? 1 : 0);
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
@@ -222,12 +226,16 @@
       // a soft halo of the next scene's own light, so the eye knows where the
       // camera is about to go before it moves
       if (f < 0.62) {
-        var hw = clip[2] * 3.1, hh = clip[3] * 3.1;
+        var hw = clip[2] * 3.4, hh = clip[3] * 3.4;
+        var hcx = clip[0] + clip[2] / 2, hcy = clip[1] + clip[3] / 2;
+        // the glow quad has to be bigger than its own falloff, or you see its corners
+        var haloT = { s: childT.s * 3.4, x: hcx + (childT.x - hcx) * 3.4, y: hcy + (childT.y - hcy) * 3.4 };
         gl.blendFunc(gl.ONE, gl.ONE);
-        drawPlate(textures["p" + pl.portal.child], ch, childT, {
-          tint: ch.grade.tint, exp: ch.grade.exp * 0.95, lod: 7.5, alpha: 0.2 * (1 - smooth(0.1, 0.5, f)),
+        drawPlate(textures["p" + pl.portal.child], ch, haloT, {
+          tint: [ch.grade.tint[0] * 1.18, ch.grade.tint[1], ch.grade.tint[2] * 0.8],
+          exp: ch.grade.exp * 0.95, lod: 7.5, alpha: 0.3 * (1 - smooth(0.1, 0.5, f)),
           clip: [clip[0] + clip[2] / 2 - hw / 2, clip[1] + clip[3] / 2 - hh / 2, hw, hh],
-          feather: Math.min(hw, hh) * 0.5,
+          radial: true,
         });
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
       }
@@ -262,7 +270,10 @@
         var c2 = intersect(clip, clipRect(ch, childT, ch.portal.aper));
         if (c2[2] > 2 && c2[3] > 2) {
           drawPlate(textures["p" + ch.portal.child], gc, gT, {
-            tint: gc.grade.tint, exp: gc.grade.exp * 0.7, lod: 5.6, alpha: 0.9,
+            tint: gc.grade.tint, exp: gc.grade.exp * 0.7, lod: 5.6,
+            // depth only while the camera is travelling: at both ends of the push
+            // the room two doors away is just darkness, not a pale rectangle
+            alpha: 0.85 * smooth(0.06, 0.34, f) * (1 - smooth(0.6, 0.94, f)),
             clip: c2, feather: Math.min(c2[2], c2[3]) * 0.4,
           });
         }
