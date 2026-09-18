@@ -107,7 +107,9 @@ STEPS = [
 
 # --------------------------------------------------------------------------
 # 5. one night — the film. Four beats, one camera, then back to business.
+#    Set SHOW_FILM = False and the section disappears; nothing else changes.
 # --------------------------------------------------------------------------
+SHOW_FILM = True
 FILM_INTRO = {
     "kicker": "One night",
     "h": "What it looks like when it works.",

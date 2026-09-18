@@ -94,8 +94,11 @@ def main():
     idx = os.path.join(SITE, "index.html")
     if os.path.exists(idx):
         page_html = open(idx, encoding="utf-8").read()
-        for hook in ('id="stage"', 'id="scene-data"', 'class="beat"', 'class="tick"',
-                     'class="bar"', "data-quote", "data-form", 'id="quote"', 'class="reveal"'):
+        hooks = ['class="bar"', "data-quote", "data-form", 'id="quote"', 'class="reveal"',
+                 'class="proof"', 'class="card ']
+        if 'class="film"' in page_html:
+            hooks += ['id="stage"', 'id="scene-data"', 'class="beat"', 'class="tick"']
+        for hook in hooks:
             if hook not in page_html:
                 errs.append("index.html: hook %s missing" % hook)
         # the offer has to be reachable from anywhere on the page

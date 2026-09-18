@@ -128,6 +128,8 @@ def steps_html():
 
 
 def film_html(scene):
+    if not getattr(C, "SHOW_FILM", True):
+        return ""
     beats = []
     for b in C.BEATS:
         plate = next(p for p in scene["plates"] if p["id"] == b["plate"])
@@ -235,7 +237,7 @@ def close_html():
 def answers_html():
     svc = "".join('<li><a href="#%s">%s</a></li>' % (s["id"], s["kicker"]) for s in C.SERVICES)
     comp = "".join('<li><a href="%s">%s</a></li>' % (u, t) for u, t in [
-        ("#night", "One night"), ("#coverage", "Where we work"),
+        ("#coverage", "Where we work"),
         ("journal/index.html", "Journal"), ("privacy.html", "Privacy")])
     return """<section class="band band--alt" id="answers">
 <div class="wrap">
@@ -333,7 +335,7 @@ HTML = """<!DOCTYPE html>
 <a class="mast__logo" href="#top" aria-label="{name} — top">
 <img src="assets/logo/swarm-horizontal-gold.svg" alt="{name}" width="200" height="52"></a>
 <nav class="mast__nav" aria-label="Primary">
-<a href="#services">Services</a><a href="#how">How we work</a><a href="#night">One night</a>
+<a href="#services">Services</a><a href="#how">How we work</a>{film_nav}
 <a href="#coverage">Coverage</a><a href="#answers">Answers</a>
 </nav>
 <div class="mast__cta">
@@ -344,7 +346,7 @@ HTML = """<!DOCTYPE html>
 </div>
 </header>
 <div class="drawer" id="drawer" hidden>
-<a href="#services">Services</a><a href="#how">How we work</a><a href="#night">One night</a>
+<a href="#services">Services</a><a href="#how">How we work</a>{film_nav}
 <a href="#coverage">Coverage</a><a href="#people">The crew</a><a href="#answers">Answers</a>
 <a class="btn" href="#quote" data-quote><span>Request a quote</span></a>
 <a class="btn btn--ghost" href="tel:{tel}"><span>Call {phone}</span></a>
@@ -395,6 +397,7 @@ def render():
         hero=street["sizes"][1]["src"],
         heroset=", ".join("%s %dw" % (s["src"], s["w"]) for s in street["sizes"]),
         cssv=asset_version("assets/cine/site.css"), jsv=asset_version("assets/cine/site.js"),
+        film_nav='<a href="#night">One night</a>' if getattr(C, "SHOW_FILM", True) else "",
         hero_s=hero_html(scene), services=services_html(), stance=stance_html(),
         steps=steps_html(), film=film_html(scene), coverage=coverage_html(),
         people=people_html(), answers=answers_html(), close=close_html(),

@@ -28,41 +28,52 @@ needs a public repo on a free account and none of them has to be public.
 
 ---
 
-## The home page — "The push"
+## The home page
 
-One camera, one night, five scrolls. Every scene contains a lit opening with the next scene
-already inside it; scrolling pushes the camera through that opening, so the background of one
-stop becomes the foreground of the next. Nothing is ever replaced, so it never reads as a
-slideshow. Full script: [`build/cinema/STORYBOARD.md`](build/cinema/STORYBOARD.md); every line of
-copy, with its scorecard, is in [`build/cinema/COPY.md`](build/cinema/COPY.md).
+A service page that happens to be cinematic, not a film with a phone number. The
+order is the argument: what this is → what we provide → how we work → how booking
+works → one night of it → where → who → answers → the ask. Full map:
+[`build/cinema/STORYBOARD.md`](build/cinema/STORYBOARD.md). Every string lives in
+[`build/cinema/content.py`](build/cinema/content.py).
 
-| Stop | Time | Scene | On screen |
-|---|---|---|---|
-| `#call` | live Toronto clock | the street, one officer, venue glow behind him | BIG ON PURPOSE. CALM BY TRAINING. |
-| `#venues` | 22:15 | the door | MOST TROUBLE NEVER GETS IN. |
-| `#events` | 00:40 | the floor | NOTHING WORTH FILMING. |
-| `#protection` | 02:10 | the exit, the car | THE EXIT IS PLANNED BEFORE THE ENTRANCE. |
-| `#report` | 06:00 | dawn, the sample shift report | YOU SLEPT. WE WROTE IT DOWN. |
-| `#book` | — | the morning, pushed in | FORGET ABOUT IT. WE WON'T. |
+| Section | id | What it does |
+|---|---|---|
+| Hero | `top` | Logo and company name, **Everything under control.**, what we do and where, quote + phone, six credentials |
+| What we provide | `services` | Three services, three concrete deliverables each, its own quote link |
+| How we work | `how` | *We talk first* — de-escalation, licences carried, hands stay down |
+| How booking works | `process` | Three steps: tell us the night → walk-through and written plan → shift and report |
+| One night | `night` | Four beats of a Saturday, one camera pushing through four scenes |
+| Where we work | `coverage` | 18 GTA municipalities |
+| Clients and crew | `people` | Testimonials and crew — placeholders until they are real |
+| Answers | `answers` | Eight straight answers, FAQ schema |
+| Tell us the night | `book` | The ask: quote, phone, Instagram, TikTok, email |
 
-Below the film, as an ordinary document: the answers (FAQ), the service links, dispatch details
-and the coverage list. `privacy.html`, `404.html` and the six-article `journal/` stay separate —
-the journal is what ranks for long-tail search. **No prices anywhere**; quoting happens on request.
+**Request a quote** and the phone number are in the sticky header everywhere, in most
+sections, and in a fixed bottom bar on phones. `privacy.html`, `404.html` and the
+six-article `journal/` stay separate — the journal is what ranks for long-tail search.
+**No prices anywhere**; quoting happens on request.
 
-**Engine** — `docs/assets/cine/push.js`, about 400 lines, no framework:
+**Placeholders.** Anything in `content.py` marked `PLACEHOLDER` (testimonials, crew)
+renders only in preview builds, so a half-filled section never reaches the public
+site. Fill it in and it publishes itself. `SHOW_FILM = False` removes the film
+section entirely, and nothing else on the page changes.
 
-- A WebGL2 renderer draws each plate as one quad. Blur is a mip bias, so a focus pull costs
-  nothing; the doorway is a feathered clip rect that opens faster than the scene behind it grows.
-- **Scroll snapping is the browser's** (CSS `scroll-snap-type: y mandatory`,
-  `scroll-snap-stop: always`), so one flick is one stop and every landing is a composed frame.
-- A **critically damped spring** drives the camera from the scroll position, so it arrives a beat
-  later and never jumps. There is no easing between scroll and camera, only mass.
-- Copy is HTML pinned to the viewport; it rides out of a mask as the camera arrives and scales
-  past you as the camera leaves.
-- `prefers-reduced-motion`, no WebGL2 or no JS: every stop becomes a full-bleed still with its
-  copy, natively scrolled. No content is lost.
+**Engine** — `docs/assets/cine/site.js`, no framework, 519 KB and 14 requests for the
+whole page:
 
----
+- Sections arrive with an IntersectionObserver; the hero has pointer and scroll
+  parallax; nothing else animates on a timer.
+- The film is a sticky stage with four viewport-tall scroll steps. A WebGL2 renderer
+  draws each plate as one quad; blur is a mip bias; the doorway is a feathered clip
+  rect that opens faster than the scene behind it grows (the exponent is solved from
+  the viewport, not tuned). A critically damped spring drives the camera, so it lands
+  a beat after the scroll.
+- Its textures load only when the section is within 120% of the viewport, and it only
+  draws while it is on screen.
+- Photography is graded quiet in `assets.py: quiet()` — desaturated, darkened — so the
+  type is always the brightest thing on the page.
+- `prefers-reduced-motion`, no WebGL2 or no JS: the beats become four full-bleed
+  stills with the same words. Nothing is lost.
 
 ## Working on it
 
@@ -77,10 +88,11 @@ python build/og.py               # regenerate the 1200x630 social cards
 | File | What lives there |
 |---|---|
 | `build/common.py` | **`BIZ` — phone, licence, domain, email, socials.** Shared shell for journal/privacy. |
-| `build/cinema/render.py` | the film's copy and markup, schema, FAQ, the quote dialog |
+| `build/cinema/content.py` | **every word on the home page**, including the placeholders |
+| `build/cinema/render.py` | the markup for each section, schema, FAQ, the quote dialog |
 | `build/cinema/assets.py` | plates, cut-outs, grades, portals — everything in `scene.json` |
-| `docs/assets/cine/push.js` | the camera, the snap, the copy choreography, the dialog |
-| `docs/assets/cine/push.css` | the film's design system; plain mode is the fallback page |
+| `docs/assets/cine/site.js` | reveals, hero parallax, the quote dialog, the film camera |
+| `docs/assets/cine/site.css` | the design system; plain mode is the no-motion fallback |
 
 ### Replacing the scene art
 
@@ -138,14 +150,14 @@ Also blocking:
 
 ---
 
-## Verified (2026-09-17, local build)
+## Verified (2026-09-17, live URL)
 
-- **Behaviour** — 12/12 automated checks: the film runs on WebGL2, all six plates load, deep
-  links land on their stop, reverse scrolling returns, the chips rewrite the story lines and
-  preset the quote form, the dialog opens, stops you cannot see are `inert`, no console errors,
-  and reduced motion renders the complete page.
-- **Frames** — every stop and every quarter-step screenshotted at 1440×900 and 390×844, plus 24
-  random in-between positions with snapping disabled, reviewed by eye. 60 fps throughout.
-- **Build audit** — 10 pages, no dead links or missing assets, valid JSON-LD
-  (`SecurityService`, `Service` ×3, `FAQPage`, `BlogPosting`, `BreadcrumbList`), all six film
-  hooks present, portals concentric.
+- **16/16 behaviour checks**: the company name, headline, quote button, phone and
+  credentials are all above the fold; ten quote entry points; the header keeps a
+  visible quote button while you scroll; three services with three proof points each;
+  the film reaches its last beat at 60 fps; the dialog opens; deep links land; the
+  mobile offer bar is fixed to the bottom; the canvas fills its stage at 3× device
+  resolution; and with motion turned off the page is complete (949 words, four stills).
+- **Weight**: 519 KB transferred, 14 requests, DOM ready 192 ms, load 222 ms.
+- **Build audit**: 10 pages, no dead links or missing assets, valid JSON-LD
+  (`SecurityService`, `Service` ×3, `FAQPage`, `BlogPosting`, `BreadcrumbList`).
