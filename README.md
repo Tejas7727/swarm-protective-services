@@ -13,9 +13,9 @@ This repo holds the website, the brand system and the build that generates them.
 ## Layout
 
     build/            the generator — edit here, never in docs/*.html
-      cinema/         the home page: renderer, asset pipeline, STORYBOARD.md, COPY.md
+      cinema/         the home page: content.py (all copy), renderer, asset pipeline, STORYBOARD.md
     docs/             the built site. GitHub Pages serves this folder.
-      assets/cine/    the camera engine (push.js, push.css)
+      assets/cine/    site.js and site.css — behaviour and the design system
       assets/scene/   the plates, the cut-out layers and scene.json (the camera manifest)
     brand/            logo system, favicons, social, email, print, brand-kit.html
     content/          brand playbook, Google Business, Instagram, TikTok, blog plan, launch
