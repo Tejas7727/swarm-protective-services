@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
-"""Scene assets for the push-through film.
+"""Scene plates for the home page camera.
 
-Takes the art in `source-art/scene-v3/` and writes, into `docs/assets/scene/`:
+Reads `source-art/scene-v4/` and writes into `docs/assets/scene/`:
 
-  * every plate as WebP at three widths (the camera only ever magnifies the
-    plate it is pushing into, so three steps is plenty),
-  * the hero cut-out cropped to its alpha, with the rect it occupies in its
-    plate so the engine can put it back exactly where it was,
-  * `scene.json` — the camera manifest: portals, apertures, grades, layers.
+  * each plate as WebP at three widths, graded quiet (the copy leads, the
+    photograph supports),
+  * `scene.json` — what the camera needs: plate sizes, focal points, and the
+    portal each push travels through.
 
-The portal is where the next scene sits inside this one; the aperture is the
-opening you see it through (a doorway, a corridor, the road out of an alley).
-The engine zooms the portal up to full frame, so the two together are the cut.
+A portal is where the next plate sits inside this one (`rect`, in this plate's
+normalised coordinates, same aspect as the child) and the opening it is seen
+through (`aper`). The camera zooms `rect` up to full frame. On this site every
+opening is the dark suit of one of our own people: the camera passes through
+the crew into the work.
+
+Sources and rights — see source-art/scene-v4/SOURCES.md:
+  crew     client photograph, background softened so the venue is not identifiable
+  event    Pexels 13602781 (Pexels licence, free for commercial use); another
+           agency's badge on the vest is blurred
+  split    left: generated locally (door); right: client photograph (detail)
 """
 import json
 import os
@@ -20,129 +27,105 @@ from PIL import Image, ImageEnhance
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-SRC = os.path.join(ROOT, "source-art", "scene-v3")
+SRC = os.path.join(ROOT, "source-art", "scene-v4")
 OUT = os.path.join(ROOT, "docs", "assets", "scene")
 
 SCALES = (1.0, 0.72, 0.5)
-QUALITY = 82
+MAXW = 2000
+QUALITY = 78
 
-# Each stop: the plate, how it is graded, where the next scene lives inside it.
-# rect  — where the child plate is drawn, in this plate's normalised coordinates
-#         (same aspect as the child, so w and h are the same fraction).
-# aper  — the opening it is seen through, before the camera arrives.
 PLATES = [
-    {
-        "id": "street", "file": "p0-street.png",
-        "focal": [0.50, 0.55], "focalM": [0.62, 0.56],
-        "grade": {"exp": 1.02, "tint": [0.97, 0.99, 1.06], "lift": 0.0},
-        "layers": [{"file": "p0-hero.png", "depth": 1.85, "fade": [0.14, 0.42]}],
-        "portal": {"rect": [0.2275, 0.3900, 0.26, 0.2078],
-                   "aper": [0.315, 0.436, 0.085, 0.116], "feather": 0.9, "depth": 2.4},
-    },
-    {
-        "id": "door", "file": "p1-door.png",
-        "focal": [0.55, 0.44], "focalM": [0.55, 0.42],
-        "grade": {"exp": 0.94, "tint": [1.00, 0.985, 1.00], "lift": 0.0},
-        "portal": {"rect": [0.4225, 0.290, 0.26, 0.26],
-                   "aper": [0.478, 0.225, 0.150, 0.390], "feather": 0.7, "depth": 2.2},
-    },
-    {
-        "id": "floor", "file": "p2-floor.png",
-        "focal": [0.56, 0.48], "focalM": [0.62, 0.46],
-        "grade": {"exp": 0.92, "tint": [1.00, 0.97, 0.96], "lift": 0.0},
-        "layers": [{"file": "p2-officer.png", "depth": 1.8, "fade": [0.10, 0.34]}],
-        "portal": {"rect": [0.5925, 0.275, 0.26, 0.26],
-                   "aper": [0.655, 0.320, 0.135, 0.170], "feather": 0.95, "depth": 2.4},
-    },
-    {
-        "id": "exit", "file": "p3-exit.png",
-        "focal": [0.58, 0.50], "focalM": [0.64, 0.50],
-        "grade": {"exp": 1.00, "tint": [0.96, 0.99, 1.07], "lift": 0.0},
-        "portal": {"rect": [0.680, 0.330, 0.26, 0.26],
-                   "aper": [0.740, 0.375, 0.140, 0.170], "feather": 0.95, "depth": 2.4,
-                   "cross": 0.55, "flood": [1.0, 0.93, 0.82]},
-    },
-    {
-        "id": "dawn", "file": "p4-dawn.png",
-        "focal": [0.50, 0.50], "focalM": [0.52, 0.48],
-        "grade": {"exp": 1.04, "tint": [1.04, 1.00, 0.97], "lift": 0.02},
-    },
+    {"id": "crew", "file": "crew.png", "grade": (0.62, 0.92, 0.96),
+     "focal": [0.50, 0.50], "focalM": [0.50, 0.48],
+     "portal": {"child": "event", "aper": [0.466, 0.385, 0.068, 0.13]}},
+    # the portrait event photo is trimmed of smoke above and barrier below —
+    # neither is ever on screen — and capped at 1600 wide: it was 616 KB
+    {"id": "event", "file": "event.png", "grade": (0.5, 0.86, 0.95), "crop": (0.0, 0.12, 1.0, 0.96),
+     "maxw": 1600, "focal": [0.52, 0.42], "focalM": [0.53, 0.43],
+     "portal": {"child": "split", "aper": [0.492, 0.428, 0.086, 0.083]},
+     "portalM": {"child": "split-m", "aper": [0.492, 0.416, 0.086, 0.107]}},
 ]
 
-
-def quiet(img):
-    """Photography here is set dressing, not the message.
-
-    Every plate is pulled back — desaturated, darkened, contrast eased — so the
-    type is the brightest thing on the screen and the picture stays at the edge
-    of the eye. The client's note: "we are not selling a cool site with cool
-    pictures, we are selling bodyguard services."
-    """
-    rgb = img.convert("RGBA") if img.mode == "RGBA" else img
-    a = rgb.split()[3] if rgb.mode == "RGBA" else None
-    base = rgb.convert("RGB")
-    base = ImageEnhance.Color(base).enhance(0.42)
-    base = ImageEnhance.Brightness(base).enhance(0.84)
-    base = ImageEnhance.Contrast(base).enhance(0.94)
-    if a is not None:
-        base = base.convert("RGBA")
-        base.putalpha(a)
-    return base
+# The split is not an image file: the camera draws the two page photos (door,
+# detail) side by side on landscape screens and stacked on portrait ones.
+# These are its virtual plates, so portals and the pull-out can be computed.
+SPLIT = {
+    "split":   {"id": "split", "w": 1600, "h": 1000, "focal": [0.5, 0.5], "focalM": [0.5, 0.5],
+                "anchor": [0.25, 0.46], "halves": "row"},
+    "split-m": {"id": "split-m", "w": 800, "h": 2000, "focal": [0.5, 0.5], "focalM": [0.5, 0.5],
+                "anchor": [0.5, 0.23], "halves": "column"},
+}
 
 
-def _export(img, stem, alpha=False):
-    """Write three widths; return the srcset list, widest first."""
-    img = quiet(img)
+def quiet(img, sat, bright, contrast):
+    """Pull every photograph back so the type is the brightest thing on screen."""
+    img = ImageEnhance.Color(img).enhance(sat)
+    img = ImageEnhance.Brightness(img).enhance(bright)
+    return ImageEnhance.Contrast(img).enhance(contrast)
+
+
+def export(img, stem, maxw=MAXW):
+    if img.width > maxw:
+        img = img.resize((maxw, round(img.height * maxw / img.width)), Image.LANCZOS)
     out = []
     for s in SCALES:
-        w = int(round(img.width * s / 2) * 2)
-        h = int(round(img.height * s / 2) * 2)
+        w, h = int(round(img.width * s / 2) * 2), int(round(img.height * s / 2) * 2)
         name = "%s-%d.webp" % (stem, w)
-        im = img.resize((w, h), Image.LANCZOS) if s != 1.0 else img
-        im.save(os.path.join(OUT, name), "WEBP", quality=QUALITY,
-                method=6, exact=alpha)
+        (img if s == 1.0 else img.resize((w, h), Image.LANCZOS)).save(
+            os.path.join(OUT, name), "WEBP", quality=QUALITY, method=6)
         out.append({"w": w, "h": h, "src": "assets/scene/" + name})
     return out
 
 
+def portal_rect(parent, child, aper):
+    """Centre the child on the opening, sized so the opening sits well inside it."""
+    cx, cy = aper[0] + aper[2] / 2, aper[1] + aper[3] / 2
+    w = max(aper[2], aper[3] * parent["h"] / parent["w"] * child["w"] / child["h"]) * 1.6
+    h = w * parent["w"] / parent["h"] * child["h"] / child["w"]
+    return [round(cx - w / 2, 5), round(cy - h / 2, 5), round(w, 5), round(h, 5)]
+
+
 def build():
     os.makedirs(OUT, exist_ok=True)
-    scene = {"plates": []}
-    for i, spec in enumerate(PLATES):
-        img = Image.open(os.path.join(SRC, spec["file"])).convert("RGB")
-        entry = {
-            "id": spec["id"], "w": img.width, "h": img.height,
-            "sizes": _export(img, spec["id"]),
-            "focal": spec["focal"], "focalM": spec["focalM"], "grade": spec["grade"],
-            "layers": [],
-        }
-        flat = None
-        for layer in spec.get("layers", []):
-            cut = Image.open(os.path.join(SRC, layer["file"])).convert("RGBA")
-            flat = Image.alpha_composite((flat or img).convert("RGBA"), cut).convert("RGB")
-            box = cut.getbbox()                     # crop to the figure
-            crop = cut.crop(box)
-            stem = "%s-%s" % (spec["id"], os.path.splitext(layer["file"])[0].split("-")[-1])
-            entry["layers"].append({
-                "sizes": _export(crop, stem, alpha=True),
-                "rect": [box[0] / cut.width, box[1] / cut.height,
-                         (box[2] - box[0]) / cut.width, (box[3] - box[1]) / cut.height],
-                "depth": layer["depth"], "fade": layer["fade"],
-            })
-        # one flattened frame per plate: what a browser with no WebGL, or a
-        # visitor who asked for no motion, sees as a plain background
-        entry["flat"] = _export(flat, spec["id"] + "-flat")[1]["src"] if flat \
-            else entry["sizes"][1]["src"]
-        if "portal" in spec:
-            entry["portal"] = dict({"depth": 2.2}, **dict(spec["portal"], child=i + 1))
-        scene["plates"].append(entry)
+    for f in os.listdir(OUT):
+        if f.endswith(".webp"):
+            os.remove(os.path.join(OUT, f))
+    plates = {}
+    for spec in PLATES:
+        img = quiet(Image.open(os.path.join(SRC, spec["file"])).convert("RGB"), *spec["grade"])
+        if "crop" in spec:
+            c = spec["crop"]
+            img = img.crop((int(c[0] * img.width), int(c[1] * img.height), int(c[2] * img.width), int(c[3] * img.height)))
+        sizes = export(img, spec["id"], spec.get("maxw", MAXW))
+        plates[spec["id"]] = {"id": spec["id"], "w": sizes[0]["w"], "h": sizes[0]["h"], "sizes": sizes,
+                              "focal": spec["focal"], "focalM": spec.get("focalM", spec["focal"])}
+        if "anchor" in spec:
+            plates[spec["id"]]["anchor"] = spec["anchor"]
+    plates.update(SPLIT)
+    for spec in PLATES:
+        for key in ("portal", "portalM"):
+            if key in spec:
+                p = spec[key]
+                parent, child = plates[spec["id"]], plates[p["child"]]
+                plates[spec["id"]][key] = {"child": p["child"], "aper": p["aper"],
+                                           "rect": portal_rect(parent, child, p["aper"])}
+    # the two halves of the split, one file each (4:5), used by the page and the camera alike
+    split = quiet(Image.open(os.path.join(SRC, "split.png")).convert("RGB"), 0.5, 0.86, 0.95)
+    half = split.width // 2
+    halves = {}
+    for name, box in (("door", (0, 0, half, split.height)), ("detail", (half, 0, split.width, split.height))):
+        im = split.crop(box)
+        halves[name] = []
+        for w in (1000, 700):
+            h = int(w * 1.25)
+            im.resize((w, h), Image.LANCZOS).save(os.path.join(OUT, "%s-%d.webp" % (name, w)), "WEBP", quality=QUALITY, method=6)
+            halves[name].append({"w": w, "h": h, "src": "assets/scene/%s-%d.webp" % (name, w)})
+    scene = {"plates": [plates[s["id"]] for s in PLATES] + [SPLIT["split"], SPLIT["split-m"]], "halves": halves}
     with open(os.path.join(OUT, "scene.json"), "w", encoding="utf-8") as fh:
         json.dump(scene, fh, separators=(",", ":"))
     return scene
 
 
 if __name__ == "__main__":
-    s = build()
-    for p in s["plates"]:
-        print(p["id"], p["w"], "x", p["h"], "layers:", len(p["layers"]),
-              "portal:" if "portal" in p else "end", p.get("portal", {}).get("rect", ""))
+    for p in build()["plates"]:
+        print(p["id"], p["w"], "x", p["h"], {k: p[k]["rect"] for k in ("portal", "portalM") if k in p})

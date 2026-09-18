@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Render the home page.
+"""Render the home page: five screens and a form.
 
-Order is the argument, not the art direction: what this is → who it is for →
-proof → what you get → how it works → one night of it → where → who → answers →
-ask. The film is one section in the middle, not the whole page.
+    home -> what we do -> on the job -> across the GTA -> the crew -> get a quote
 
-All copy lives in `content.py`. All scene geometry lives in `assets.py`.
+The markup is a complete static page first: each screen is a section with its
+own image and copy, readable with no JavaScript, no WebGL and no motion. The
+camera in site.js is an enhancement laid over those same sections — it never
+owns the content, so nothing on the page depends on it.
+
+Copy lives in content.py; plate geometry in assets.py.
 """
 import io
 import json
@@ -17,285 +20,210 @@ sys.path.insert(0, os.path.dirname(HERE))
 sys.path.insert(0, HERE)
 
 import common                                                       # noqa: E402
-from common import AREAS, BIZ, ICONS, asset_version, canonical, faq_schema, plain  # noqa: E402
-from home import FAQS                                               # noqa: E402
+from common import AREAS, BIZ, ICONS, asset_version, canonical      # noqa: E402
 import content as C                                                 # noqa: E402
 
-MAIL = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3V5Zm2.4 2 6.6 5 '
-        '6.6-5H5.4Zm13.6 2.3-7 5.3-7-5.3V17h14V9.3Z"/></svg>')
+PHONE_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.5 9 7l-2 2.2a13 13 0 0 0 '
+              '5.8 5.8L15 13l4.5 2.4-1.2 4a2 2 0 0 1-2.2 1.4C8.6 20 4 15.4 2.7 6.9A2 2 0 0 1 4.1 '
+              '4.7l2.5-2.2Z"/></svg>')
+MAIL_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3V5Zm2.4 2 6.6 5 '
+             '6.6-5H5.4Zm13.6 2.3-7 5.3-7-5.3V17h14V9.3Z"/></svg>')
+
+# approximate municipal centres (lat, lon), Toronto first
+CITIES = [
+    ("Toronto", 43.6532, -79.3832), ("Etobicoke", 43.6205, -79.5132), ("North York", 43.7615, -79.4111),
+    ("Scarborough", 43.7764, -79.2318), ("Mississauga", 43.5890, -79.6441), ("Brampton", 43.7315, -79.7624),
+    ("Vaughan", 43.8361, -79.4983), ("Markham", 43.8561, -79.3370), ("Richmond Hill", 43.8828, -79.4403),
+    ("Oakville", 43.4675, -79.6877), ("Burlington", 43.3255, -79.7990), ("Hamilton", 43.2557, -79.8711),
+    ("Pickering", 43.8384, -79.0868), ("Ajax", 43.8509, -79.0204), ("Whitby", 43.8975, -78.9429),
+    ("Oshawa", 43.8971, -78.8658), ("Milton", 43.5183, -79.8774), ("Newmarket", 44.0592, -79.4613),
+]
+SHORE = [(43.24, -79.98), (43.27, -79.84), (43.31, -79.79), (43.44, -79.67), (43.55, -79.58),
+         (43.60, -79.50), (43.635, -79.38), (43.70, -79.23), (43.81, -79.08), (43.83, -79.02),
+         (43.85, -78.94), (43.86, -78.85), (43.87, -78.72)]
+MW, MH = 1200, 640
+LON0, LON1, LAT0, LAT1 = -80.02, -78.68, 44.12, 43.18
+# labels that would collide with a neighbour go to the other side
+LEFT = {"Etobicoke", "Mississauga", "Oakville", "Burlington", "Hamilton", "Milton", "Brampton", "Vaughan", "Pickering"}
+# Phones see a tighter window of the map (data-narrow), so labels are placed
+# for it separately: (dx, dy, anchor). Cities outside that window keep their
+# pin and lose only the label. All labels are decorative — every city is named
+# in the map's <title>.
+PHONE = {
+    "Mississauga": (0, 30, "middle"), "Brampton": (14, 5, "start"), "Vaughan": (14, 5, "start"),
+    "Richmond Hill": (0, -18, "middle"), "Markham": (14, 5, "start"), "North York": (14, 5, "start"),
+    "Scarborough": (14, 5, "start"), "Etobicoke": (-14, 5, "end"), "Newmarket": (14, 5, "start"),
+    "Pickering": (-14, 5, "end"),
+}
 
 
-def quote_btn(cls="btn", label=None):
-    return ('<a class="%s" href="#quote" data-quote><span>%s</span></a>'
-            % (cls, label or C.HERO["cta"]))
+def xy(lat, lon):
+    return ((lon - LON0) / (LON1 - LON0) * MW, (lat - LAT0) / (LAT1 - LAT0) * MH)
 
 
-def call_btn(cls="btn btn--ghost", label=None):
-    return ('<a class="%s" href="tel:%s"><span>%s</span></a>'
-            % (cls, BIZ["phone_tel"], label or BIZ["phone_ui"]))
+def map_svg():
+    hx, hy = xy(CITIES[0][1], CITIES[0][2])
+    shore = " ".join("%s%.1f %.1f" % ("M" if i == 0 else "L", *xy(la, lo)) for i, (la, lo) in enumerate(SHORE))
+    lake = shore + " L%.1f %.1f L0 %.1f Z" % (MW, MH, MH)
+    grid = "".join('<line class="gm__grid" x1="%d" y1="0" x2="%d" y2="%d"/>' % (x, x, MH)
+                   for x in range(100, MW, 100))
+    grid += "".join('<line class="gm__grid" x1="0" y1="%d" x2="%d" y2="%d"/>' % (y, MW, y)
+                    for y in range(80, MH, 80))
+    routes, pins, labels = [], [], []
+    for name, la, lo in CITIES[1:]:
+        x, y = xy(la, lo)
+        mx, my = (hx + x) / 2, (hy + y) / 2 - abs(x - hx) * 0.1
+        routes.append('<path class="gm__route" pathLength="1" d="M%.1f %.1f Q%.1f %.1f %.1f %.1f"/>'
+                      % (hx, hy, mx, my, x, y))
+        pins.append('<image class="gm__pin" href="assets/logo/bee-160.webp" x="%.1f" y="%.1f" '
+                    'width="17" height="20"/>' % (x - 8.5, y - 10))
+        left = name in LEFT
+        labels.append('<text class="gm__lbl gm__lbl--d" x="%.1f" y="%.1f" text-anchor="%s">%s</text>'
+                      % (x + (-14 if left else 14), y + 5, "end" if left else "start", name))
+        if name in PHONE:
+            dx, dy, anchor = PHONE[name]
+            labels.append('<text class="gm__lbl gm__lbl--m" x="%.1f" y="%.1f" text-anchor="%s">%s</text>'
+                          % (x + dx, y + dy, anchor, name))
+    return ('<svg class="gm" viewBox="0 0 %d %d" data-full="0 0 %d %d" data-narrow="215 20 700 600" '
+            'role="img" aria-labelledby="gm-title"><title id="gm-title">Map of the 18 Greater Toronto '
+            'Area cities Swarm covers: %s.</title>'
+            '<g aria-hidden="true">%s<path class="gm__lake" d="%s"/><path class="gm__shore" d="%s"/>'
+            '%s%s'
+            '<circle class="gm__ring" cx="%.1f" cy="%.1f" r="30"/>'
+            '<image class="gm__hq" id="gm-hq" href="assets/logo/emblem-108.webp" x="%.1f" y="%.1f" '
+            'width="40" height="44"/>%s'
+            '<text class="gm__lbl gm__lbl--hq" x="%.1f" y="%.1f" text-anchor="middle">Toronto</text></g></svg>'
+            % (MW, MH, MW, MH, ", ".join(c[0] for c in CITIES), grid, lake, shore,
+               "".join(routes), "".join(pins), hx, hy, hx - 20, hy - 22, "".join(labels), hx, hy + 44))
 
 
-def words(text):
-    """Each word rides up out of a mask when its block arrives."""
-    out = []
-    for n, part in enumerate(text.split("|")):
-        if n:
-            out.append("<br>")
-        out.append("".join('<span class="word"><i>%s</i></span> ' % w
-                           for w in part.strip().split(" ")))
-    return "".join(out).strip()
+def btn_quote(cls="btn"):
+    return '<a class="%s" href="#contact" data-quote><span>%s</span></a>' % (cls, C.HOME["quote"])
 
 
-# --------------------------------------------------------------------------
-def hero_html(scene):
-    plate = next(p for p in scene["plates"] if p["id"] == "street")
-    layer = plate["layers"][0]
+def btn_call(cls="btn btn--ghost", label=None):
+    return ('<a class="%s" href="tel:%s">%s<span>%s</span></a>'
+            % (cls, BIZ["phone_tel"], PHONE_ICON, label or C.HOME["call"]))
+
+
+def img_tag(plate, cls, alt, sizes="100vw", priority=False):
     srcset = ", ".join("%s %dw" % (s["src"], s["w"]) for s in plate["sizes"])
-    cut = ", ".join("%s %dw" % (s["src"], s["w"]) for s in layer["sizes"])
-    proof = "".join("<li>%s</li>" % p for p in C.PROOF)
-    return """<section class="hero" id="top">
-<div class="hero__bg" aria-hidden="true">
-<img src="{bg}" srcset="{bgset}" sizes="100vw" alt="" width="{bw}" height="{bh}"
- fetchpriority="high" decoding="async" data-par="0.05">
-<img class="hero__cut" src="{cut}" srcset="{cutset}" sizes="70vw" alt=""
- width="{cw}" height="{ch}" decoding="async" data-par="0.16">
+    return ('<img class="%s" src="%s" srcset="%s" sizes="%s" alt="%s" width="%d" height="%d"%s decoding="async">'
+            % (cls, plate["sizes"][1]["src"], srcset, sizes, alt, plate["w"], plate["h"],
+               ' fetchpriority="high"' if priority else ' loading="lazy"'))
+
+
+def stops_html(scene):
+    P = {p["id"]: p for p in scene["plates"]}
+
+    def half_img(name, alt):
+        sizes = scene["halves"][name]
+        return ('<img class="split__img" src="%s" srcset="%s" sizes="(orientation: portrait) 100vw, 50vw" alt="%s" '
+                'width="%d" height="%d" loading="lazy" decoding="async">'
+                % (sizes[1]["src"], ", ".join("%s %dw" % (x["src"], x["w"]) for x in sizes), alt,
+                   sizes[0]["w"], sizes[0]["h"]))
+    S, W, V, K = C.SERVICES, C.WORK, C.COVERAGE, C.CREW
+
+    home = """<section class="stop stop--home" id="home" data-stop="0" aria-labelledby="h-home">
+<div class="stop__media">{img}</div>
+<div class="stop__copy home">
+<h1 id="h-home" class="home__name" aria-label="{name}"><span class="home__row"><img class="home__mark" src="assets/logo/emblem-216.webp" alt="" width="216" height="238"><span class="home__swarm">SWARM</span></span><span class="home__ps">PROTECTIVE SERVICES</span></h1>
+<p class="home__line">{line}</p>
+<div class="acts home__acts" id="hero-cta">{q}{c}</div>
 </div>
-<div class="hero__in">
-<img class="hero__logo" src="assets/logo/swarm-horizontal-gold.svg"
- alt="{name}" width="440" height="114" fetchpriority="high">
-<h1>{h}</h1>
-<p class="lede">{sub}</p>
-<div class="acts">{q}{c}</div>
-<p class="micro"><span class="dot" aria-hidden="true"></span>{note}</p>
+</section>""".format(img=img_tag(P["crew"], "stop__img", "The Swarm crew: six officers in black suits.", priority=True),
+                     name=BIZ["name"], line=C.HOME["line"], q=btn_quote(), c=btn_call())
+
+    items = "".join('<li><b>%s</b><span>%s</span></li>' % it for it in S["items"])
+    creds = "".join("<li>%s</li>" % c for c in S["creds"])
+    services = """<section class="stop stop--services" id="services" data-stop="1" aria-labelledby="h-services">
+<div class="stop__media">{img}</div>
+<div class="stop__copy svc">
+<h2 id="h-services" class="kicker">{k}</h2>
+<ul class="svc__list">{items}</ul>
+<ul class="creds" aria-label="Licences and insurance">{creds}</ul>
 </div>
-<ul class="proof" aria-label="Credentials">{proof}</ul>
+</section>""".format(img=img_tag(P["event"], "stop__img", "A security officer at the barrier in front of a concert crowd."),
+                     k=S["kicker"], items=items, creds=creds)
+
+    work = """<section class="stop stop--work" id="work" data-stop="2" aria-labelledby="h-work">
+<div class="stop__media split">
+<figure class="split__half">{a}<figcaption><b>{lh}</b><span>{ll}</span></figcaption></figure>
+<figure class="split__half">{b}<figcaption><b>{rh}</b><span>{rl}</span></figcaption></figure>
+</div>
+<div class="stop__copy work"><h2 id="h-work" class="kicker">{k}</h2></div>
 </section>""".format(
-        bg=plate["sizes"][1]["src"], bgset=srcset,
-        bw=plate["sizes"][0]["w"], bh=plate["sizes"][0]["h"],
-        cut=layer["sizes"][1]["src"], cutset=cut,
-        cw=layer["sizes"][0]["w"], ch=layer["sizes"][0]["h"],
-        name=BIZ["name"], h=C.HERO["h"], sub=C.HERO["sub"],
-        q=quote_btn(), c=call_btn(label="Call dispatch"),
-        note=C.HERO["note"], proof=proof)
+        a=half_img("door", "A doorman in a black suit at a venue entrance at night."),
+        b=half_img("detail", "Three Swarm officers standing by a client&rsquo;s car in a parking garage."),
+        k=W["kicker"], lh=W["left"][0], ll=W["left"][1], rh=W["right"][0], rl=W["right"][1])
 
-
-def services_html():
-    cards = []
-    for s in C.SERVICES:
-        pts = "".join("<li>%s</li>" % p for p in s["points"])
-        cards.append("""<article class="card reveal" id="{id}">
+    coverage = """<section class="stop stop--coverage" id="coverage" data-stop="3" aria-labelledby="h-coverage">
+<div class="stop__media map">{svg}</div>
+<div class="stop__copy cov">
 <p class="kicker">{k}</p>
-<h3>{h}</h3>
-<p class="card__line">{line}</p>
-<ul class="ticks">{pts}</ul>
-<a class="link" href="#quote" data-quote><span>Get a quote for this</span></a>
-</article>""".format(id=s["id"], k=s["kicker"], h=s["h"], line=s["line"], pts=pts))
-    return """<section class="band" id="services">
-<div class="wrap">
-<p class="kicker reveal">What we provide</p>
-<h2 class="reveal">Three jobs, done the same way every time.</h2>
-<div class="cards">{cards}</div>
-<p class="band__foot reveal">Not sure which one you need? Send the date and the place and we
-will tell you what it takes. {q}</p>
+<h2 id="h-coverage">{h}</h2>
+<p class="cov__line">{line}</p>
 </div>
-</section>""".format(cards="".join(cards), q=quote_btn("link", "Ask us"))
+</section>""".format(svg=map_svg(), k=V["kicker"], h=V["h"], line=V["line"])
 
-
-def stance_html():
-    pts = "".join('<li class="reveal"><h4>%s</h4><p>%s</p></li>' % (h, p)
-                  for h, p in C.STANCE["points"])
-    return """<section class="band band--alt" id="how">
-<div class="wrap">
-<p class="kicker reveal">{k}</p>
-<h2 class="reveal">{h}</h2>
-<p class="lede reveal">{line}</p>
-<ul class="grid3">{pts}</ul>
+    def tile(title, sub, img):
+        empty = title.startswith("PLACEHOLDER")
+        pic = ('<img src="%s" alt="%s" loading="lazy" decoding="async">' % (img, title)) if img else \
+              '<span class="tile__ph" aria-hidden="true"></span>'
+        return ('<li class="tile%s"><div class="tile__pic">%s</div><p class="tile__t">%s</p><p class="tile__s">%s</p></li>'
+                % (" is-empty" if empty else "", pic, "Photo coming" if empty else title, sub))
+    tiles = "".join(tile(*t) for t in K["people"] + K["events"])
+    crew = """<section class="stop stop--crew" id="crew" data-stop="4" aria-labelledby="h-crew">
+<div class="stop__copy crew">
+<div class="crew__head"><p class="kicker">{k}</p><h2 id="h-crew">{h}</h2><p class="crew__line">{line}</p></div>
+<ul class="tiles">{tiles}</ul>
 </div>
-</section>""".format(k=C.STANCE["kicker"], h=C.STANCE["h"], line=C.STANCE["line"], pts=pts)
+</section>""".format(k=K["kicker"], h=K["h"], line=K["line"], tiles=tiles)
+    return home + services + work + coverage + crew
 
 
-def steps_html():
-    items = "".join('<li class="reveal"><span class="step__n">%02d</span><h4>%s</h4><p>%s</p></li>'
-                    % (i + 1, h, p) for i, (h, p) in enumerate(C.STEPS))
-    return """<section class="band" id="process">
-<div class="wrap">
-<p class="kicker reveal">How booking works</p>
-<h2 class="reveal">Three steps, and two of them are ours.</h2>
-<ol class="steps">{items}</ol>
-<div class="acts reveal">{q}{c}</div>
-</div>
-</section>""".format(items=items, q=quote_btn(), c=call_btn())
-
-
-def film_html(scene):
-    if not getattr(C, "SHOW_FILM", True):
-        return ""
-    beats = []
-    for b in C.BEATS:
-        plate = next(p for p in scene["plates"] if p["id"] == b["plate"])
-        beats.append("""<div class="beat" id="{id}" data-plate="{p}" data-time="{t}" data-label="{l}"
- style="--plate:url({bg})">
-<div class="beat__in">
-<p class="kicker">{t} &middot; {l}</p>
-<h3>{h}</h3>
-<p class="beat__line">{line}</p>
-</div>
-</div>""".format(id=b["id"], p=b["plate"], t=b["time"], l=b["label"], h=words(b["h"]), line=b["line"],
-                 bg="../" + plate.get("flat", plate["sizes"][1]["src"]).split("assets/", 1)[1]))
-    rail = "".join('<button class="tick" type="button" aria-label="%s %s"></button>'
-                   % (b["time"], b["label"]) for b in C.BEATS)
-    spacers = "".join('<div class="film__step"></div>' for _ in C.BEATS)
-    return """<section class="film" id="night" aria-label="One night">
-<div class="wrap film__head">
-<p class="kicker reveal">{k}</p>
-<h2 class="reveal">{h}</h2>
-<p class="lede reveal">{line}</p>
-</div>
-<div class="film__stage">
-<canvas id="stage" data-stage aria-hidden="true"></canvas>
-<div class="film__grade" aria-hidden="true"></div>
-<div class="beats">{beats}</div>
-<div class="hud" id="hud">
-<span class="hud__dot" aria-hidden="true"></span>
-<b data-time>22:15</b><span data-label>The door</span>
-<span class="hud__sp"></span>
-<nav class="rail" aria-label="Moments">{rail}</nav>
-</div>
-</div>
-<div class="film__scroll" aria-hidden="true">{spacers}</div>
-</section>""".format(k=C.FILM_INTRO["kicker"], h=C.FILM_INTRO["h"], line=C.FILM_INTRO["line"],
-                     beats="".join(beats), rail=rail, spacers=spacers)
-
-
-def coverage_html():
-    items = "".join("<li>%s</li>" % a for a in AREAS)
-    return """<section class="band band--alt" id="coverage">
-<div class="wrap">
-<p class="kicker reveal">Where we work</p>
-<h2 class="reveal">Toronto and 17 more.</h2>
-<ul class="areas reveal">{items}</ul>
-<p class="band__foot reveal">{note}</p>
-</div>
-</section>""".format(items=items, note=C.COVERAGE_NOTE)
-
-
-def people_html():
-    preview = common.MODE["preview"]
-    live_t = [t for t in C.TESTIMONIALS if not t[0].startswith("PLACEHOLDER")]
-    live_p = [p for p in C.TEAM if not p[0].startswith("PLACEHOLDER")]
-    show_t = live_t or (C.TESTIMONIALS if preview else [])
-    show_p = live_p or (C.TEAM if preview else [])
-    out = ['<section class="band" id="people"><div class="wrap">']
-    out.append('<p class="kicker reveal">%s</p><h2 class="reveal">%s</h2>'
-               '<p class="lede reveal">%s</p>'
-               % (C.TESTIMONIAL_INTRO["kicker"], C.TESTIMONIAL_INTRO["h"],
-                  C.TESTIMONIAL_INTRO["line"]))
-    if show_t:
-        cards = "".join(
-            '<figure class="quote reveal%s"><blockquote>%s</blockquote>'
-            '<figcaption><b>%s</b><span>%s</span></figcaption></figure>'
-            % (" is-placeholder" if q.startswith("PLACEHOLDER") else "", q, n, r)
-            for q, n, r in show_t)
-        out.append('<div class="quotes">%s</div>' % cards)
-    out.append('<div class="crew"><p class="kicker reveal">%s</p><h3 class="reveal">%s</h3>'
-               '<p class="lede reveal">%s</p>'
-               % (C.TEAM_INTRO["kicker"], C.TEAM_INTRO["h"], C.TEAM_INTRO["line"]))
-    if show_p:
-        cards = "".join(
-            '<li class="reveal%s"><div class="crew__ph" aria-hidden="true"></div>'
-            '<h4>%s</h4><p class="crew__role">%s</p><p>%s</p></li>'
-            % (" is-placeholder" if n.startswith("PLACEHOLDER") else "", n, role, line)
-            for n, role, line, _img in show_p)
-        out.append('<ul class="crewlist">%s</ul>' % cards)
-    out.append("</div></div></section>")
-    return "".join(out)
-
-
-def faq_html():
-    return "".join('<details class="reveal"><summary>%s</summary><div class="a">%s</div></details>'
-                   % (q, a) for q, a in FAQS)
-
-
-def close_html():
-    return """<section class="band band--close" id="book">
-<div class="wrap">
-<p class="kicker reveal">{k}</p>
-<h2 class="reveal">{h}</h2>
-<p class="lede reveal">{line}</p>
-<div class="acts reveal">{q}{c}</div>
-<div class="social reveal">
+def contact_html():
+    T = C.CONTACT
+    return """<section class="contact" id="contact" aria-labelledby="h-contact">
+<div class="contact__in">
+<div class="contact__lead">
+<h2 id="h-contact">{h}</h2>
+<p class="contact__line">{line}</p>
+<a class="contact__tel" href="tel:{tel}">{icon}<span>{phone}</span></a>
+<p class="contact__note"><span class="dot" aria-hidden="true"></span>{note}</p>
+<div class="social">
 <a href="{ig}" rel="me noopener" target="_blank" aria-label="Swarm on Instagram">{i_ig}</a>
 <a href="{tt}" rel="me noopener" target="_blank" aria-label="Swarm on TikTok">{i_tt}</a>
-<a href="mailto:{email}" aria-label="Email dispatch">{i_mail}</a>
+<a href="mailto:{email}" aria-label="Email {email}">{i_mail}</a>
 </div>
 </div>
-</section>""".format(k=C.CLOSE["kicker"], h=C.CLOSE["h"], line=C.CLOSE["line"],
-                     q=quote_btn(), c=call_btn(), ig=BIZ["ig"], tt=BIZ["tt"],
-                     email=BIZ["email"], i_ig=ICONS["ig"], i_tt=ICONS["tt"], i_mail=MAIL)
-
-
-def answers_html():
-    svc = "".join('<li><a href="#%s">%s</a></li>' % (s["id"], s["kicker"]) for s in C.SERVICES)
-    comp = "".join('<li><a href="%s">%s</a></li>' % (u, t) for u, t in [
-        ("#coverage", "Where we work"),
-        ("journal/index.html", "Journal"), ("privacy.html", "Privacy")])
-    return """<section class="band band--alt" id="answers">
-<div class="wrap">
-<p class="kicker reveal">Answers</p>
-<h2 class="reveal">What people ask before they book.</h2>
-<div class="faq">{faq}</div>
-<div class="cols">
-<div><h4>What we do</h4><ul>{svc}</ul></div>
-<div><h4>Company</h4><ul>{comp}</ul></div>
-<div><h4>Dispatch</h4><ul>
-<li><a href="tel:{tel}">{phone}</a></li>
-<li><a href="mailto:{email}">{email}</a></li>
-<li>Answered 24 hours, every day</li>
-<li>Ontario agency licence {lic}</li>
-</ul></div>
-</div>
-<div class="foot__bar">
-<span>&copy; <span id="yr">2026</span> {name}</span>
-<span>PSISA-licensed &middot; $5M commercial general liability &middot; WSIB covered</span>
-</div>
-</div>
-</section>""".format(faq=faq_html(), svc=svc, comp=comp, tel=BIZ["phone_tel"],
-                     phone=BIZ["phone_ui"], email=BIZ["email"], lic=BIZ["licence"],
-                     name=BIZ["name"])
-
-
-def dialog_html():
-    return """<dialog id="quote" aria-labelledby="q-title">
-<form class="q" data-form novalidate>
-<h2 id="q-title">Tell us the night.</h2>
-<p>Date, place and headcount is enough to start. You get a written number and a named lead,
-usually the same day.</p>
-<div class="q__row">
+<form class="form" data-form novalidate>
 <label>Name<input name="name" autocomplete="name" required></label>
 <label>Phone<input name="phone" type="tel" autocomplete="tel" required></label>
-</div>
-<div class="q__row">
-<label>Email<input name="email" type="email" autocomplete="email" required></label>
 <label>What needs covering
-<select name="service" id="q-service">
-<option>Venue / bar</option><option>Event</option><option>Close protection</option><option>Something else</option>
-</select></label>
-</div>
-<div class="q__row">
+<select name="service" id="q-service"><option>Event</option><option>Venue / bar</option><option>Close protection</option><option>Something else</option></select></label>
 <label>Date<input name="date" type="date"></label>
-<label>Place<input name="place" placeholder="Venue or area"></label>
-</div>
-<label>Anything we should know<textarea name="note" rows="3"></textarea></label>
+<label class="form__wide">Anything we should know <em>(optional)</em><textarea name="note" rows="2"></textarea></label>
 <label class="vh">Leave this empty<input name="company" tabindex="-1" autocomplete="off"></label>
-<div class="q__acts">
-<button class="btn" type="submit"><span>Send it</span></button>
-<a class="btn btn--ghost" href="tel:{tel}"><span>Call {phone}</span></a>
-<button class="q__close" type="button" data-close>Close</button>
+<div class="form__acts" id="form-cta">
+<button class="btn" type="submit"><span>{send}</span></button>
+<a class="btn btn--ghost" href="tel:{tel}">{icon}<span>Call</span></a>
 </div>
-<p class="q__sent" hidden>Sent. If your mail app did not open, call {phone} &mdash; answered 24 hours.</p>
+<p class="form__sent" role="status" hidden>Thanks — sent. If your mail app did not open, call {phone}.</p>
 </form>
-</dialog>""".format(tel=BIZ["phone_tel"], phone=BIZ["phone_ui"])
+</div>
+<footer class="foot">
+<span>&copy; <span id="yr">2026</span> {name}</span>
+<span>Ontario agency licence {lic} &middot; PSISA-licensed officers</span>
+<nav aria-label="More"><a href="answers.html">Answers</a><a href="journal/index.html">Journal</a><a href="privacy.html">Privacy</a></nav>
+</footer>
+</section>""".format(h=T["h"], line=T["line"], note=T["note"], send=T["send"], tel=BIZ["phone_tel"],
+                     phone=BIZ["phone_ui"], icon=PHONE_ICON, email=BIZ["email"], ig=BIZ["ig"],
+                     tt=BIZ["tt"], i_ig=ICONS["ig"], i_tt=ICONS["tt"], i_mail=MAIL_ICON,
+                     name=BIZ["name"], lic=BIZ["licence"])
 
+
+NAV = [("#services", "Services"), ("#coverage", "Coverage"), ("#crew", "Crew"), ("#contact", "Contact")]
 
 HTML = """<!DOCTYPE html>
 <html lang="en-CA">
@@ -324,49 +252,34 @@ HTML = """<!DOCTYPE html>
 <link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@100..125,600..800&family=Archivo:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@100..125,500..800&family=Archivo:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/cine/site.css?v={cssv}">
 <link rel="preload" as="image" href="{hero}" imagesrcset="{heroset}" imagesizes="100vw" fetchpriority="high">
-{schema}
+<script type="application/ld+json">{org}</script>
+{svc}
 </head>
 <body>
-<a class="skip" href="#services"><span>Skip to services</span></a>
+<a class="skip" href="#contact"><span>Skip to the quote form</span></a>
 <header class="mast" id="mast">
-<a class="mast__logo" href="#top" aria-label="{name} — top">
+<a class="mast__logo" href="#home" aria-label="{name} — top of page">
 <img src="assets/logo/swarm-horizontal-gold.svg" alt="{name}" width="200" height="52"></a>
-<nav class="mast__nav" aria-label="Primary">
-<a href="#services">Services</a><a href="#how">How we work</a>{film_nav}
-<a href="#coverage">Coverage</a><a href="#answers">Answers</a>
-</nav>
-<div class="mast__cta">
-<a class="btn btn--ghost btn--sm mast__tel" href="tel:{tel}"><span>{phone}</span></a>
-<a class="btn btn--sm" href="#quote" data-quote><span>Request a quote</span></a>
-<button class="burger" type="button" aria-expanded="false" aria-controls="drawer"
- aria-label="Open menu"><span></span><span></span><span></span></button>
+<nav class="mast__nav" aria-label="Primary">{nav}</nav>
+<div class="mast__cta" id="mast-cta">
+<a class="btn btn--ghost btn--sm mast__call" href="tel:{tel}" aria-label="Call {phone}">{icon}<span>{phone}</span></a>
+<a class="btn btn--sm" href="#contact" data-quote><span>Get a quote</span></a>
 </div>
+<button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Menu"><span></span><span></span></button>
 </header>
-<div class="drawer" id="drawer" hidden>
-<a href="#services">Services</a><a href="#how">How we work</a>{film_nav}
-<a href="#coverage">Coverage</a><a href="#people">The crew</a><a href="#answers">Answers</a>
-<a class="btn" href="#quote" data-quote><span>Request a quote</span></a>
-<a class="btn btn--ghost" href="tel:{tel}"><span>Call {phone}</span></a>
+<div class="drawer" id="drawer" hidden>{drawer}
+<a class="btn" href="#contact" data-quote><span>Get a quote</span></a>
+<a class="btn btn--ghost" href="tel:{tel}">{icon}<span>{phone}</span></a>
 </div>
-<main id="main">
-{hero_s}
-{services}
-{stance}
-{steps}
-{film}
-{coverage}
-{people}
-{answers}
-{close}
+<canvas id="stage" data-stage aria-hidden="true"></canvas>
+<div class="shade" aria-hidden="true"></div>
+<main id="main" class="track">
+{stops}
 </main>
-<div class="bar">
-<a class="bar__call" href="tel:{tel}"><span>Call dispatch</span></a>
-<a class="bar__quote" href="#quote" data-quote><span>Request a quote</span></a>
-</div>
-{dialog}
+{contact}
 <script id="scene-data" type="application/json">{scene}</script>
 <script src="assets/cine/site.js?v={jsv}" defer></script>
 </body>
@@ -377,28 +290,23 @@ HTML = """<!DOCTYPE html>
 def render():
     scene = json.loads(io.open(os.path.join(common.OUTDIR, "assets", "scene", "scene.json"),
                                encoding="utf-8").read())
-    service_schema = "".join(
+    svc = "".join(
         '<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service",'
-        '"name":"%s","serviceType":"%s","url":"%s/#%s","provider":{"@id":"%s/#org"},'
-        '"areaServed":{"@type":"State","name":"Ontario"}}</script>' % (n, n, BIZ["base"], a, BIZ["base"])
-        for n, a in [("Nightclub and bar security", "venues"), ("Event security", "events"),
-                     ("Close protection and executive protection", "protection")])
-    schema = ('<script type="application/ld+json">%s</script>' % common.org_schema()) \
-        + service_schema + faq_schema([(q, plain(a)) for q, a in FAQS])
+        '"name":"%s","serviceType":"%s","url":"%s/#services","provider":{"@id":"%s/#org"},'
+        '"areaServed":{"@type":"State","name":"Ontario"}}</script>' % (n, n, BIZ["base"], BIZ["base"])
+        for n in ("Event security", "Nightclub and bar security", "Close protection"))
     base = common.MODE["preview_base"] if common.MODE["preview"] else BIZ["base"]
-    street = next(p for p in scene["plates"] if p["id"] == "street")
+    crew = next(p for p in scene["plates"] if p["id"] == "crew")
+    nav = "".join('<a href="%s">%s</a>' % n for n in NAV)
     return HTML.format(
-        title="Security Company Toronto — Door Staff, Events, Close Protection",
-        desc="Licensed security company in Toronto and the GTA. Bar and nightclub door staff, "
-             "event security and close protection. De-escalation first, dispatch answered 24 hours.",
+        title="Swarm Protective Services — Security Company, Toronto &amp; GTA",
+        desc="Licensed security in Toronto and the GTA: event security, bar and nightclub door "
+             "staff and close protection. PSISA licensed, $5M insured. Get a quote.",
         canon=canonical("/"), base=base.rstrip("/"), name=BIZ["name"],
         robots="noindex,nofollow" if common.MODE["preview"] else "index,follow,max-image-preview:large",
-        schema=schema, tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
-        hero=street["sizes"][1]["src"],
-        heroset=", ".join("%s %dw" % (s["src"], s["w"]) for s in street["sizes"]),
+        org=common.org_schema(), svc=svc, tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], icon=PHONE_ICON,
+        nav=nav, drawer=nav,
+        hero=crew["sizes"][1]["src"], heroset=", ".join("%s %dw" % (s["src"], s["w"]) for s in crew["sizes"]),
         cssv=asset_version("assets/cine/site.css"), jsv=asset_version("assets/cine/site.js"),
-        film_nav='<a href="#night">One night</a>' if getattr(C, "SHOW_FILM", True) else "",
-        hero_s=hero_html(scene), services=services_html(), stance=stance_html(),
-        steps=steps_html(), film=film_html(scene), coverage=coverage_html(),
-        people=people_html(), answers=answers_html(), close=close_html(),
-        dialog=dialog_html(), scene=json.dumps(scene, separators=(",", ":")))
+        stops=stops_html(scene), contact=contact_html(),
+        scene=json.dumps(scene, separators=(",", ":")))

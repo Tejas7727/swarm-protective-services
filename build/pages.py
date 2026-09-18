@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """The two pages that cannot live on the single page: privacy and 404."""
-from common import BIZ, page
+from common import BIZ, faq_html, faq_schema, page, plain
+from home import FAQS
 
 PRIVACY = page(
     path="/privacy.html", depth=0,
@@ -76,13 +77,34 @@ NOT_FOUND = page(
 <p class="lede">Usually a good sign. Not this time — the page you asked for does not exist.</p>
 <div class="hero__cta">
 <a class="btn" href="index.html"><span>Back to the front</span></a>
-<a class="btn btn--ghost" href="index.html#quote"><span>Request a quote</span></a>
+<a class="btn btn--ghost" href="index.html#contact"><span>Request a quote</span></a>
 </div>
 </div>
 </section>""",
 )
 
+ANSWERS = page(
+    path="/answers.html", depth=0,
+    title="Security Questions Answered — Swarm Protective Services",
+    desc="Straight answers about hiring security in Toronto and the GTA: licensing, armed "
+         "guards, how many officers an event needs, response times and what happens on the night.",
+    og="/assets/og/og-default.jpg",
+    schema=faq_schema([(q, plain(a)) for q, a in FAQS]),
+    body="""<section class="phero">
+<div class="wrap">
+<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Answers</span></div>
+<p class="eyebrow">Answers</p>
+<h1>What people ask before they book.</h1>
+<p class="lede">If yours is not here, call {phone} or <a href="index.html#contact">send the date and the place</a>.</p>
+</div>
+</section>
+<section>
+<div class="wrap">{faq}</div>
+</section>""".format(phone=BIZ["phone_ui"], faq=faq_html(FAQS)),
+)
+
 PAGES = {
     "privacy.html": PRIVACY,
     "404.html": NOT_FOUND,
+    "answers.html": ANSWERS,
 }

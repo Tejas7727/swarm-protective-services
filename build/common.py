@@ -36,11 +36,10 @@ MODE = {"preview": False, "preview_base": ""}
 
 # One page. Every nav item is an anchor on it.
 NAV = [
-    ("#venues",     "Venues",     "Bars, nightclubs, lounges"),
-    ("#events",     "Events",     "Concerts, weddings, corporate"),
-    ("#protection", "Protection", "Executive and personal details"),
-    ("#report",     "Reporting",  "What lands in your inbox by morning"),
-    ("#answers",    "Answers",    "What people ask before booking"),
+    ("#services",   "Services",   "Events, venues, close protection"),
+    ("#coverage",   "Coverage",   "Toronto and 17 GTA cities"),
+    ("#crew",       "Crew",       "The people who turn up"),
+    ("#contact",    "Contact",    "Get a quote"),
 ]
 
 AREAS = [
@@ -66,8 +65,12 @@ def pfx(depth):
 
 
 def home(depth, anchor=""):
-    """Link back to the single page, optionally at an anchor."""
-    return (pfx(depth) + "index.html" + anchor) if depth else (anchor or "index.html")
+    """Link back to the home page, optionally at an anchor.
+
+    Always names index.html: every page built through page() is a different
+    document, so a bare "#services" would point at itself (the audit's anchor
+    check caught privacy.html doing exactly that)."""
+    return pfx(depth) + "index.html" + anchor
 
 
 def _j(s):
@@ -103,7 +106,7 @@ def drawer_html(depth):
     out.append('<a href="%sjournal/index.html">Journal<small>Field notes for venue owners</small></a>'
                % pfx(depth))
     out.append('<a class="btn btn--full" href="%s"><span>Request a quote</span></a>'
-               % home(depth, "#quote"))
+               % home(depth, "#contact"))
     out.append('<a class="btn btn--ghost btn--full" style="margin-top:10px" href="tel:%s">'
                '<span>Call dispatch %s</span></a>' % (BIZ["phone_tel"], BIZ["phone_ui"]))
     return "".join(out)
@@ -139,7 +142,7 @@ def mast_html(depth):
 </header>
 <div class="scrollbar" aria-hidden="true"><i></i></div>""".format(
         p=p, home=home(depth), name=BIZ["name"], nav=nav_html(depth),
-        quote=home(depth, "#quote"), tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
+        quote=home(depth, "#contact"), tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
         i_phone=ICONS["phone"])
 
 
@@ -150,16 +153,16 @@ def drawer_wrap(depth):
 def foot_html(depth):
     p = pfx(depth)
     svc = "".join('<li><a href="%s">%s</a></li>' % (home(depth, h), t) for h, t in [
-        ("#venues", "Venue and door security"),
-        ("#events", "Event security"),
-        ("#protection", "Close protection"),
-        ("#report", "Written reporting"),
+        ("#services", "Event security"),
+        ("#services", "Venue and door security"),
+        ("#services", "Close protection"),
+        ("#coverage", "Where we work"),
     ])
     comp = "".join('<li><a href="%s">%s</a></li>' % (u, t) for u, t in [
-        (home(depth, "#answers"), "Answers"),
-        (home(depth, "#coverage"), "Where we work"),
+        (p + "answers.html", "Answers"),
+        (home(depth, "#crew"), "The crew"),
         (p + "journal/index.html", "Journal"),
-        (home(depth, "#quote"), "Request a quote"),
+        (home(depth, "#contact"), "Request a quote"),
     ])
     return """<footer class="foot">
 <div class="wrap">
@@ -219,10 +222,9 @@ def org_schema():
 "openingHoursSpecification":[{{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"00:00","closes":"23:59"}}],
 "sameAs":["{ig}","{tt}","{li}"],
 "hasOfferCatalog":{{"@type":"OfferCatalog","name":"Protective services","itemListElement":[
-{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Nightclub and bar security","url":"{base}/#venues"}}}},
-{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Event security","url":"{base}/#events"}}}},
-{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Close protection and executive protection","url":"{base}/#protection"}}}},
-{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"High-risk protective detail","url":"{base}/#high-risk"}}}}
+{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Event security","url":"{base}/#services"}}}},
+{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Nightclub and bar security","url":"{base}/#services"}}}},
+{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Close protection and executive protection","url":"{base}/#services"}}}}
 ]}}
 }}""".format(
         base=BIZ["base"], name=BIZ["name"], tel=BIZ["phone_tel"], email=BIZ["email"],
@@ -376,5 +378,5 @@ def cta_final(depth=0, heading="Tell us the night.",
 <a class="btn btn--ghost" href="tel:{tel}"><span>Call dispatch</span></a>
 </div>
 </div>
-</section>""".format(p=pfx(depth), h=heading, l=lede, quote=home(depth, "#quote"),
+</section>""".format(p=pfx(depth), h=heading, l=lede, quote=home(depth, "#contact"),
                      tel=BIZ["phone_tel"])

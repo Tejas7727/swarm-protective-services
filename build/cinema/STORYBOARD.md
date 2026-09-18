@@ -1,37 +1,29 @@
 # Swarm — the home page
 
-A service page first, with one cinematic section in the middle. The order is the
-argument, not the art direction.
+Five screens and a form. Phone-first, a few words per screen, one camera.
 
-| # | Section | id | Job | Proof it does it |
-|---|---------|----|-----|------------------|
-| 1 | **Hero** | `top` | Five-second test: logo and company name, *Everything under control.*, what we do and where, quote + phone, credentials | A stranger can say what this is and what to do next without scrolling |
-| 2 | **What we provide** | `services` | Three services, each with three concrete deliverables and its own quote link | No adjectives — ID checks, capacity, guest lists, advance work, reports |
-| 3 | **How we work** | `how` | The objection nobody says out loud: *will the guards be the problem?* | De-escalation refreshers twice a year, licences carried, hands stay down |
-| 4 | **How booking works** | `process` | Remove effort: three steps, two of them ours | Tell us the night → walk-through and written plan → shift and report |
-| 5 | **One night** | `night` | The signature moment: one camera through four scenes of a Saturday | 22:15 the door · 00:40 the floor · 02:10 the exit · 06:00 the report |
-| 6 | **Where we work** | `coverage` | Local relevance for search and for trust | 18 GTA municipalities, plus "ask anyway" |
-| 7 | **Clients and crew** | `people` | Proof and faces — placeholders until real ones exist | Honest: "ask us for references" rather than invented quotes |
-| 8 | **Answers** | `answers` | Objection handling, including price and the armed-guard question | Eight straight answers, FAQ schema |
-| 9 | **Tell us the night** | `book` | The ask, restated with the least friction | Quote, phone, Instagram, TikTok, email |
+| # | Screen | id | On screen | How the camera leaves it |
+|---|--------|----|-----------|--------------------------|
+| 1 | **Home** | `home` | The crew (client photo), SWARM lockup with the emblem, PROTECTIVE SERVICES, "Licensed security service", Get a quote + Call | Pushes *through the centre officer's suit* into the next scene |
+| 2 | **What we do** | `services` | Event security · Venue security · Close protection, one line each; PSISA licensed · $5M insured · WSIB covered | Pushes through the officer's back into the split |
+| 3 | **On the job** | `work` | At the door \| At your side — side by side on landscape, stacked on portrait | Pulls **out**: the side photo fades, the doorman shrinks onto Toronto |
+| 4 | **Across the GTA** | `coverage` | Map, 18 cities pinned with the bee, Toronto marked with the emblem | Settles back to a faint base under the crew (no screen is ever empty) |
+| 5 | **The crew** | `crew` | Crew and event tiles — placeholders until real photos exist | The form slides up over it |
+| — | **Get a quote** | `contact` | Heading, one line, the phone, socials, the form | — |
 
-Always on screen: the header (logo, phone, **Request a quote**) and, on phones, a
-bottom bar with **Call dispatch** and **Request a quote**.
+**The ask travels.** Get a quote and Call start on the first screen, move into the header on the
+way to screen 2, and drop from the header into the form's own buttons when the form arrives (on
+phones, where the form buttons are below the fold, they hand over and fade instead).
 
-## The film, in one section
+**Motif.** Every push goes through one of our people: the camera passes through the crew into the
+work. The only pull-back is into the map, because that is the one screen about reach.
 
-Four beats of one night. Each scene contains a lit opening and the next scene is
-inside it, so the camera pushes through rather than cutting. It lives inside a
-sticky stage with four viewport-tall steps of scroll; `scroll-snap-type: proximity`
-means a flick lands on a beat but never traps the rest of the page.
+**Mechanics.** CSS scroll-snap (one flick, one screen) · a critically damped spring drives the
+camera · WebGL2 draws the page's own `<img>` elements, so nothing downloads twice · the split
+plate is the screen itself, halved, with each photo cover-fitted into its half.
 
-Its images are deliberately quiet — desaturated, darkened, contrast eased (see
-`assets.py: quiet()`), because the copy is what sells, not the photograph.
+**Fallbacks.** Without WebGL, with reduced motion, or with no JavaScript, the page is five
+full-bleed screens and the form in normal flow. Same words, same actions.
 
-If WebGL or motion is unavailable, the four beats become four full-bleed stills with
-the same words, and the rest of the page is unchanged.
-
-## Editing
-
-Every string is in [`content.py`](content.py). Anything marked `PLACEHOLDER`
-(testimonials, crew) shows only in preview builds — fill it in and it publishes.
+**Editing.** Words: `content.py`. Images and portals: `assets.py`. Placeholders (crew, events)
+render as clean empty tiles until filled in.

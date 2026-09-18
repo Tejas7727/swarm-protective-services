@@ -94,22 +94,19 @@ def main():
     idx = os.path.join(SITE, "index.html")
     if os.path.exists(idx):
         page_html = open(idx, encoding="utf-8").read()
-        hooks = ['class="bar"', "data-quote", "data-form", 'id="quote"', 'class="reveal"',
-                 'class="proof"', 'class="card ']
-        if 'class="film"' in page_html:
-            hooks += ['id="stage"', 'id="scene-data"', 'class="beat"', 'class="tick"']
+        hooks = ['id="stage"', 'id="scene-data"', 'id="hero-cta"', 'id="mast-cta"', 'id="form-cta"',
+                 'data-form', 'id="contact"', 'class="gm"', "data-quote"]
         for hook in hooks:
             if hook not in page_html:
                 errs.append("index.html: hook %s missing" % hook)
-        # the offer has to be reachable from anywhere on the page
-        if page_html.count("data-quote") < 4:
+        # the offer has to be reachable from every screen
+        if page_html.count("data-quote") < 3:
             errs.append("index.html: too few quote entry points")
         if 'href="tel:' not in page_html:
             errs.append("index.html: no phone link")
-        beats = len(re.findall(r'<div class="beat"', page_html))
-        steps = len(re.findall(r'<div class="film__step">', page_html))
-        if beats != steps:
-            errs.append("index.html: %d beats but %d scroll steps" % (beats, steps))
+        stops = len(re.findall(r'<section class="stop ', page_html))
+        if stops != 5:
+            errs.append("index.html: %d screens before the form, expected 5" % stops)
         m = re.search(r'<script id="scene-data" type="application/json">(.*?)</script>',
                       page_html, re.S)
         if not m:
@@ -121,11 +118,10 @@ def main():
                 errs.append("index.html: unreadable camera manifest — %s" % exc)
                 scene = {"plates": []}
             for pl in scene.get("plates", []):
-                for size in pl["sizes"] + [s for L in pl.get("layers", []) for s in L["sizes"]]:
+                for size in pl.get("sizes", []) + [s for L in pl.get("layers", []) for s in L["sizes"]]:
                     if "/" + size["src"] not in assets:
                         errs.append("scene: missing plate %s" % size["src"])
-                port = pl.get("portal")
-                if port:
+                for port in [pl[k] for k in ("portal", "portalM") if k in pl]:
                     r, a = port["rect"], port["aper"]
                     if not (0 <= r[0] < 1 and 0 <= r[1] < 1 and 0.05 < r[2] < 0.9):
                         errs.append("scene: %s portal rect out of range" % pl["id"])
@@ -134,6 +130,27 @@ def main():
                     if abs(ac[0] - rc[0]) > 0.02 or abs(ac[1] - rc[1]) > 0.02:
                         errs.append("scene: %s aperture is not centred on the next scene "
                                     "(%.3f,%.3f vs %.3f,%.3f)" % (pl["id"], ac[0], ac[1], rc[0], rc[1]))
+
+            for half in scene.get("halves", {}).values():
+                for size in half:
+                    if "/" + size["src"] not in assets:
+                        errs.append("scene: missing half %s" % size["src"])
+
+    # every fragment that points at a page must match an id on that page
+    ids = {}
+    for p in pages:
+        rel = norm(p)[len(norm(SITE)):]
+        ids[rel] = set(re.findall(r'\sid="([^"]+)"', open(p, encoding="utf-8").read()))
+    for p in pages:
+        rel = norm(p)[len(norm(SITE)):]
+        here = os.path.dirname(rel)
+        for href in re.findall(r'href="([^"#]*)#([^"]+)"', open(p, encoding="utf-8").read()):
+            target, frag = href
+            if target.startswith(("http", "mailto:", "tel:")):
+                continue
+            tpath = rel if not target else "/" + norm(os.path.normpath(os.path.join(here.lstrip("/"), target)))
+            if tpath in ids and frag not in ids[tpath]:
+                errs.append("%s: link to %s#%s — no such id" % (rel, tpath, frag))
 
     for k, v in titles.items():
         if len(v) > 1:

@@ -442,7 +442,7 @@ Build a documented record of incidents with dates, times, screenshots and witnes
 restraining or peace-bond application. Change what is predictable about your routine. And put coverage in place
 while all of that is happening — we will place a detail within 24 hours and run the assessment in parallel rather
 than leaving someone uncovered while paperwork is written.</p>
-<p>What we will not do is sell you a firearm-shaped fantasy. <a href="../index.html#high-risk">Our high-risk
+<p>What we will not do is sell you a firearm-shaped fantasy. <a href="../answers.html">Our high-risk
 section</a> sets out exactly what we can and cannot lawfully provide.</p>
 """,
 )
@@ -566,7 +566,7 @@ def post_page(p):
 <div class="rail rail--wide">
 <div class="rail__label">Field notes
 <span>Written for venue owners, event managers and anyone who has to make a staffing decision this week.</span>
-<span style="margin-top:18px"><a class="tlink" href="../index.html#quote"><span>Get a quote</span></a></span></div>
+<span style="margin-top:18px"><a class="tlink" href="../index.html#contact"><span>Get a quote</span></a></span></div>
 <article class="article__body">
 <p class="article__lead">{lead}</p>
 {toc}
