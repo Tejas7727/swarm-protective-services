@@ -32,6 +32,43 @@ def write(rel, text):
     return rel, len(text)
 
 
+def llms_txt(base):
+    """The site in plain text, for assistants that answer instead of linking.
+
+    Same facts as the page, in the order someone would ask for them. Short on
+    purpose: an assistant quotes a sentence, so every sentence has to stand up
+    on its own.
+    """
+    import content as C                                           # noqa: E402
+    B = common.BIZ
+    out = ["# %s" % B["name"], "",
+           "> Licensed security company in Toronto and the Greater Toronto Area: event security, "
+           "bar and nightclub door staff, close protection, and monitoring for homes and "
+           "businesses. PSISA-licensed officers, $5M insured, WSIB covered. Based in Toronto; "
+           "we travel with clients anywhere in Canada.", "",
+           "Motto: %s." % C.HOME["motto"], "",
+           "## Services", ""]
+    out += ["- **%s** — %s." % it for it in C.SERVICES["items"]]
+    out += ["", "## Coverage", "",
+            "- %s %s" % (C.COVERAGE["line"], C.COVERAGE["national"]),
+            "- Cities: %s." % ", ".join(common.AREAS), "",
+            "## Licences and insurance", ""]
+    out += ["- %s" % c for c in C.SERVICES["creds"]]
+    out += ["- Officers are not armed: Ontario does not permit private security to carry firearms.",
+            "", "## Answers", ""]
+    out += ["- **%s** %s" % qa for qa in C.FAQ["items"]]
+    out += ["", "## Contact", "",
+            "- Phone: %s (answered 24/7)" % B["phone_ui"],
+            "- Email: %s" % B["email"],
+            "- Quote form: %s/#contact" % base,
+            "- Prices are quoted per job; nothing is published.", "",
+            "## More", "",
+            "- [Answers](%s/answers.html): the longer answers to these questions." % base,
+            "- [Journal](%s/journal/): field notes for venue owners and event organisers." % base,
+            "- [Privacy](%s/privacy.html): what we keep and for how long." % base, ""]
+    return "\n".join(out)
+
+
 def main():
     scene_assets.build()             # plates + camera manifest, before the page reads it
     files = {"index.html": cinema.render()}
@@ -55,6 +92,8 @@ def main():
           % "\n".join(urls))
 
     write("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % base)
+
+    write("llms.txt", llms_txt(base))
 
     write("site.webmanifest",
           '{"name":"%s","short_name":"Swarm","start_url":"./","display":"standalone",'

@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-"""Render the home page: five screens and a form.
+"""Render the home page: six screens and a form.
 
-    home -> what we do -> on the job -> across the GTA -> the crew -> get a quote
+    home -> what we do -> on the job -> across the GTA -> the crew -> questions
+    -> get a quote
 
 The markup is a complete static page first: each screen is a section with its
 own image and copy, readable with no JavaScript, no WebGL and no motion. The
 camera in site.js is an enhancement laid over those same sections — it never
 owns the content, so nothing on the page depends on it.
 
-Copy lives in content.py; plate geometry in assets.py.
+Copy lives in content.py; plate geometry in assets.py; the maps are drawn from
+geo.json (see geo_extract.py).
 """
 import io
 import json
@@ -29,7 +31,7 @@ PHONE_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.5 9 7
 MAIL_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3V5Zm2.4 2 6.6 5 '
              '6.6-5H5.4Zm13.6 2.3-7 5.3-7-5.3V17h14V9.3Z"/></svg>')
 
-# approximate municipal centres (lat, lon), Toronto first
+# municipal centres (lat, lon), Toronto first
 CITIES = [
     ("Toronto", 43.6532, -79.3832), ("Etobicoke", 43.6205, -79.5132), ("North York", 43.7615, -79.4111),
     ("Scarborough", 43.7764, -79.2318), ("Mississauga", 43.5890, -79.6441), ("Brampton", 43.7315, -79.7624),
@@ -38,63 +40,135 @@ CITIES = [
     ("Pickering", 43.8384, -79.0868), ("Ajax", 43.8509, -79.0204), ("Whitby", 43.8975, -78.9429),
     ("Oshawa", 43.8971, -78.8658), ("Milton", 43.5183, -79.8774), ("Newmarket", 44.0592, -79.4613),
 ]
-SHORE = [(43.24, -79.98), (43.27, -79.84), (43.31, -79.79), (43.44, -79.67), (43.55, -79.58),
-         (43.60, -79.50), (43.635, -79.38), (43.70, -79.23), (43.81, -79.08), (43.83, -79.02),
-         (43.85, -78.94), (43.86, -78.85), (43.87, -78.72)]
-MW, MH = 1200, 640
-LON0, LON1, LAT0, LAT1 = -80.02, -78.68, 44.12, 43.18
-# labels that would collide with a neighbour go to the other side
-LEFT = {"Etobicoke", "Mississauga", "Oakville", "Burlington", "Hamilton", "Milton", "Brampton", "Vaughan", "Pickering"}
-# Phones see a tighter window of the map (data-narrow), so labels are placed
-# for it separately: (dx, dy, anchor). Cities outside that window keep their
-# pin and lose only the label. All labels are decorative — every city is named
-# in the map's <title>.
-PHONE = {
-    "Mississauga": (0, 30, "middle"), "Brampton": (14, 5, "start"), "Vaughan": (14, 5, "start"),
-    "Richmond Hill": (0, -18, "middle"), "Markham": (14, 5, "start"), "North York": (14, 5, "start"),
-    "Scarborough": (14, 5, "start"), "Etobicoke": (-14, 5, "end"), "Newmarket": (14, 5, "start"),
-    "Pickering": (-14, 5, "end"),
-}
+
+GEO = json.loads(io.open(os.path.join(HERE, "geo.json"), encoding="utf-8").read())
+GTA, CAN = GEO["gta"], GEO["canada"]
+PJ = GTA["proj"]
+
+PIN_W, PIN_H = 26.0, 31.0          # svg units; CSS scales them up on phones
+HQ_W, HQ_H = 54.0, 59.0
+FS_D, FS_M = 17.0, 30.0            # label size, desktop window / phone window
 
 
 def xy(lat, lon):
-    return ((lon - LON0) / (LON1 - LON0) * MW, (lat - LAT0) / (LAT1 - LAT0) * MH)
+    return ((lon - PJ["lon_w"]) * PJ["kx"], (PJ["lat_n"] - lat) * PJ["k"])
+
+
+def window(aspect, padx, pady):
+    """The part of the drawing a screen of this shape sees: every city, in frame."""
+    pts = [xy(la, lo) for _, la, lo in CITIES]
+    x0, x1 = min(p[0] for p in pts) - padx, max(p[0] for p in pts) + padx
+    y0, y1 = min(p[1] for p in pts) - pady, max(p[1] for p in pts) + pady
+    w, h = x1 - x0, y1 - y0
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    if w / h < aspect:
+        w = h * aspect
+    else:
+        h = w / aspect
+    x0, y0 = cx - w / 2, cy - h / 2
+    x0 = (GTA["w"] - w) / 2 if w > GTA["w"] else max(0, min(GTA["w"] - w, x0))
+    y0 = (GTA["h"] - h) / 2 if h > GTA["h"] else max(0, min(GTA["h"] - h, y0))
+    return [round(x0), round(y0), round(w), round(h)]
+
+
+def labels_for(win, fs, lead=1.0):
+    """Place each city name where it collides with nothing.
+
+    Tried in order: right of the pin, left, above, below. A name that cannot be
+    placed inside the window is dropped — the labels are decorative and every
+    city is named in the map's title.
+    """
+    x0, y0, w, h = win
+    taken = []
+
+    def free(b):
+        if b[0] < x0 + 6 or b[1] < y0 + 4 or b[0] + b[2] > x0 + w - 6 or b[1] + b[3] > y0 + h - 4:
+            return False
+        return not any(b[0] < t[0] + t[2] and t[0] < b[0] + b[2] and
+                       b[1] < t[1] + t[3] and t[1] < b[1] + b[3] for t in taken)
+
+    out = {}
+    hx, hy = xy(CITIES[0][1], CITIES[0][2])
+    for _, la, lo in CITIES:                                   # the pins come first
+        x, y = xy(la, lo)
+        taken.append([x - PIN_W * lead / 2, y - PIN_H * lead / 2, PIN_W * lead, PIN_H * lead])
+    taken.append([hx - fs * 2.6, hy + HQ_H * 0.5, fs * 5.2, fs * 1.4])      # "Toronto"
+    for name, la, lo in CITIES[1:]:
+        x, y = xy(la, lo)
+        tw, th = len(name) * fs * 0.54, fs * 1.15
+        gap = PIN_W * lead * 0.7
+        for dx, dy, anchor in ((gap, fs * 0.36, "start"), (-gap, fs * 0.36, "end"),
+                               (0, -PIN_H * lead * 0.6, "middle"), (0, PIN_H * lead * 0.6 + fs, "middle")):
+            bx = x + dx - (tw if anchor == "end" else tw / 2 if anchor == "middle" else 0)
+            box = [bx, y + dy - th * 0.8, tw, th]
+            if free(box):
+                taken.append(box)
+                out[name] = (dx, dy, anchor)
+                break
+    return out
 
 
 def map_svg():
+    """The Golden Horseshoe, drawn from Natural Earth: real water, real roads."""
+    full, narrow = window(1.78, 110, 110), window(0.46, 70, 150)
     hx, hy = xy(CITIES[0][1], CITIES[0][2])
-    shore = " ".join("%s%.1f %.1f" % ("M" if i == 0 else "L", *xy(la, lo)) for i, (la, lo) in enumerate(SHORE))
-    lake = shore + " L%.1f %.1f L0 %.1f Z" % (MW, MH, MH)
-    grid = "".join('<line class="gm__grid" x1="%d" y1="0" x2="%d" y2="%d"/>' % (x, x, MH)
-                   for x in range(100, MW, 100))
-    grid += "".join('<line class="gm__grid" x1="0" y1="%d" x2="%d" y2="%d"/>' % (y, MW, y)
-                    for y in range(80, MH, 80))
-    routes, pins, labels = [], [], []
+    # land is the sheet with the lakes punched out of it, so the water is the
+    # page's own glow showing through and the shoreline needs no guesswork
+    land = ('<path class="gm__land" fill-rule="evenodd" d="M0 0H%d V%d H0Z %s"/>'
+            % (GTA["w"], GTA["h"], " ".join(GTA["lake"])))
+    land += "".join('<path class="gm__urban" d="%s"/>' % d for d in GTA["urban"])
+    water = "".join('<path class="gm__shore" d="%s"/>' % d for d in GTA["lake"])
+    roads = "".join('<path class="gm__hwy" d="%s"/>' % d for h in GTA["hwy"] for d in h["d"])
+    routes, pins = [], []
     for name, la, lo in CITIES[1:]:
         x, y = xy(la, lo)
-        mx, my = (hx + x) / 2, (hy + y) / 2 - abs(x - hx) * 0.1
-        routes.append('<path class="gm__route" pathLength="1" d="M%.1f %.1f Q%.1f %.1f %.1f %.1f"/>'
+        mx, my = (hx + x) / 2, (hy + y) / 2 - abs(x - hx) * 0.12
+        routes.append('<path class="gm__route" pathLength="1" d="M%.0f %.0f Q%.0f %.0f %.0f %.0f"/>'
                       % (hx, hy, mx, my, x, y))
-        pins.append('<image class="gm__pin" href="assets/logo/bee-160.webp" x="%.1f" y="%.1f" '
-                    'width="17" height="20"/>' % (x - 8.5, y - 10))
-        left = name in LEFT
-        labels.append('<text class="gm__lbl gm__lbl--d" x="%.1f" y="%.1f" text-anchor="%s">%s</text>'
-                      % (x + (-14 if left else 14), y + 5, "end" if left else "start", name))
-        if name in PHONE:
-            dx, dy, anchor = PHONE[name]
-            labels.append('<text class="gm__lbl gm__lbl--m" x="%.1f" y="%.1f" text-anchor="%s">%s</text>'
-                          % (x + dx, y + dy, anchor, name))
-    return ('<svg class="gm" viewBox="0 0 %d %d" data-full="0 0 %d %d" data-narrow="215 20 700 600" '
-            'role="img" aria-labelledby="gm-title"><title id="gm-title">Map of the 18 Greater Toronto '
-            'Area cities Swarm covers: %s.</title>'
-            '<g aria-hidden="true">%s<path class="gm__lake" d="%s"/><path class="gm__shore" d="%s"/>'
-            '%s%s'
-            '<circle class="gm__ring" cx="%.1f" cy="%.1f" r="30"/>'
-            '<image class="gm__hq" id="gm-hq" href="assets/logo/emblem-108.webp" x="%.1f" y="%.1f" '
-            'width="40" height="44"/>%s'
-            '<text class="gm__lbl gm__lbl--hq" x="%.1f" y="%.1f" text-anchor="middle">Toronto</text></g></svg>'
-            % (MW, MH, MW, MH, ", ".join(c[0] for c in CITIES), grid, lake, shore,
-               "".join(routes), "".join(pins), hx, hy, hx - 20, hy - 22, "".join(labels), hx, hy + 44))
+        pins.append('<image class="gm__pin" href="assets/logo/bee-160.webp" x="%.0f" y="%.0f" '
+                    'width="%.0f" height="%.0f"/>' % (x - PIN_W / 2, y - PIN_H / 2, PIN_W, PIN_H))
+    labels = []
+    for cls, place, fs in (("gm__lbl--d", labels_for(full, FS_D), FS_D),
+                           ("gm__lbl--m", labels_for(narrow, FS_M, 1.7), FS_M)):
+        for name, la, lo in CITIES[1:]:
+            if name not in place:
+                continue
+            x, y = xy(la, lo)
+            dx, dy, anchor = place[name]
+            labels.append('<text class="gm__lbl %s" x="%.0f" y="%.0f" text-anchor="%s">%s</text>'
+                          % (cls, x + dx, y + dy, anchor, name))
+    return ('<svg class="gm" viewBox="%d %d %d %d" data-full="%d %d %d %d" data-narrow="%d %d %d %d" '
+            'preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="gm-title">'
+            '<title id="gm-title">Map of the Greater Toronto Area — Lake Ontario, the built-up '
+            'areas and the 400-series highways — with the 18 cities Swarm covers marked: %s.</title>'
+            '<g aria-hidden="true">%s%s%s%s%s'
+            '<circle class="gm__ring" cx="%.0f" cy="%.0f" r="%.0f"/>'
+            '<image class="gm__hq" id="gm-hq" href="assets/logo/emblem-108.webp" x="%.0f" y="%.0f" '
+            'width="%.0f" height="%.0f"/>%s'
+            '<text class="gm__lbl gm__lbl--hq" x="%.0f" y="%.0f" text-anchor="middle">Toronto</text>'
+            '</g></svg>'
+            % tuple(full + full + narrow +
+                    [", ".join(c[0] for c in CITIES), land, water, roads, "".join(routes), "".join(pins),
+                     hx, hy, HQ_W * 0.85, hx - HQ_W / 2, hy - HQ_H / 2, HQ_W, HQ_H,
+                     "".join(labels), hx, hy + HQ_H * 0.5 + FS_D * 1.1]))
+
+
+def canada_svg():
+    """The inset: where the client goes, we go."""
+    x0, y0, w, h = CAN["box"]
+    pad = 18
+    tx, ty = CAN["toronto"]
+    land = "".join('<path class="ca__land" d="%s"/>' % d for d in CAN["outline"])
+    arcs = []
+    for city in ("Vancouver", "Calgary", "Halifax"):
+        cx, cy = CAN["cities"][city]
+        arcs.append('<path class="ca__arc" d="M%d %d Q%d %d %d %d"/>'
+                    % (tx, ty, (tx + cx) / 2, (ty + cy) / 2 - abs(cx - tx) * 0.22, cx, cy))
+    return ('<svg class="ca" viewBox="%d %d %d %d" role="img" aria-label="Map of Canada with Toronto '
+            'marked: Swarm travels with clients anywhere in the country."><g aria-hidden="true">%s%s'
+            '<circle class="ca__pin" cx="%d" cy="%d" r="11"/>'
+            '<circle class="ca__ring" cx="%d" cy="%d" r="26"/></g></svg>'
+            % (x0 - pad, y0 - pad, w + pad * 2, h + pad * 2, land, "".join(arcs), tx, ty, tx, ty))
 
 
 def btn_quote(cls="btn"):
@@ -122,17 +196,21 @@ def stops_html(scene):
                 'width="%d" height="%d" loading="lazy" decoding="async">'
                 % (sizes[1]["src"], ", ".join("%s %dw" % (x["src"], x["w"]) for x in sizes), alt,
                    sizes[0]["w"], sizes[0]["h"]))
-    S, W, V, K = C.SERVICES, C.WORK, C.COVERAGE, C.CREW
+    S, W, V, K, Q = C.SERVICES, C.WORK, C.COVERAGE, C.CREW, C.FAQ
 
     home = """<section class="stop stop--home" id="home" data-stop="0" aria-labelledby="h-home">
 <div class="stop__media">{img}</div>
 <div class="stop__copy home">
 <h1 id="h-home" class="home__name" aria-label="{name}"><span class="home__row"><img class="home__mark" src="assets/logo/emblem-216.webp" alt="" width="216" height="238"><span class="home__swarm">SWARM</span></span><span class="home__ps">PROTECTIVE SERVICES</span></h1>
+<p class="home__motto">{motto}</p>
 <p class="home__line">{line}</p>
 <div class="acts home__acts" id="hero-cta">{q}{c}</div>
 </div>
-</section>""".format(img=img_tag(P["crew"], "stop__img", "The Swarm crew: six officers in black suits.", priority=True),
-                     name=BIZ["name"], line=C.HOME["line"], q=btn_quote(), c=btn_call())
+</section>""".format(img=img_tag(P["crew"], "stop__img",
+                                 "Five Swarm officers in black suits, the Swarm emblem on the wall behind them.",
+                                 priority=True),
+                     name=BIZ["name"], motto=C.HOME["motto"], line=C.HOME["line"],
+                     q=btn_quote(), c=btn_call())
 
     items = "".join('<li><b>%s</b><span>%s</span></li>' % it for it in S["items"])
     creds = "".join("<li>%s</li>" % c for c in S["creds"])
@@ -163,8 +241,10 @@ def stops_html(scene):
 <p class="kicker">{k}</p>
 <h2 id="h-coverage">{h}</h2>
 <p class="cov__line">{line}</p>
+<div class="cov__away">{inset}<p class="cov__national">{national}</p></div>
 </div>
-</section>""".format(svg=map_svg(), k=V["kicker"], h=V["h"], line=V["line"])
+</section>""".format(svg=map_svg(), k=V["kicker"], h=V["h"], line=V["line"],
+                     inset=canada_svg(), national=V["national"])
 
     def tile(title, sub, img):
         empty = title.startswith("PLACEHOLDER")
@@ -179,7 +259,16 @@ def stops_html(scene):
 <ul class="tiles">{tiles}</ul>
 </div>
 </section>""".format(k=K["kicker"], h=K["h"], line=K["line"], tiles=tiles)
-    return home + services + work + coverage + crew
+
+    qa = "".join('<div class="qa__item"><dt>%s</dt><dd>%s</dd></div>' % it for it in Q["items"])
+    faq = """<section class="stop stop--faq" id="faq" data-stop="5" aria-labelledby="h-faq">
+<div class="stop__copy qa">
+<div class="qa__head"><p class="kicker">{k}</p><h2 id="h-faq">{h}</h2></div>
+<dl class="qa__list">{qa}</dl>
+<p class="qa__more"><a href="answers.html">{more}</a></p>
+</div>
+</section>""".format(k=Q["kicker"], h=Q["h"], qa=qa, more=Q["more"])
+    return home + services + work + coverage + crew + faq
 
 
 def contact_html():
@@ -201,7 +290,7 @@ def contact_html():
 <label>Name<input name="name" autocomplete="name" required></label>
 <label>Phone<input name="phone" type="tel" autocomplete="tel" required></label>
 <label>What needs covering
-<select name="service" id="q-service"><option>Event</option><option>Venue / bar</option><option>Close protection</option><option>Something else</option></select></label>
+<select name="service" id="q-service"><option>Event</option><option>Venue / bar</option><option>Close protection</option><option>Monitoring</option><option>Something else</option></select></label>
 <label>Date<input name="date" type="date"></label>
 <label class="form__wide">Anything we should know <em>(optional)</em><textarea name="note" rows="2"></textarea></label>
 <label class="vh">Leave this empty<input name="company" tabindex="-1" autocomplete="off"></label>
@@ -223,7 +312,8 @@ def contact_html():
                      name=BIZ["name"], lic=BIZ["licence"])
 
 
-NAV = [("#services", "Services"), ("#coverage", "Coverage"), ("#crew", "Crew"), ("#contact", "Contact")]
+NAV = [("#services", "Services"), ("#coverage", "Coverage"), ("#crew", "Crew"),
+       ("#faq", "FAQ"), ("#contact", "Contact")]
 
 HTML = """<!DOCTYPE html>
 <html lang="en-CA">
@@ -257,6 +347,7 @@ HTML = """<!DOCTYPE html>
 <link rel="preload" as="image" href="{hero}" imagesrcset="{heroset}" imagesizes="100vw" fetchpriority="high">
 <script type="application/ld+json">{org}</script>
 {svc}
+{faq}
 </head>
 <body>
 <a class="skip" href="#contact"><span>Skip to the quote form</span></a>
@@ -293,18 +384,21 @@ def render():
     svc = "".join(
         '<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service",'
         '"name":"%s","serviceType":"%s","url":"%s/#services","provider":{"@id":"%s/#org"},'
-        '"areaServed":{"@type":"State","name":"Ontario"}}</script>' % (n, n, BIZ["base"], BIZ["base"])
-        for n in ("Event security", "Nightclub and bar security", "Close protection"))
+        '"areaServed":[{"@type":"State","name":"Ontario"},{"@type":"Country","name":"Canada"}]}</script>'
+        % (n, n, BIZ["base"], BIZ["base"])
+        for n in ("Event security", "Nightclub and bar security", "Close protection",
+                  "Home and business monitoring"))
     base = common.MODE["preview_base"] if common.MODE["preview"] else BIZ["base"]
     crew = next(p for p in scene["plates"] if p["id"] == "crew")
     nav = "".join('<a href="%s">%s</a>' % n for n in NAV)
     return HTML.format(
         title="Swarm Protective Services — Security Company, Toronto &amp; GTA",
-        desc="Licensed security in Toronto and the GTA: event security, bar and nightclub door "
-             "staff and close protection. PSISA licensed, $5M insured. Get a quote.",
+        desc="Licensed security in Toronto and the GTA: events, bars and clubs, close protection, "
+             "and monitoring for homes and businesses. PSISA licensed, $5M insured. Get a quote.",
         canon=canonical("/"), base=base.rstrip("/"), name=BIZ["name"],
         robots="noindex,nofollow" if common.MODE["preview"] else "index,follow,max-image-preview:large",
-        org=common.org_schema(), svc=svc, tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], icon=PHONE_ICON,
+        org=common.org_schema(), svc=svc, faq=common.faq_schema(C.FAQ["items"]),
+        tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], icon=PHONE_ICON,
         nav=nav, drawer=nav,
         hero=crew["sizes"][1]["src"], heroset=", ".join("%s %dw" % (s["src"], s["w"]) for s in crew["sizes"]),
         cssv=asset_version("assets/cine/site.css"), jsv=asset_version("assets/cine/site.js"),

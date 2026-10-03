@@ -14,7 +14,7 @@
   --pad:clamp(20px,5vw,72px);
   --mast:68px;
   --ink-rgb:8,9,10; --bone-rgb:231,228,211; --gold-rgb:184,145,78; --gold-hi-rgb:214,178,116;
-  --on-gold:#0A0A0B; --map-glow:#101416;
+  --on-gold:#0A0A0B; --map-glow:#0D1216; --land:#1A1E22;
   --ease:cubic-bezier(.22,.8,.24,1);          /* one curve for every UI response */
 }
 *{box-sizing:border-box}
@@ -88,7 +88,10 @@ h2{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:u
   color:var(--bone);text-shadow:0 2px 40px rgba(var(--ink-rgb),.6)}
 .home__ps{font-family:var(--display);font-weight:600;font-stretch:118%;letter-spacing:.34em;
   margin-right:-.34em;font-size:clamp(13px,1.9vw,27px);color:var(--gold-hi);margin-top:clamp(8px,1.2vh,14px)}
-.home__line{margin-top:clamp(10px,1.6vh,16px);font-size:clamp(13px,1.05vw,15px);letter-spacing:.06em;color:var(--bone-2)}
+.home__motto{margin-top:clamp(12px,2vh,22px);font-family:var(--display);font-weight:500;font-stretch:108%;
+  font-size:clamp(15px,1.7vw,24px);letter-spacing:.03em;color:var(--bone);max-width:22ch}
+.home__line{margin-top:clamp(6px,1vh,10px);font-size:clamp(11.5px,.95vw,13px);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--mute)}
 .home__acts{margin-top:clamp(18px,3vh,30px);justify-content:center}
 
 /* 2 · what we do */
@@ -100,7 +103,7 @@ h2{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:u
 .svc__list{margin-top:18px;display:grid;gap:clamp(12px,2vh,22px)}
 .svc__list li{display:flex;flex-direction:column;gap:2px}
 .svc__list b{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:uppercase;
-  letter-spacing:.01em;line-height:1;font-size:clamp(30px,4.3vw,58px)}
+  letter-spacing:.01em;line-height:1;font-size:clamp(26px,3.5vw,48px)}
 .svc__list span{color:var(--bone-2);font-size:clamp(14px,1.1vw,16px);letter-spacing:.02em}
 .creds{margin-top:clamp(20px,3.4vh,34px);display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12px;
   letter-spacing:.16em;text-transform:uppercase;color:var(--bone)}
@@ -126,19 +129,44 @@ h2{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:u
 .stop--coverage{background:radial-gradient(90% 80% at 55% 55%,var(--map-glow),var(--ink) 70%);align-items:stretch;
   flex-direction:column}
 .stop--coverage .stop__media::after{display:none}
-.map{display:flex;align-items:center;justify-content:center;padding:calc(var(--mast) + 110px) 3vw 3vh}
-.gm{width:min(1200px,100%);height:auto;max-height:100%;overflow:visible}
-.gm__grid{stroke:rgba(var(--bone-rgb),.045);stroke-width:1}
-.gm__lake{fill:rgba(var(--gold-rgb),.05)}
-.gm__shore{fill:none;stroke:var(--gold-dim);stroke-width:1.4}
-.gm__route{fill:none;stroke:rgba(var(--gold-hi-rgb),.34);stroke-width:1.1;stroke-dasharray:1;stroke-dashoffset:0}
-.gm__lbl{fill:var(--bone-2);font-family:var(--body);font-size:15px;letter-spacing:.04em}
-.gm__lbl--hq{fill:var(--gold-hi);font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:.16em}
-.gm__lbl--m{display:none}
-.gm__ring{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.55}
+.map{display:flex;align-items:center;justify-content:center;padding:calc(var(--mast) + 96px) 2vw 4vh}
+.gm{width:100%;height:100%;overflow:visible}
+/* the drawing is Natural Earth data, so these are the real lake, the real
+   built-up areas and the real 400-series highways */
+.gm__land{fill:var(--land)}
+.gm__urban{fill:rgba(var(--bone-rgb),.1);stroke:rgba(var(--bone-rgb),.14);stroke-width:1}
+.gm__shore{fill:none;stroke:rgba(var(--gold-rgb),.62);stroke-width:2.8}
+.gm__hwy{fill:none;stroke:rgba(var(--bone-rgb),.2);stroke-width:2.4;stroke-linecap:round}
+.gm__route{fill:none;stroke:rgba(var(--gold-hi-rgb),.3);stroke-width:2.2;stroke-dasharray:1;stroke-dashoffset:0}
+.gm__pin,.gm__hq,.gm__ring{transform-box:fill-box;transform-origin:center;transform:scale(1)}
+.gm__lbl{fill:var(--bone-2);font-family:var(--body);letter-spacing:.04em}
+.gm__lbl--d{font-size:17px}
+.gm__lbl--m{font-size:30px;display:none}
+.gm__lbl--hq{fill:var(--gold-hi);font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.14em}
+.gm__ring{fill:none;stroke:var(--gold);stroke-width:2;opacity:.5}
 .cov{position:absolute;top:0;left:0;padding-top:calc(var(--mast) + 22px)}
 .cov h2{margin-top:10px}
 .cov__line{margin-top:10px;color:var(--bone-2);font-size:clamp(14px,1.1vw,16px)}
+.cov__away{margin-top:clamp(14px,2.4vh,24px);display:flex;align-items:center;gap:14px}
+.ca{width:clamp(118px,13vw,184px);height:auto;flex:none}
+.ca__land{fill:rgba(var(--bone-rgb),.1);stroke:rgba(var(--bone-rgb),.34);stroke-width:2.4}
+.ca__arc{fill:none;stroke:rgba(var(--gold-hi-rgb),.6);stroke-width:3}
+.ca__pin{fill:var(--gold)}
+.ca__ring{fill:none;stroke:var(--gold);stroke-width:2;opacity:.5}
+.cov__national{color:var(--bone-2);font-size:clamp(13px,1vw,15px);max-width:20ch}
+
+/* 6 · questions */
+.stop--faq{background:var(--ink);align-items:center}
+.qa{display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2.4vh,26px)}
+.qa__head{text-align:center}
+.qa__head h2{margin-top:10px;font-size:clamp(28px,4vw,54px)}
+.qa__list{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2vh,22px) clamp(24px,4vw,56px);
+  width:min(1020px,100%)}
+.qa__item dt{font-family:var(--display);font-weight:700;font-stretch:108%;font-size:clamp(15px,1.3vw,19px);
+  letter-spacing:.01em;color:var(--bone)}
+.qa__item dd{margin:5px 0 0;color:var(--bone-2);font-size:clamp(13.5px,1vw,15px);line-height:1.5;max-width:46ch}
+.qa__more a{color:var(--gold-hi);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  text-decoration:none;border-bottom:1px solid var(--gold-dim);padding-bottom:3px}
 
 /* 5 · the crew */
 .stop--crew{background:var(--ink);align-items:center}
@@ -224,8 +252,8 @@ html.fx .map{z-index:1}
 html.fx .stop__copy{z-index:5;top:auto;pointer-events:none;will-change:transform,opacity}
 html.fx .stop__copy.is-on{pointer-events:auto}
 html.fx .work,html.fx .cov{top:0;bottom:auto}
-html.fx .crew{top:0;bottom:0;justify-content:center;padding-top:calc(var(--mast) + 10px)}
-html.fx .stop--crew,html.fx .stop--coverage{background:none}
+html.fx .crew,html.fx .qa{top:0;bottom:0;justify-content:center;padding-top:calc(var(--mast) + 10px)}
+html.fx .stop--crew,html.fx .stop--coverage,html.fx .stop--faq{background:none}
 html.fx .stop--coverage .map{background:radial-gradient(90% 80% at 55% 55%,var(--map-glow),var(--ink) 70%)}
 html.fx .contact{box-shadow:0 -40px 80px rgba(var(--ink-rgb),.55)}
 html.fx .gm__route{stroke-dashoffset:var(--route,0)}
@@ -241,10 +269,13 @@ html.fx .gm__route{stroke-dashoffset:var(--route,0)}
   .split{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
   .split__half + .split__half{box-shadow:inset 0 1px 0 rgba(var(--gold-hi-rgb),.45)}
   .split__half figcaption{bottom:22px}
-  .gm__lbl{font-size:24px}
-  .gm__lbl--hq{font-size:29px}
+  .gm__lbl--hq{font-size:44px}
   .gm__lbl--d{display:none}        /* decorative: every city is named in the map's title */
   .gm__lbl--m{display:inline}
+  .gm__pin,.gm__hq,.gm__ring{transform:scale(1.7)}   /* the window is tighter, the marks hold their size */
+  .gm__shore{stroke-width:3.4}
+  .gm__hwy{stroke-width:3.6}
+  .gm__route{stroke-width:3.4}
 }
 @media (max-width:900px){
   .contact__in{grid-template-columns:1fr;align-items:start;gap:26px}
@@ -258,7 +289,12 @@ html.fx .gm__route{stroke-dashoffset:var(--route,0)}
   .btn--sm{padding:10px 13px;font-size:12px}
   .home__acts{width:100%}
   .home__acts .btn{flex:1 1 0}
-  .map{padding:calc(var(--mast) + 120px) 0 4vh}
+  .map{padding:calc(var(--mast) + 108px) 0 4vh}
+  .cov__away{gap:10px}
+  .qa__list{grid-template-columns:1fr;gap:9px}
+  .qa__item dt{font-size:14.5px}
+  .qa__item dd{margin-top:2px;font-size:13px;line-height:1.45}
+  .qa{gap:12px}
   .tiles{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:62vw;overflow-x:auto;
     scroll-snap-type:x mandatory;width:100vw;padding:0 var(--pad) 6px;margin:0 calc(-1 * var(--pad));
     scrollbar-width:none}

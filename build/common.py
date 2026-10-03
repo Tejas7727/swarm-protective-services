@@ -36,9 +36,10 @@ MODE = {"preview": False, "preview_base": ""}
 
 # One page. Every nav item is an anchor on it.
 NAV = [
-    ("#services",   "Services",   "Events, venues, close protection"),
-    ("#coverage",   "Coverage",   "Toronto and 17 GTA cities"),
+    ("#services",   "Services",   "Events, venues, close protection, monitoring"),
+    ("#coverage",   "Coverage",   "The GTA, and anywhere in Canada"),
     ("#crew",       "Crew",       "The people who turn up"),
+    ("#faq",        "FAQ",        "Answers before you call"),
     ("#contact",    "Contact",    "Get a quote"),
 ]
 
@@ -213,18 +214,20 @@ def org_schema():
 "telephone":"{tel}",
 "email":"{email}",
 "priceRange":"$$$",
+"slogan":"Life is unpredictable, let us keep you protected",
 "foundingDate":"{founded}",
-"description":"Licensed door staff, event security and close protection across the Greater Toronto Area. PSISA-licensed officers, $5M commercial general liability, a written incident report before the shift ends, and dispatch answered 24 hours.",
+"description":"Licensed door staff, event security, close protection and monitoring for homes and businesses across the Greater Toronto Area, travelling with clients anywhere in Canada. PSISA-licensed officers, $5M commercial general liability, a written incident report before the shift ends, and dispatch answered 24 hours.",
 "knowsLanguage":"en-CA",
 "address":{{"@type":"PostalAddress","addressLocality":"Toronto","addressRegion":"ON","addressCountry":"CA"}},
 "geo":{{"@type":"GeoCoordinates","latitude":43.6532,"longitude":-79.3832}},
-"areaServed":[{areas}],
+"areaServed":[{areas},{{"@type":"Country","name":"Canada"}}],
 "openingHoursSpecification":[{{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"00:00","closes":"23:59"}}],
 "sameAs":["{ig}","{tt}","{li}"],
 "hasOfferCatalog":{{"@type":"OfferCatalog","name":"Protective services","itemListElement":[
 {{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Event security","url":"{base}/#services"}}}},
 {{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Nightclub and bar security","url":"{base}/#services"}}}},
-{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Close protection and executive protection","url":"{base}/#services"}}}}
+{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Close protection and executive protection","url":"{base}/#services"}}}},
+{{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Home and business monitoring","url":"{base}/#services"}}}}
 ]}}
 }}""".format(
         base=BIZ["base"], name=BIZ["name"], tel=BIZ["phone_tel"], email=BIZ["email"],

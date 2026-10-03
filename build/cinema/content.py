@@ -5,12 +5,16 @@ The rule for this page is fewer words, not smaller type: one heading and a
 line or two per screen, because most visitors arrive on a phone from Instagram,
 TikTok or a search result and decide in seconds.
 
+The motto and the licence line are the client's own words — leave them exactly
+as they are written here.
+
 Anything whose first field starts with PLACEHOLDER shows a clean empty tile.
 Replace it with real content and it renders as a real card.
 """
 
 HOME = {
     "line": "Licensed security service",           # the client's words, kept as written
+    "motto": "Life is unpredictable, let us keep you protected",
     "quote": "Get a quote",
     "call": "Call",
 }
@@ -21,6 +25,7 @@ SERVICES = {
         ("Event security", "Concerts, weddings, galas"),
         ("Venue security", "Bars, clubs, lounges"),
         ("Close protection", "Executives, artists, families"),
+        ("Monitoring", "Homes and businesses"),
     ],
     "creds": ["PSISA licensed", "$5M insured", "WSIB covered"],
 }
@@ -35,6 +40,8 @@ COVERAGE = {
     "kicker": "Coverage",
     "h": "Across the GTA",
     "line": "Toronto and 17 cities around it.",
+    "national": "And we travel with you anywhere in Canada.",
+    "inset_label": "Canada",
 }
 
 CREW = {
@@ -51,6 +58,29 @@ CREW = {
         ("PLACEHOLDER", "Event photo", ""),
         ("PLACEHOLDER", "Event photo", ""),
         ("PLACEHOLDER", "Event photo", ""),
+    ],
+}
+
+# Short, true answers to what people actually ask before they call. They are
+# also what a search engine or an AI assistant quotes, so each answer stands on
+# its own and the longer versions live on answers.html.
+FAQ = {
+    "kicker": "Questions",
+    "h": "Asked before every booking",
+    "more": "More answers",
+    "items": [
+        ("Where do you work?",
+         "Toronto and 17 cities around it, and we travel with clients anywhere in Canada."),
+        ("Are your officers licensed?",
+         "Yes. PSISA-licensed officers, $5M insurance and WSIB coverage on every job."),
+        ("Are your bodyguards armed?",
+         "No. Ontario does not allow it. We work on presence, planning and de-escalation."),
+        ("What can you cover?",
+         "Events, bars and clubs, close protection, and monitoring for homes and businesses."),
+        ("How soon can you start?",
+         "Same day for most jobs. Large events and travel need a few days."),
+        ("How do I book you?",
+         "Send the date, the place and the headcount. We reply the same day."),
     ],
 }
 

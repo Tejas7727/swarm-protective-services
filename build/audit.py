@@ -95,7 +95,8 @@ def main():
     if os.path.exists(idx):
         page_html = open(idx, encoding="utf-8").read()
         hooks = ['id="stage"', 'id="scene-data"', 'id="hero-cta"', 'id="mast-cta"', 'id="form-cta"',
-                 'data-form', 'id="contact"', 'class="gm"', "data-quote"]
+                 'data-form', 'id="contact"', 'class="gm"', "data-quote", 'id="faq"', 'id="gm-hq"',
+                 'class="ca"', 'gm__land', 'gm__shore']
         for hook in hooks:
             if hook not in page_html:
                 errs.append("index.html: hook %s missing" % hook)
@@ -105,8 +106,20 @@ def main():
         if 'href="tel:' not in page_html:
             errs.append("index.html: no phone link")
         stops = len(re.findall(r'<section class="stop ', page_html))
-        if stops != 5:
-            errs.append("index.html: %d screens before the form, expected 5" % stops)
+        if stops != 6:
+            errs.append("index.html: %d screens before the form, expected 6" % stops)
+        # the questions are the part search engines and assistants quote, so the
+        # answers on the page and the answers in the structured data must agree
+        qa = re.findall(r"<dt>(.*?)</dt><dd>(.*?)</dd>", page_html, re.S)
+        if len(qa) < 5:
+            errs.append("index.html: %d questions on the page, expected at least 5" % len(qa))
+        fp = re.search(r'"@type":"FAQPage","mainEntity":\[(.*?)\]\}</script>', page_html, re.S)
+        if not fp:
+            errs.append("index.html: no FAQPage structured data")
+        else:
+            for q, a in qa:
+                if q not in fp.group(1) or a not in fp.group(1):
+                    errs.append("index.html: question %r is not in the FAQ structured data" % q)
         m = re.search(r'<script id="scene-data" type="application/json">(.*?)</script>',
                       page_html, re.S)
         if not m:
@@ -151,6 +164,16 @@ def main():
             tpath = rel if not target else "/" + norm(os.path.normpath(os.path.join(here.lstrip("/"), target)))
             if tpath in ids and frag not in ids[tpath]:
                 errs.append("%s: link to %s#%s — no such id" % (rel, tpath, frag))
+
+    # the plain-text copy for assistants has to say the same things as the page
+    llms = os.path.join(SITE, "llms.txt")
+    if not os.path.exists(llms):
+        errs.append("llms.txt: missing")
+    else:
+        txt = open(llms, encoding="utf-8").read()
+        for want in ("## Services", "## Coverage", "## Answers", "## Contact", "Monitoring"):
+            if want not in txt:
+                errs.append("llms.txt: %r missing" % want)
 
     for k, v in titles.items():
         if len(v) > 1:

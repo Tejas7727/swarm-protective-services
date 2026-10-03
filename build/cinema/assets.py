@@ -14,8 +14,9 @@ through (`aper`). The camera zooms `rect` up to full frame. On this site every
 opening is the dark suit of one of our own people: the camera passes through
 the crew into the work.
 
-Sources and rights — see source-art/scene-v4/SOURCES.md:
-  crew     client photograph, background softened so the venue is not identifiable
+Sources and rights — see source-art/scene-v5/SOURCES.md:
+  crew     client photograph, rebuilt by hero_plate.py: the crew on a dark wall
+           with the emblem standing behind them
   event    Pexels 13602781 (Pexels licence, free for commercial use); another
            agency's badge on the vest is blurred
   split    left: generated locally (door); right: client photograph (detail)
@@ -27,7 +28,7 @@ from PIL import Image, ImageEnhance
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-SRC = os.path.join(ROOT, "source-art", "scene-v4")
+SRC = os.path.join(ROOT, "source-art", "scene-v5")
 OUT = os.path.join(ROOT, "docs", "assets", "scene")
 
 SCALES = (1.0, 0.72, 0.5)
@@ -35,13 +36,16 @@ MAXW = 2000
 QUALITY = 78
 
 PLATES = [
-    {"id": "crew", "file": "crew.png", "grade": (0.62, 0.92, 0.96),
-     "focal": [0.50, 0.50], "focalM": [0.50, 0.48],
+    # the crew plate is graded as it is built (hero_plate.py), so it is barely
+    # touched here: pulling its saturation down again would take the gold with it
+    {"id": "crew", "file": "crew.png", "grade": (0.88, 1.0, 1.0),
+     "focal": [0.50, 0.50], "focalM": [0.50, 0.48], "q": 82,
      "portal": {"child": "event", "aper": [0.466, 0.385, 0.068, 0.13]}},
     # the portrait event photo is trimmed of smoke above and barrier below —
-    # neither is ever on screen — and capped at 1600 wide: it was 616 KB
+    # neither is ever on screen. It is the heaviest thing on the page (a lit
+    # crowd compresses badly), so it is also the one capped hardest.
     {"id": "event", "file": "event.png", "grade": (0.5, 0.86, 0.95), "crop": (0.0, 0.12, 1.0, 0.96),
-     "maxw": 1600, "focal": [0.52, 0.42], "focalM": [0.53, 0.43],
+     "maxw": 1440, "q": 68, "focal": [0.52, 0.42], "focalM": [0.53, 0.43],
      "portal": {"child": "split", "aper": [0.492, 0.428, 0.086, 0.083]},
      "portalM": {"child": "split-m", "aper": [0.492, 0.416, 0.086, 0.107]}},
 ]
@@ -64,7 +68,7 @@ def quiet(img, sat, bright, contrast):
     return ImageEnhance.Contrast(img).enhance(contrast)
 
 
-def export(img, stem, maxw=MAXW):
+def export(img, stem, maxw=MAXW, quality=QUALITY):
     if img.width > maxw:
         img = img.resize((maxw, round(img.height * maxw / img.width)), Image.LANCZOS)
     out = []
@@ -72,7 +76,7 @@ def export(img, stem, maxw=MAXW):
         w, h = int(round(img.width * s / 2) * 2), int(round(img.height * s / 2) * 2)
         name = "%s-%d.webp" % (stem, w)
         (img if s == 1.0 else img.resize((w, h), Image.LANCZOS)).save(
-            os.path.join(OUT, name), "WEBP", quality=QUALITY, method=6)
+            os.path.join(OUT, name), "WEBP", quality=quality, method=6)
         out.append({"w": w, "h": h, "src": "assets/scene/" + name})
     return out
 
@@ -96,7 +100,7 @@ def build():
         if "crop" in spec:
             c = spec["crop"]
             img = img.crop((int(c[0] * img.width), int(c[1] * img.height), int(c[2] * img.width), int(c[3] * img.height)))
-        sizes = export(img, spec["id"], spec.get("maxw", MAXW))
+        sizes = export(img, spec["id"], spec.get("maxw", MAXW), spec.get("q", QUALITY))
         plates[spec["id"]] = {"id": spec["id"], "w": sizes[0]["w"], "h": sizes[0]["h"], "sizes": sizes,
                               "focal": spec["focal"], "focalM": spec.get("focalM", spec["focal"])}
         if "anchor" in spec:
@@ -118,7 +122,7 @@ def build():
         halves[name] = []
         for w in (1000, 700):
             h = int(w * 1.25)
-            im.resize((w, h), Image.LANCZOS).save(os.path.join(OUT, "%s-%d.webp" % (name, w)), "WEBP", quality=QUALITY, method=6)
+            im.resize((w, h), Image.LANCZOS).save(os.path.join(OUT, "%s-%d.webp" % (name, w)), "WEBP", quality=72, method=6)
             halves[name].append({"w": w, "h": h, "src": "assets/scene/%s-%d.webp" % (name, w)})
     scene = {"plates": [plates[s["id"]] for s in PLATES] + [SPLIT["split"], SPLIT["split-m"]], "halves": halves}
     with open(os.path.join(OUT, "scene.json"), "w", encoding="utf-8") as fh:

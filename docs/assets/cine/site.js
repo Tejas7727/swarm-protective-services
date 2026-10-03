@@ -2,10 +2,11 @@
  *
  * The page works without this file. What it adds, when it can:
  *
- *   one camera over five screens — it pushes through one of our officers into
+ *   one camera over six screens — it pushes through one of our officers into
  *   the next scene twice, then pulls back out of the door into the map of the
- *   GTA; the quote and call buttons travel from the first screen into the
- *   header, and from the header down into the form.
+ *   GTA, which stays as a faint base under the crew and the questions; the
+ *   quote and call buttons travel from the first screen into the header, and
+ *   from the header down into the form.
  *
  * One scroll clock (the page's own scroll, snapped by CSS), one spring for the
  * camera, one owner for every animated property. Content is never hidden:
@@ -106,9 +107,12 @@
   gl.clearColor(0, 0, 0, 0);
 
   root.classList.add("fx");
-  canvas.addEventListener("webglcontextlost", function () {  // renderer failure: back to the static page
+  var dead = false;
+  function giveUp() {                        // any renderer failure: back to the static page
+    dead = true;
     root.classList.remove("fx", "lit");
-  });
+  }
+  canvas.addEventListener("webglcontextlost", giveUp);
 
   /* ------------------------------------------------------------ plates */
   var SCENE = JSON.parse(data.textContent), PL = {};
@@ -125,10 +129,15 @@
   var tex = {};
   function upload(id) {
     var img = SRC[id];
-    if (!img || !img.complete || !img.naturalWidth) return;
+    if (dead || !img || !img.complete || !img.naturalWidth) return;
     var t = tex[id] || gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, t);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    try {
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    } catch (e) {
+      giveUp();              // opened from file://, say: the page's own images are off-limits
+      return;
+    }
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -359,6 +368,7 @@
   /* ------------------------------------------------------------- clock */
   var cur = 0, vel = 0, target = 0, last = 0, raf = 0, qPrev = -1, fps = 0;
   function frame(t) {
+    if (dead) { raf = 0; return; }
     var dt = Math.min(0.033, (t - last) / 1000 || 0.016); last = t;
     target = progress();
     var k = 42, c = 2 * Math.sqrt(k);

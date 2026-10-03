@@ -30,22 +30,24 @@ needs a public repo on a free account and none of them has to be public.
 
 ## The home page
 
-Five screens and a form, phone-first, a few words per screen, one camera. Full map:
+Six screens and a form, phone-first, a few words per screen, one camera. Full map:
 [`build/cinema/STORYBOARD.md`](build/cinema/STORYBOARD.md). Every word:
 [`build/cinema/content.py`](build/cinema/content.py).
 
 | Screen | id | What it holds |
 |---|---|---|
 | Home | `home` | The crew, the SWARM lockup, "Licensed security service", Get a quote + Call |
-| What we do | `services` | Event security · Venue security · Close protection; PSISA licensed · $5M insured · WSIB |
+| What we do | `services` | Event · Venue · Close protection · Monitoring; PSISA licensed · $5M insured · WSIB |
 | On the job | `work` | At the door \| At your side |
-| Across the GTA | `coverage` | Map of 18 cities, bee pins, Toronto marked |
+| Across the GTA | `coverage` | Drawn map of the GTA, 18 cities pinned, Canada inset for travel |
 | The crew | `crew` | Crew and event tiles (placeholders until real photos exist) |
+| Questions | `faq` | Six answers, also emitted as FAQPage data and into `llms.txt` |
 | Get a quote | `contact` | The form, the phone, socials |
 
 The camera pushes through one of our officers into each of the first two scenes, then pulls
 back out of the door into the map. Get a quote and Call start on the first screen, move into
-the header, then drop into the form. `answers.html` carries the FAQ for search.
+the header, then drop into the form. The home screen carries the client's motto,
+*"Life is unpredictable, let us keep you protected"*; `answers.html` carries the long FAQ.
 **No prices anywhere**; quoting happens on request.
 
 **Engine** — `docs/assets/cine/site.js`, no framework, about 700 KB for the whole page:
@@ -55,14 +57,20 @@ the header, then drop into the form. `answers.html` carries the FAQ for search.
   browser picked for this screen.
 - The split is the screen halved (side by side on landscape, stacked on portrait); each photo
   is cover-fitted into its half.
-- Without WebGL, with reduced motion, or with no JavaScript, it is five full-bleed screens and
+- Without WebGL, with reduced motion, or with no JavaScript, it is six full-bleed screens and
   the form in normal flow. Copy off-stage is transparent, never hidden; focusing it moves the
   camera to it.
 
-**Images** — provenance in `source-art/scene-v4/SOURCES.md`: the crew and the garage detail are
+**Images** — provenance in `source-art/scene-v5/SOURCES.md`: the crew and the garage detail are
 the client's photos; the event shot is Pexels 13602781 (free commercial licence, another agency's
-badge blurred, never captioned as Swarm); the doorman is generated locally. Every photo is graded
-quiet in `assets.py` so the type stays the brightest thing on screen.
+badge blurred, never captioned as Swarm); the doorman is generated locally. The first screen is
+rebuilt by `build/cinema/hero_plate.py` — the crew cut out of their own photograph and set in
+front of the emblem, extruded and lit. Every photo is graded quiet in `assets.py` so the type
+stays the brightest thing on screen.
+
+**Maps** — both are drawings, not an embed: `build/cinema/geo_extract.py` turns Natural Earth
+(public domain) into `build/cinema/geo.json`, and `render.py` draws Lake Ontario, the built-up
+areas, the 400-series highways and the city pins from it. Nothing is requested at runtime.
 
 ## Working on it
 
@@ -72,6 +80,8 @@ python build/build.py                                                           
 python build/audit.py            # dead links, assets, SEO lengths, JSON-LD, film hooks, portal sanity
 python build/cinema/assets.py    # re-export the plates and rewrite scene.json
 python build/og.py               # regenerate the 1200x630 social cards
+python build/cinema/hero_plate.py --src source-art/scene-v5 --out source-art/scene-v5/crew.png
+python build/cinema/geo_extract.py --src <folder of Natural Earth geojson>   # redraw the maps
 ```
 
 | File | What lives there |
