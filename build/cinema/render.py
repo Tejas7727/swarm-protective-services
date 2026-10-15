@@ -25,6 +25,14 @@ import common                                                       # noqa: E402
 from common import AREAS, BIZ, ICONS, asset_version, canonical      # noqa: E402
 import content as C                                                 # noqa: E402
 
+# Which first-screen plate a screen gets, by aspect ratio (width / height):
+# up to 0.95 the upright one (phones, upright tablets, an unfolded foldable),
+# up to 1.7 the 4:3 one (landscape tablets, near-square windows), wider than
+# that the 1.8:1 one. Must match site.css and site.js.
+UPRIGHT = "(max-aspect-ratio: 19/20)"
+MIDDLE = "(min-aspect-ratio: 951/1000) and (max-aspect-ratio: 17/10)"
+WIDE = "(min-aspect-ratio: 1701/1000)"
+
 PHONE_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.5 9 7l-2 2.2a13 13 0 0 0 '
               '5.8 5.8L15 13l4.5 2.4-1.2 4a2 2 0 0 1-2.2 1.4C8.6 20 4 15.4 2.7 6.9A2 2 0 0 1 4.1 '
               '4.7l2.5-2.2Z"/></svg>')
@@ -108,9 +116,10 @@ def labels_for(win, fs, lead=1.0):
     return out
 
 
-def map_svg():
-    """The Golden Horseshoe, drawn from Natural Earth: real water, real roads."""
-    full, narrow = window(1.78, 110, 110), window(0.46, 70, 150)
+def map_svg(narrow_aspect=0.46):
+    """The Golden Horseshoe, drawn from Natural Earth: real water, real roads.
+    `narrow_aspect` is the window phones see (the film used a full-screen 0.46)."""
+    full, narrow = window(1.78, 110, 110), window(narrow_aspect, 70, 150)
     hx, hy = xy(CITIES[0][1], CITIES[0][2])
     # land is the sheet with the lakes punched out of it, so the water is the
     # page's own glow showing through and the shoreline needs no guesswork
@@ -162,22 +171,13 @@ def canada_svg():
     arcs = []
     for city in ("Vancouver", "Calgary", "Halifax"):
         cx, cy = CAN["cities"][city]
-        arcs.append('<path class="ca__arc" d="M%d %d Q%d %d %d %d"/>'
+        arcs.append('<path class="ca__arc" pathLength="1" d="M%d %d Q%d %d %d %d"/>'
                     % (tx, ty, (tx + cx) / 2, (ty + cy) / 2 - abs(cx - tx) * 0.22, cx, cy))
     return ('<svg class="ca" viewBox="%d %d %d %d" role="img" aria-label="Map of Canada with Toronto '
             'marked: Swarm travels with clients anywhere in the country."><g aria-hidden="true">%s%s'
             '<circle class="ca__pin" cx="%d" cy="%d" r="11"/>'
             '<circle class="ca__ring" cx="%d" cy="%d" r="26"/></g></svg>'
             % (x0 - pad, y0 - pad, w + pad * 2, h + pad * 2, land, "".join(arcs), tx, ty, tx, ty))
-
-
-def btn_quote(cls="btn"):
-    return '<a class="%s" href="#contact" data-quote><span>%s</span></a>' % (cls, C.HOME["quote"])
-
-
-def btn_call(cls="btn btn--ghost", label=None):
-    return ('<a class="%s" href="tel:%s">%s<span>%s</span></a>'
-            % (cls, BIZ["phone_tel"], PHONE_ICON, label or C.HOME["call"]))
 
 
 def img_tag(plate, cls, alt, sizes="100vw", priority=False):
@@ -196,23 +196,30 @@ def stops_html(scene):
                 'width="%d" height="%d" loading="lazy" decoding="async">'
                 % (sizes[1]["src"], ", ".join("%s %dw" % (x["src"], x["w"]) for x in sizes), alt,
                    sizes[0]["w"], sizes[0]["h"]))
-    S, W, V, K, Q = C.SERVICES, C.WORK, C.COVERAGE, C.CREW, C.FAQ
+    S, W, V, E, Q = C.SERVICES, C.WORK, C.COVERAGE, C.ELITE, C.FAQ
 
+    # the first screen: the motto on the night sky, nothing to press (the header
+    # carries Call and Get a quote on every screen). Upright screens get the
+    # upright plate; the camera draws whichever one the browser picked.
+    first, rest = C.HOME["motto"].split(", ", 1)
+    rest = rest.replace(C.HOME["gold"], "<em>%s</em>" % C.HOME["gold"], 1)
     home = """<section class="stop stop--home" id="home" data-stop="0" aria-labelledby="h-home">
-<div class="stop__media">{img}</div>
+<div class="stop__media"><picture><source media="{upright}" srcset="{mset}" sizes="75vh"><source media="{middle}" srcset="{tset}" sizes="100vw">{img}</picture></div>
 <div class="stop__copy home">
-<h1 id="h-home" class="home__name" aria-label="{name}"><span class="home__row"><img class="home__mark" src="assets/logo/emblem-216.webp" alt="" width="216" height="238"><span class="home__swarm">SWARM</span></span><span class="home__ps">PROTECTIVE SERVICES</span></h1>
-<p class="home__motto">{motto}</p>
-<p class="home__line">{line}</p>
-<div class="acts home__acts" id="hero-cta">{q}{c}</div>
+<p class="home__line">{line}<span class="home__dot" aria-hidden="true"> &middot; </span> <span class="home__where">{where}</span></p>
+<h1 id="h-home" class="home__motto">{first},<br> <span class="home__nw">{rest}</span></h1>
+<p class="home__lede">{lede}</p>
 </div>
 </section>""".format(img=img_tag(P["crew"], "stop__img",
-                                 "Five Swarm officers in black suits, the Swarm emblem on the wall behind them.",
-                                 priority=True),
-                     name=BIZ["name"], motto=C.HOME["motto"], line=C.HOME["line"],
-                     q=btn_quote(), c=btn_call())
+                                 "A Swarm officer seen from behind, SWARM on his jacket, looking out over the "
+                                 "Toronto skyline and the CN Tower at night.", priority=True),
+                     upright=UPRIGHT, mset=", ".join("%s %dw" % (s["src"], s["w"]) for s in P["crew-m"]["sizes"]),
+                     middle=MIDDLE, tset=", ".join("%s %dw" % (s["src"], s["w"]) for s in P["crew-t"]["sizes"]),
+                     line=C.HOME["line"], where=C.HOME["where"].replace("&", "&amp;"),
+                     first=first, rest=rest, lede=C.HOME["lede"])
 
-    items = "".join('<li><b>%s</b><span>%s</span></li>' % it for it in S["items"])
+    # every service is a link: the home page says the name, the page says the rest
+    items = "".join('<li><a href="%s.html"><b>%s</b><span>%s</span></a></li>' % it for it in S["items"])
     creds = "".join("<li>%s</li>" % c for c in S["creds"])
     services = """<section class="stop stop--services" id="services" data-stop="1" aria-labelledby="h-services">
 <div class="stop__media">{img}</div>
@@ -246,19 +253,15 @@ def stops_html(scene):
 </section>""".format(svg=map_svg(), k=V["kicker"], h=V["h"], line=V["line"],
                      inset=canada_svg(), national=V["national"])
 
-    def tile(title, sub, img):
-        empty = title.startswith("PLACEHOLDER")
-        pic = ('<img src="%s" alt="%s" loading="lazy" decoding="async">' % (img, title)) if img else \
-              '<span class="tile__ph" aria-hidden="true"></span>'
-        return ('<li class="tile%s"><div class="tile__pic">%s</div><p class="tile__t">%s</p><p class="tile__s">%s</p></li>'
-                % (" is-empty" if empty else "", pic, "Photo coming" if empty else title, sub))
-    tiles = "".join(tile(*t) for t in K["people"] + K["events"])
-    crew = """<section class="stop stop--crew" id="crew" data-stop="4" aria-labelledby="h-crew">
-<div class="stop__copy crew">
-<div class="crew__head"><p class="kicker">{k}</p><h2 id="h-crew">{h}</h2><p class="crew__line">{line}</p></div>
-<ul class="tiles">{tiles}</ul>
+    # why these people, specifically — the screen the client asked for
+    el = "".join('<li><b>%s</b><span>%s</span></li>' % it for it in E["items"])
+    elite = """<section class="stop stop--elite" id="why" data-stop="4" aria-labelledby="h-why">
+<div class="stop__copy why">
+<div class="why__head"><p class="kicker">{k}</p><h2 id="h-why">{h}</h2></div>
+<ul class="why__list">{el}</ul>
+<p class="why__more"><a href="about.html">{more}</a></p>
 </div>
-</section>""".format(k=K["kicker"], h=K["h"], line=K["line"], tiles=tiles)
+</section>""".format(k=E["kicker"], h=E["h"], el=el, more="Meet the crew")
 
     qa = "".join('<div class="qa__item"><dt>%s</dt><dd>%s</dd></div>' % it for it in Q["items"])
     faq = """<section class="stop stop--faq" id="faq" data-stop="5" aria-labelledby="h-faq">
@@ -268,7 +271,7 @@ def stops_html(scene):
 <p class="qa__more"><a href="answers.html">{more}</a></p>
 </div>
 </section>""".format(k=Q["kicker"], h=Q["h"], qa=qa, more=Q["more"])
-    return home + services + work + coverage + crew + faq
+    return home + services + work + coverage + elite + faq
 
 
 def contact_html():
@@ -312,8 +315,8 @@ def contact_html():
                      name=BIZ["name"], lic=BIZ["licence"])
 
 
-NAV = [("#services", "Services"), ("#coverage", "Coverage"), ("#crew", "Crew"),
-       ("#faq", "FAQ"), ("#contact", "Contact")]
+NAV = [("#services", "Services"), ("#coverage", "Coverage"), ("#why", "Why us"),
+       ("about.html", "Crew"), ("#contact", "Contact")]
 
 HTML = """<!DOCTYPE html>
 <html lang="en-CA">
@@ -344,7 +347,9 @@ HTML = """<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@100..125,500..800&family=Archivo:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/cine/site.css?v={cssv}">
-<link rel="preload" as="image" href="{hero}" imagesrcset="{heroset}" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" href="{hero}" imagesrcset="{heroset}" imagesizes="100vw" media="{wide}" fetchpriority="high">
+<link rel="preload" as="image" href="{herot}" imagesrcset="{herosett}" imagesizes="100vw" media="{middle}" fetchpriority="high">
+<link rel="preload" as="image" href="{herom}" imagesrcset="{herosetm}" imagesizes="75vh" media="{upright}" fetchpriority="high">
 <script type="application/ld+json">{org}</script>
 {svc}
 {faq}
@@ -390,6 +395,8 @@ def render():
                   "Home and business monitoring"))
     base = common.MODE["preview_base"] if common.MODE["preview"] else BIZ["base"]
     crew = next(p for p in scene["plates"] if p["id"] == "crew")
+    crewm = next(p for p in scene["plates"] if p["id"] == "crew-m")
+    crewt = next(p for p in scene["plates"] if p["id"] == "crew-t")
     nav = "".join('<a href="%s">%s</a>' % n for n in NAV)
     return HTML.format(
         title="Swarm Protective Services — Security Company, Toronto &amp; GTA",
@@ -401,6 +408,9 @@ def render():
         tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], icon=PHONE_ICON,
         nav=nav, drawer=nav,
         hero=crew["sizes"][1]["src"], heroset=", ".join("%s %dw" % (s["src"], s["w"]) for s in crew["sizes"]),
+        herom=crewm["sizes"][1]["src"], herosetm=", ".join("%s %dw" % (s["src"], s["w"]) for s in crewm["sizes"]),
+        herot=crewt["sizes"][1]["src"], herosett=", ".join("%s %dw" % (s["src"], s["w"]) for s in crewt["sizes"]),
+        upright=UPRIGHT, middle=MIDDLE, wide=WIDE,
         cssv=asset_version("assets/cine/site.css"), jsv=asset_version("assets/cine/site.js"),
         stops=stops_html(scene), contact=contact_html(),
         scene=json.dumps(scene, separators=(",", ":")))

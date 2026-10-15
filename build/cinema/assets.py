@@ -15,8 +15,9 @@ opening is the dark suit of one of our own people: the camera passes through
 the crew into the work.
 
 Sources and rights — see source-art/scene-v5/SOURCES.md:
-  crew     client photograph, rebuilt by hero_plate.py: the crew on a dark wall
-           with the emblem standing behind them
+  crew, crew-m  the Toronto skyline at night (CC0, Andrew Gosine, Wikimedia
+           Commons) with a generated officer in front, SWARM printed on his
+           jacket (source-art/v6-art/hero_city.py)
   event    Pexels 13602781 (Pexels licence, free for commercial use); another
            agency's badge on the vest is blurred
   split    left: generated locally (door); right: client photograph (detail)
@@ -28,7 +29,7 @@ from PIL import Image, ImageEnhance
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-SRC = os.path.join(ROOT, "source-art", "scene-v5")
+SRC = os.path.join(ROOT, "source-art", "scene-v6")
 OUT = os.path.join(ROOT, "docs", "assets", "scene")
 
 SCALES = (1.0, 0.72, 0.5)
@@ -36,11 +37,24 @@ MAXW = 2000
 QUALITY = 78
 
 PLATES = [
-    # the crew plate is graded as it is built (hero_plate.py), so it is barely
-    # touched here: pulling its saturation down again would take the gold with it
-    {"id": "crew", "file": "crew.png", "grade": (0.88, 1.0, 1.0),
-     "focal": [0.50, 0.50], "focalM": [0.50, 0.48], "q": 82,
-     "portal": {"child": "event", "aper": [0.466, 0.385, 0.068, 0.13]}},
+    # The first screen has three plates, built and graded by
+    # source-art/v6-art/hero_city.py: an officer facing the Toronto skyline at
+    # night. "crew" (1.8:1) is for laptops and wider, the words on the sky to his
+    # left; "crew-t" (4:3) for landscape tablets and near-square windows, the
+    # officer smaller and further right; "crew-m" (3:4) for phones and upright
+    # tablets: wider than any phone, so a phone always sees its full height, sky
+    # above for the words, officer and tower below. The page's <picture> picks
+    # one by aspect ratio and the camera follows. The portal is the dark jacket
+    # under the emblem.
+    {"id": "crew", "file": "hero.png", "grade": (0.95, 1.0, 1.0),
+     "focal": [0.60, 0.45], "focalM": [0.60, 0.45], "q": 82,
+     "portal": {"child": "event", "aper": [0.61, 0.791, 0.058, 0.107]}},
+    {"id": "crew-t", "file": "hero-t.png", "grade": (0.95, 1.0, 1.0), "maxw": 1920,
+     "focal": [0.68, 0.5], "focalM": [0.68, 0.5], "q": 80,
+     "portal": {"child": "event", "aper": [0.68, 0.85, 0.058, 0.08]}},
+    {"id": "crew-m", "file": "hero-m.png", "grade": (0.95, 1.0, 1.0), "maxw": 1440,
+     "focal": [0.55, 1.0], "focalM": [0.55, 1.0], "q": 80,
+     "portal": {"child": "event", "aper": [0.357, 0.885, 0.09, 0.07]}},
     # the portrait event photo is trimmed of smoke above and barrier below —
     # neither is ever on screen. It is the heaviest thing on the page (a lit
     # crowd compresses badly), so it is also the one capped hardest.

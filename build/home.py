@@ -349,7 +349,8 @@ FAQS = [
      "a Criminal Record and Judicial Matters Check, and emergency first aid. Licences are "
      "digital and carried on shift. Ask any officer and they will show you theirs.</p>"
      "<p>We also hold an Ontario security agency licence, which is the one that lets a company "
-     "supply guards at all. Ours is {lic}.</p>".format(lic=BIZ["licence"])),
+     "supply guards at all. {lic}</p>".format(
+         lic=("Ours is %s." % BIZ["licence"]) if BIZ["licence"] else "We send its number with every quote.")),
     ("Do you provide armed guards or armed bodyguards?",
      "<p>In Ontario, bodyguards cannot carry firearms. A federal Authorization to Carry is "
      "issued almost exclusively for protecting cash and goods of substantial value in transit, "

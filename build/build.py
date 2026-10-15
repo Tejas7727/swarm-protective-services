@@ -18,10 +18,9 @@ if "--preview" in sys.argv:
     common.MODE["preview"] = True
     common.MODE["preview_base"] = sys.argv[i + 1] if len(sys.argv) > i + 1 else ""
 
-import journal, pages               # noqa: E402
+import about, coverage, front, journal, pages, services, service_art   # noqa: E402
 sys.path.insert(0, os.path.join(HERE, "cinema"))
 import assets as scene_assets        # noqa: E402
-import render as cinema              # noqa: E402
 
 
 def write(rel, text):
@@ -48,7 +47,8 @@ def llms_txt(base):
            "we travel with clients anywhere in Canada.", "",
            "Motto: %s." % C.HOME["motto"], "",
            "## Services", ""]
-    out += ["- **%s** — %s." % it for it in C.SERVICES["items"]]
+    out += ["- **%s** — %s. [Details](%s/%s.html)" % (name, line, base, slug)
+            for slug, name, line in C.SERVICES["items"]]
     out += ["", "## Coverage", "",
             "- %s %s" % (C.COVERAGE["line"], C.COVERAGE["national"]),
             "- Cities: %s." % ", ".join(common.AREAS), "",
@@ -63,6 +63,8 @@ def llms_txt(base):
             "- Quote form: %s/#contact" % base,
             "- Prices are quoted per job; nothing is published.", "",
             "## More", "",
+            "- [Meet us](%s/about.html): who turns up and the standard they are held to." % base,
+            "- [Coverage](%s/coverage.html): the 18 GTA cities we cover, and travel across Canada." % base,
             "- [Answers](%s/answers.html): the longer answers to these questions." % base,
             "- [Journal](%s/journal/): field notes for venue owners and event organisers." % base,
             "- [Privacy](%s/privacy.html): what we keep and for how long." % base, ""]
@@ -71,8 +73,12 @@ def llms_txt(base):
 
 def main():
     scene_assets.build()             # plates + camera manifest, before the page reads it
-    files = {"index.html": cinema.render()}
+    service_art.build()              # one photograph per service page
+    files = {"index.html": front.render()}
     files.update(pages.PAGES)
+    files.update(services.pages())
+    files.update(about.PAGES)
+    files.update(coverage.PAGES)
     files.update(journal.pages())
 
     written = [write(rel, html) for rel, html in sorted(files.items())]
@@ -105,8 +111,17 @@ def main():
     # GitHub Pages: stop Jekyll eating files, and serve the SPA-less 404
     write(".nojekyll", "")
 
+    # CSS and JS carry a content hash in their URL (?v=), so they can be kept a
+    # year. Images keep their names when they are re-exported, so a week.
     write("_headers",
-          "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/assets/css/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/assets/js/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/assets/cine/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/assets/img/*\n  Cache-Control: public, max-age=604800\n"
+          "/assets/scene/*\n  Cache-Control: public, max-age=604800\n"
+          "/assets/logo/*\n  Cache-Control: public, max-age=604800\n"
+          "/assets/icon/*\n  Cache-Control: public, max-age=604800\n"
+          "/assets/og/*\n  Cache-Control: public, max-age=604800\n"
           "/*\n  X-Content-Type-Options: nosniff\n"
           "  Referrer-Policy: strict-origin-when-cross-origin\n"
           "  X-Frame-Options: SAMEORIGIN\n"

@@ -89,28 +89,43 @@ def main():
             if ("." + cls) in css and ('class="' + cls) not in html_all                     and (" " + cls + '"') not in html_all and (" " + cls + " ") not in html_all:
                 errs.append("css: .%s is styled but never used in any page" % cls)
 
-    # the film: every hook the camera drives must exist, and every plate it
-    # names must actually be on disk (a missing plate is an invisible scene).
+    # the home page is a funnel: every service card reaches its page, every
+    # step of the quote form exists, the phone is one tap away, and the first
+    # screen's photographs are all on disk
     idx = os.path.join(SITE, "index.html")
     if os.path.exists(idx):
         page_html = open(idx, encoding="utf-8").read()
-        hooks = ['id="stage"', 'id="scene-data"', 'id="hero-cta"', 'id="mast-cta"', 'id="form-cta"',
-                 'data-form', 'id="contact"', 'class="gm"', "data-quote", 'id="faq"', 'id="gm-hq"',
-                 'class="ca"', 'gm__land', 'gm__shore']
+        hooks = ['id="contact"', "data-quote", 'id="services"', 'id="faq"', 'id="coverage"', 'id="people"',
+                 'class="gm"', 'id="gm-hq"', 'gm__land', 'gm__shore', 'class="abar"']
         for hook in hooks:
             if hook not in page_html:
                 errs.append("index.html: hook %s missing" % hook)
-        # the offer has to be reachable from every screen
-        if page_html.count("data-quote") < 3:
-            errs.append("index.html: too few quote entry points")
         if 'href="tel:' not in page_html:
             errs.append("index.html: no phone link")
-        stops = len(re.findall(r'<section class="stop ', page_html))
-        if stops != 6:
-            errs.append("index.html: %d screens before the form, expected 6" % stops)
+        # the coverage page carries both maps
+        cov = os.path.join(SITE, "coverage.html")
+        cov_html = open(cov, encoding="utf-8").read() if os.path.exists(cov) else ""
+        for hook in ('data-cov', 'class="gm"', 'class="ca"', 'gm__route'):
+            if hook not in cov_html:
+                errs.append("coverage.html: hook %s missing" % hook)
+        if len(re.findall(r'<h1[ >]', page_html)) != 1:
+            errs.append("index.html: expected exactly one h1")
+        cards = re.findall(r'<a class="scard" href="([^"]+)"', page_html)
+        if len(cards) != 6:
+            errs.append("index.html: %d service cards, expected 6" % len(cards))
+        for href in cards:
+            if not os.path.exists(os.path.join(SITE, href)):
+                errs.append("index.html: service card points at missing %s" % href)
+        if len(re.findall(r'class="qf__step" data-step="\d"', page_html)) != 3:
+            errs.append("index.html: the quote form needs its three steps")
+        for src in re.findall(r'(?:srcset|imagesrcset)="([^"]+)"', page_html):
+            for part in src.split(","):
+                url = part.strip().split(" ")[0]
+                if url.startswith("assets/") and "/" + url not in assets:
+                    errs.append("index.html: missing image %s" % url)
         # the questions are the part search engines and assistants quote, so the
         # answers on the page and the answers in the structured data must agree
-        qa = re.findall(r"<dt>(.*?)</dt><dd>(.*?)</dd>", page_html, re.S)
+        qa = re.findall(r"<summary>(.*?)</summary><div class=\"faq__a\">(.*?)</div>", page_html, re.S)
         if len(qa) < 5:
             errs.append("index.html: %d questions on the page, expected at least 5" % len(qa))
         fp = re.search(r'"@type":"FAQPage","mainEntity":\[(.*?)\]\}</script>', page_html, re.S)
@@ -120,34 +135,6 @@ def main():
             for q, a in qa:
                 if q not in fp.group(1) or a not in fp.group(1):
                     errs.append("index.html: question %r is not in the FAQ structured data" % q)
-        m = re.search(r'<script id="scene-data" type="application/json">(.*?)</script>',
-                      page_html, re.S)
-        if not m:
-            errs.append("index.html: no camera manifest")
-        else:
-            try:
-                scene = json.loads(m.group(1))
-            except Exception as exc:
-                errs.append("index.html: unreadable camera manifest — %s" % exc)
-                scene = {"plates": []}
-            for pl in scene.get("plates", []):
-                for size in pl.get("sizes", []) + [s for L in pl.get("layers", []) for s in L["sizes"]]:
-                    if "/" + size["src"] not in assets:
-                        errs.append("scene: missing plate %s" % size["src"])
-                for port in [pl[k] for k in ("portal", "portalM") if k in pl]:
-                    r, a = port["rect"], port["aper"]
-                    if not (0 <= r[0] < 1 and 0 <= r[1] < 1 and 0.05 < r[2] < 0.9):
-                        errs.append("scene: %s portal rect out of range" % pl["id"])
-                    ac = (a[0] + a[2] / 2, a[1] + a[3] / 2)
-                    rc = (r[0] + r[2] / 2, r[1] + r[3] / 2)
-                    if abs(ac[0] - rc[0]) > 0.02 or abs(ac[1] - rc[1]) > 0.02:
-                        errs.append("scene: %s aperture is not centred on the next scene "
-                                    "(%.3f,%.3f vs %.3f,%.3f)" % (pl["id"], ac[0], ac[1], rc[0], rc[1]))
-
-            for half in scene.get("halves", {}).values():
-                for size in half:
-                    if "/" + size["src"] not in assets:
-                        errs.append("scene: missing half %s" % size["src"])
 
     # every fragment that points at a page must match an id on that page
     ids = {}

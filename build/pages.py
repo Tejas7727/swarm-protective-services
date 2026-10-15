@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """The two pages that cannot live on the single page: privacy and 404."""
-from common import BIZ, faq_html, faq_schema, page, plain
+from common import BIZ, cta_final, faq_html, faq_schema, ihero, img, page, plain
 from home import FAQS
 
 PRIVACY = page(
@@ -55,13 +55,14 @@ receives the request as part of loading the page. The quote form is submitted di
 
 <h2>Contact</h2>
 <p>{name}, {city}, Ontario. <a href="mailto:{email}">{email}</a> ·
-<a href="tel:{tel}">{phone}</a>. Ontario security agency licence {lic}.</p>
+<a href="tel:{tel}">{phone}</a>.{lic}</p>
 <p class="sub">Last updated September 2026. This is a plain-language summary, not legal advice;
 have your own counsel review it before launch.</p>
 </div>
 </div>
 </section>""".format(email=BIZ["email"], name=BIZ["name"], city=BIZ["city"],
-                    tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], lic=BIZ["licence"]),
+                    tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
+                    lic=(" Ontario security agency licence %s." % BIZ["licence"]) if BIZ["licence"] else ""),
 )
 
 NOT_FOUND = page(
@@ -90,17 +91,23 @@ ANSWERS = page(
          "guards, how many officers an event needs, response times and what happens on the night.",
     og="/assets/og/og-default.jpg",
     schema=faq_schema([(q, plain(a)) for q, a in FAQS]),
-    body="""<section class="phero">
-<div class="wrap">
-<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Answers</span></div>
-<p class="eyebrow">Answers</p>
-<h1>What people ask before they book.</h1>
-<p class="lede">If yours is not here, call {phone} or <a href="index.html#contact">send the date and the place</a>.</p>
+    bodyattr=' class="screens"',
+    body="""{hero}
+<section class="scr qx" id="answers" data-label="The answers" aria-label="The answers">
+<div class="wrap scr__in qx__in">
+<div class="qx__side"><p class="eyebrow">Still unsure?</p><h2>Ask us directly</h2>
+<p class="lede">Call <a href="tel:{tel}">{phone}</a>, answered 24/7, or
+<a href="index.html#contact">send the date and the place</a>.</p></div>
+{faq}
 </div>
 </section>
-<section>
-<div class="wrap">{faq}</div>
-</section>""".format(phone=BIZ["phone_ui"], faq=faq_html(FAQS)),
+{cta}""".format(hero=ihero('<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Answers</span></div>',
+                           "Answers", "What people ask before they book.",
+                           "Licences, armed guards, headcounts, timing and what happens on the night.",
+                           img("svc-venue-security", (800, 1600), "100vw",
+                               "The brass doors of a venue at night.", loading="eager", priority=True,
+                               ratio=1216 / 832.0), label="Answers"),
+                tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], faq=faq_html(FAQS), cta=cta_final(0)),
 )
 
 PAGES = {

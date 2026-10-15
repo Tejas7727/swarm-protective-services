@@ -17,16 +17,22 @@ OUTDIR = os.path.abspath(os.path.join(HERE, "..", "docs"))
 BIZ = {
     "name":      "Swarm Protective Services",
     "short":     "Swarm",
-    "base":      "https://swarmprotective.ca",   # PLACEHOLDER — final domain
-    "phone_ui":  "(647) 555-0173",               # PLACEHOLDER
-    "phone_tel": "+16475550173",                 # PLACEHOLDER
-    "email":     "dispatch@swarmprotective.ca",  # PLACEHOLDER
-    "licence":   "#0000000",                     # PLACEHOLDER — Ontario agency licence
+    "base":      "https://swarmprotectiveservices.ca",   # the domain on the business card
+    "phone_ui":  "(416) 938-4766",                       # from Nigel Wright's card
+    "phone_tel": "+14169384766",
+    # quotes go here; Cloudflare Email Routing will forward it to the owners' Gmail
+    "email":     "quote@swarmprotectiveservices.ca",
+    "founder":   "Nigel Wright",
+    "founder_role": "CEO &amp; Founder",
+    # Ontario security agency licence number. Empty until the client sends it: every
+    # line that would show it is left out, so no placeholder number is ever published.
+    "licence":   "",
     "city":      "Toronto",
     "region":    "ON",
-    "ig":        "https://instagram.com/swarmprotective",
-    "tt":        "https://tiktok.com/@swarmprotective",
-    "li":        "https://linkedin.com/company/swarmprotective",
+    # social accounts are being set up: a link shows only once its address is here
+    "ig":        "",
+    "tt":        "",
+    "li":        "",
     "founded":   "2021",
 }
 
@@ -34,13 +40,13 @@ BIZ = {
 # noindex, so a client preview never competes with the real site in search.
 MODE = {"preview": False, "preview_base": ""}
 
-# One page. Every nav item is an anchor on it.
+# The menu: the funnel's five doors. Paths are from the site root.
 NAV = [
-    ("#services",   "Services",   "Events, venues, close protection, monitoring"),
-    ("#coverage",   "Coverage",   "The GTA, and anywhere in Canada"),
-    ("#crew",       "Crew",       "The people who turn up"),
-    ("#faq",        "FAQ",        "Answers before you call"),
-    ("#contact",    "Contact",    "Get a quote"),
+    ("index.html#services", "Services", "Close protection, events, venues, buses, limos, monitoring"),
+    ("about.html",          "Meet us",  "The people who turn up"),
+    ("coverage.html",       "Coverage", "Toronto, the GTA, and anywhere in Canada"),
+    ("answers.html",        "Answers",  "What people ask before they book"),
+    ("index.html#contact",  "Contact",  "Get a quote"),
 ]
 
 AREAS = [
@@ -98,11 +104,11 @@ def canonical(path):
 # chrome
 # ---------------------------------------------------------------------------
 def nav_html(depth):
-    return "".join('<a href="%s">%s</a>' % (home(depth, h), label) for h, label, _ in NAV)
+    return "".join('<a href="%s%s">%s</a>' % (pfx(depth), h, label) for h, label, _ in NAV)
 
 
 def drawer_html(depth):
-    out = ['<a href="%s">%s<small>%s</small></a>' % (home(depth, h), label, blurb)
+    out = ['<a href="%s%s">%s<small>%s</small></a>' % (pfx(depth), h, label, blurb)
            for h, label, blurb in NAV]
     out.append('<a href="%sjournal/index.html">Journal<small>Field notes for venue owners</small></a>'
                % pfx(depth))
@@ -111,17 +117,6 @@ def drawer_html(depth):
     out.append('<a class="btn btn--ghost btn--full" style="margin-top:10px" href="tel:%s">'
                '<span>Call dispatch %s</span></a>' % (BIZ["phone_tel"], BIZ["phone_ui"]))
     return "".join(out)
-
-
-def status_html():
-    return (
-        '<div class="status"><div class="status__in">'
-        '<span class="dot" aria-hidden="true"></span>'
-        '<span>Dispatch open — <b>answered 24 hours</b></span>'
-        '<span class="status__right">'
-        '<span data-clock>Toronto</span>'
-        '<span>Ontario licence <b>%s</b></span>'
-        '</span></div></div>' % BIZ["licence"])
 
 
 def mast_html(depth):
@@ -153,15 +148,18 @@ def drawer_wrap(depth):
 
 def foot_html(depth):
     p = pfx(depth)
-    svc = "".join('<li><a href="%s">%s</a></li>' % (home(depth, h), t) for h, t in [
-        ("#services", "Event security"),
-        ("#services", "Venue and door security"),
-        ("#services", "Close protection"),
-        ("#coverage", "Where we work"),
+    svc = "".join('<li><a href="%s%s">%s</a></li>' % (p, u, t) for u, t in [
+        ("close-protection.html", "Close protection"),
+        ("event-security.html", "Event security"),
+        ("venue-security.html", "Venue security"),
+        ("party-bus-security.html", "Party bus security"),
+        ("limousine-service.html", "Limousine service"),
+        ("monitoring.html", "Monitoring"),
     ])
     comp = "".join('<li><a href="%s">%s</a></li>' % (u, t) for u, t in [
+        (p + "coverage.html", "Where we work"),
         (p + "answers.html", "Answers"),
-        (home(depth, "#crew"), "The crew"),
+        (p + "about.html", "Meet us"),
         (p + "journal/index.html", "Journal"),
         (home(depth, "#contact"), "Request a quote"),
     ])
@@ -171,11 +169,7 @@ def foot_html(depth):
 <div>
 <a class="foot__logo" href="{home}" aria-label="{name} — home"><img src="{p}assets/logo/swarm-horizontal-gold.svg" alt="{name}" width="188" height="49" loading="lazy"></a>
 <p class="foot__blurb">Licensed door staff, event security and close protection across the Greater Toronto Area. The product is a night where nothing happened.</p>
-<div class="foot__social">
-<a href="{ig}" aria-label="Swarm on Instagram" rel="me noopener" target="_blank">{i_ig}</a>
-<a href="{tt}" aria-label="Swarm on TikTok" rel="me noopener" target="_blank">{i_tt}</a>
-<a href="{li}" aria-label="Swarm on LinkedIn" rel="me noopener" target="_blank">{i_li}</a>
-</div>
+{social}
 </div>
 <div><h4>What we do</h4><ul>{svc}</ul></div>
 <div><h4>Company</h4><ul>{comp}</ul></div>
@@ -185,7 +179,7 @@ def foot_html(depth):
 <li><a href="tel:{tel}">{phone}</a></li>
 <li><a href="mailto:{email}">{email}</a></li>
 <li>Answered 24 hours, every day of the year</li>
-<li>Ontario security agency licence {lic}</li>
+{lic}
 </ul>
 </div>
 </div>
@@ -198,8 +192,15 @@ def foot_html(depth):
 </footer>""".format(
         p=p, home=home(depth), name=BIZ["name"], svc=svc, comp=comp,
         tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], email=BIZ["email"],
-        lic=BIZ["licence"], ig=BIZ["ig"], tt=BIZ["tt"], li=BIZ["li"],
-        i_ig=ICONS["ig"], i_tt=ICONS["tt"], i_li=ICONS["li"])
+        lic=("<li>Ontario security agency licence %s</li>" % BIZ["licence"]) if BIZ["licence"] else "",
+        social=social_html())
+
+
+def social_html():
+    links = "".join('<a href="%s" aria-label="Swarm on %s" rel="me noopener" target="_blank">%s</a>'
+                    % (BIZ[k], label, ICONS[k]) for k, label in (("ig", "Instagram"), ("tt", "TikTok"),
+                                                                  ("li", "LinkedIn")) if BIZ[k])
+    return '<div class="foot__social">%s</div>' % links if links else ""
 
 
 def org_schema():
@@ -214,7 +215,7 @@ def org_schema():
 "telephone":"{tel}",
 "email":"{email}",
 "priceRange":"$$$",
-"slogan":"Life is unpredictable, let us keep you protected",
+"slogan":"Life is unpredictable, Let us Protect you",
 "foundingDate":"{founded}",
 "description":"Licensed door staff, event security, close protection and monitoring for homes and businesses across the Greater Toronto Area, travelling with clients anywhere in Canada. PSISA-licensed officers, $5M commercial general liability, a written incident report before the shift ends, and dispatch answered 24 hours.",
 "knowsLanguage":"en-CA",
@@ -222,7 +223,7 @@ def org_schema():
 "geo":{{"@type":"GeoCoordinates","latitude":43.6532,"longitude":-79.3832}},
 "areaServed":[{areas},{{"@type":"Country","name":"Canada"}}],
 "openingHoursSpecification":[{{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"00:00","closes":"23:59"}}],
-"sameAs":["{ig}","{tt}","{li}"],
+"sameAs":[{same}],
 "hasOfferCatalog":{{"@type":"OfferCatalog","name":"Protective services","itemListElement":[
 {{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Event security","url":"{base}/#services"}}}},
 {{"@type":"Offer","itemOffered":{{"@type":"Service","name":"Nightclub and bar security","url":"{base}/#services"}}}},
@@ -231,7 +232,7 @@ def org_schema():
 ]}}
 }}""".format(
         base=BIZ["base"], name=BIZ["name"], tel=BIZ["phone_tel"], email=BIZ["email"],
-        founded=BIZ["founded"], ig=BIZ["ig"], tt=BIZ["tt"], li=BIZ["li"],
+        founded=BIZ["founded"], same=",".join('"%s"' % BIZ[k] for k in ("ig", "tt", "li") if BIZ[k]),
         areas=",".join('{"@type":"City","name":"%s"}' % a for a in AREAS))
 
 
@@ -275,7 +276,6 @@ PAGE = """<!DOCTYPE html>
 <body{bodyattr}>
 <a href="#main" class="skip"><span>Skip to content</span></a>
 <div class="topbar">
-{status}
 {mast}
 </div>
 {drawer}
@@ -283,6 +283,10 @@ PAGE = """<!DOCTYPE html>
 {body}
 </main>
 {foot}
+<nav class="abar" aria-label="Call or get a quote">
+<a class="btn btn--ghost" href="tel:{tel}">{i_phone}<span>Call</span></a>
+<a class="btn" href="{quote}"><span>Get a quote</span></a>
+</nav>
 <script src="{p}assets/js/swarm.js?v={jsv}" defer></script>
 </body>
 </html>
@@ -299,8 +303,9 @@ def page(path, title, desc, body, depth=0, og="/assets/og/og-default.jpg",
         name=BIZ["name"], ogtitle=(ogtitle or title), og=og, ogtype=ogtype,
         org=org_schema(), schema=schema, head=head, robots=robots, bodyattr=bodyattr,
         cssv=asset_version("assets/css/swarm.css"), jsv=asset_version("assets/js/swarm.js"),
-        status=status_html(), mast=mast_html(depth), drawer=drawer_wrap(depth),
-        body=body, foot=foot_html(depth))
+        mast=mast_html(depth), drawer=drawer_wrap(depth),
+        body=body, foot=foot_html(depth), tel=BIZ["phone_tel"], i_phone=ICONS["phone"],
+        quote=home(depth, "#contact"))
 
 
 # ---------------------------------------------------------------------------
@@ -366,11 +371,27 @@ def crumb_html(items):
     return '<div class="crumbs">%s</div>' % "<i>/</i>".join(parts)
 
 
+def ihero(crumbs, eyebrow, h1, lede, pic, ctas="", label="Overview"):
+    """The opening of every inner page: a full-bleed photograph that pulls back
+    into a frame as you scroll (swarm.js writes --h), the title on its dark
+    lower left. `pic` is an <img>; `ctas` optional buttons."""
+    return """<section class="scr ih" id="top" data-label="{label}">
+<div class="ih__media">{pic}</div>
+<div class="wrap ih__in">
+{crumbs}
+<p class="eyebrow">{eyebrow}</p>
+<h1>{h1}</h1>
+<p class="lede">{lede}</p>
+{ctas}
+</div>
+</section>""".format(pic=pic, crumbs=crumbs, eyebrow=eyebrow, h1=h1, lede=lede, ctas=ctas, label=label)
+
+
 def cta_final(depth=0, heading="Tell us the night.",
               lede="Date, venue and headcount is enough to start. You get a written number and "
-                   "a named lead, usually the same day."):
-    return """<section class="cta-final">
-<div class="wrap reveal">
+                   "a named lead, usually the same day.", quote=None):
+    return """<section class="scr cta-final" id="quote" data-label="Get a quote">
+<div class="wrap scr__in">
 <img class="cta-final__em" src="{p}assets/logo/emblem-216.webp"
  srcset="{p}assets/logo/emblem-108.webp 108w, {p}assets/logo/emblem-216.webp 216w"
  sizes="72px" alt="" width="216" height="238" loading="lazy" decoding="async">
@@ -381,5 +402,5 @@ def cta_final(depth=0, heading="Tell us the night.",
 <a class="btn btn--ghost" href="tel:{tel}"><span>Call dispatch</span></a>
 </div>
 </div>
-</section>""".format(p=pfx(depth), h=heading, l=lede, quote=home(depth, "#contact"),
+</section>""".format(p=pfx(depth), h=heading, l=lede, quote=quote or home(depth, "#contact"),
                      tel=BIZ["phone_tel"])

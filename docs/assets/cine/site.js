@@ -5,8 +5,8 @@
  *   one camera over six screens — it pushes through one of our officers into
  *   the next scene twice, then pulls back out of the door into the map of the
  *   GTA, which stays as a faint base under the crew and the questions; the
- *   quote and call buttons travel from the first screen into the header, and
- *   from the header down into the form.
+ *   quote and call buttons sit in the header from the first screen and travel
+ *   down into the form.
  *
  * One scroll clock (the page's own scroll, snapped by CSS), one spring for the
  * camera, one owner for every animated property. Content is never hidden:
@@ -130,6 +130,8 @@
   function upload(id) {
     var img = SRC[id];
     if (dead || !img || !img.complete || !img.naturalWidth) return;
+    // the first screen's <picture> hands over the plate for this screen's shape
+    if (id === "crew") { var r = img.naturalWidth / img.naturalHeight; id = r < 1 ? "crew-m" : r < 1.5 ? "crew-t" : "crew"; }
     var t = tex[id] || gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, t);
     try {
@@ -144,7 +146,7 @@
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     tex[id] = t;
-    if (id === "crew") root.classList.add("lit");
+    if (id.indexOf("crew") === 0) root.classList.add("lit");
     kick();
   }
   Object.keys(SRC).forEach(function (id) {
@@ -157,6 +159,7 @@
 
   /* ------------------------------------------------------------ camera */
   var VW = 1, VH = 1, DPR = 1, mob = false, tall = false, stepH = 1;   // tall: portrait screens stack the split
+  var hero = "crew";                  // the first-screen plate for this shape (as render.py and site.css)
   function smooth(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
   function ease(f) { return 0.25 * f + 0.75 * f * f * (3 - 2 * f); }
   function cover(pl) {
@@ -260,14 +263,14 @@
   var copies = stops.map(function (s) { return s.querySelector(".stop__copy"); });
   var split = D.querySelector(".split"), map = D.querySelector(".map"), gm = D.querySelector(".gm");
   var hq = D.getElementById("gm-hq"), shade = D.querySelector(".shade");
-  var heroCta = D.getElementById("hero-cta"), mastCta = D.getElementById("mast-cta");
+  var mastCta = D.getElementById("mast-cta");
   var formCta = D.getElementById("form-cta"), contact = D.getElementById("contact");
-  var home0 = { x: 0, y: 0, w: 1 }, mast0 = { x: 0, y: 0, w: 1 };
+  var mast0 = { x: 0, y: 0, w: 1 };
 
   function centre(el) { var r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; }
 
   function measure() {
-    VW = W.innerWidth; VH = W.innerHeight; mob = VW < 760; tall = VH > VW;
+    VW = W.innerWidth; VH = W.innerHeight; mob = VW < 760; tall = VH > VW; hero = VW / VH <= 0.95 ? "crew-m" : VW / VH <= 1.7 ? "crew-t" : "crew";
     DPR = Math.min(W.devicePixelRatio || 1, VW * VH > 1600000 ? 1.5 : 2);
     canvas.width = Math.round(VW * DPR); canvas.height = Math.round(VH * DPR);
     gl.viewport(0, 0, canvas.width, canvas.height);
@@ -284,13 +287,12 @@
       gm.setAttribute("viewBox", gm.getAttribute(tall ? "data-narrow" : "data-full"));
       gm.style.transform = "none";
     }
-    [heroCta, mastCta].forEach(function (el) { if (el) el.style.transform = "none"; });
+    if (mastCta) mastCta.style.transform = "none";
     if (hq) pin = centre(hq);
     if (gm && hq) {                                  // the map scales about Toronto, so the pin never moves
       var g = gm.getBoundingClientRect();
       gm.style.transformOrigin = (pin.x - g.left) + "px " + (pin.y - g.top) + "px";
     }
-    if (heroCta) home0 = centre(heroCta);
     if (mastCta) mast0 = centre(mastCta);
     cur = target = progress(); vel = 0;
   }
@@ -300,7 +302,8 @@
 
   function paint(p, q) {
     gl.clear(gl.COLOR_BUFFER_BIT);
-    if (p < 1) push("crew", "event", PL.crew.portal, ease(p));
+    var hid = tex[hero] ? hero : tex.crew ? "crew" : tex["crew-t"] ? "crew-t" : "crew-m";
+    if (p < 1) push(hid, "event", PL[hid].portal, ease(p));
     else if (p < 2) push("event", "split", splitPortal, ease(p - 1));
     else if (p < 3) pullOut(ease(p - 2));
     canvas.dataset.frame = p.toFixed(3);
@@ -330,20 +333,18 @@
       map.style.setProperty("--route", (1 - smooth(0.55, 1, p >= 3 ? 1 : Math.max(0, p - 2))).toFixed(3));
     }
     if (shade) {
-      shade.style.opacity = (1 - smooth(2.25, 2.7, p)).toFixed(3);
+      // none on the first screen: its photograph is composed for the words, and
+      // the shade would put out the officer and the city
+      shade.style.opacity = Math.min(smooth(0.12, 0.6, p), 1 - smooth(2.25, 2.7, p)).toFixed(3);
       shade.style.setProperty("--side", (1 - smooth(0.2, 0.6, Math.abs(p - 1))).toFixed(3));
     }
 
-    // the ask travels: first screen -> header -> form
-    if (heroCta && mastCta) {
-      var e1 = smooth(0, 0.45, p);
-      heroCta.style.transform = "translate3d(" + ((mast0.x - home0.x) * e1).toFixed(1) + "px," +
-        ((mast0.y - home0.y) * e1).toFixed(1) + "px,0) scale(" + (1 - (1 - mast0.w / home0.w) * e1).toFixed(3) + ")";
-      heroCta.style.opacity = (1 - smooth(0.25, 0.45, p)).toFixed(3);
+    // the ask: in the header from the first screen, then down into the form
+    if (mastCta) {
       // down into the form — but only when the form's own buttons will be on
       // screen to receive them; on a phone they are below the fold, so the
       // header buttons simply hand over and fade instead of crossing the heading
-      var mo2 = smooth(0.3, 0.55, p), dx = 0, dy = 0;
+      var mo2 = 1, dx = 0, dy = 0;
       if (q > 0 && formCta) {
         var fr = formCta.getBoundingClientRect(), landY = fr.top + fr.height / 2 - (1 - q) * VH;
         if (landY < VH - 20) {

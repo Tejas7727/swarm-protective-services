@@ -78,21 +78,52 @@ h2{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:u
   background:linear-gradient(0deg,rgba(var(--ink-rgb),.94) 0%,rgba(var(--ink-rgb),.55) 34%,rgba(var(--ink-rgb),.12) 62%,rgba(var(--ink-rgb),.35) 100%)}
 .stop__copy{position:relative;z-index:2;width:100%;padding:calc(var(--mast) + 24px) var(--pad) clamp(40px,8vh,84px)}
 
-/* 1 · home: the crew, the name, the ask */
-.stop--home .stop__img{object-position:50% 38%}
-.home{display:flex;flex-direction:column;align-items:center;text-align:center}
-.home__name{display:flex;flex-direction:column;align-items:center;font-weight:normal}
-.home__row{display:flex;align-items:center;gap:.14em;font-size:clamp(58px,11vw,172px);line-height:.84}
-.home__mark{height:.86em;width:auto;filter:drop-shadow(0 4px 24px rgba(var(--ink-rgb),.6))}
-.home__swarm{font-family:var(--display);font-weight:800;font-stretch:125%;letter-spacing:.04em;
-  color:var(--bone);text-shadow:0 2px 40px rgba(var(--ink-rgb),.6)}
-.home__ps{font-family:var(--display);font-weight:600;font-stretch:118%;letter-spacing:.34em;
-  margin-right:-.34em;font-size:clamp(13px,1.9vw,27px);color:var(--gold-hi);margin-top:clamp(8px,1.2vh,14px)}
-.home__motto{margin-top:clamp(12px,2vh,22px);font-family:var(--display);font-weight:500;font-stretch:108%;
-  font-size:clamp(15px,1.7vw,24px);letter-spacing:.03em;color:var(--bone);max-width:22ch}
-.home__line{margin-top:clamp(6px,1vh,10px);font-size:clamp(11.5px,.95vw,13px);letter-spacing:.2em;
-  text-transform:uppercase;color:var(--mute)}
-.home__acts{margin-top:clamp(18px,3vh,30px);justify-content:center}
+/* 1 · home: the motto on the night sky, nothing else; the header carries Call
+   and Get a quote. The first screen is complete without a scroll on any shape.
+   Three plates, picked by aspect ratio (render.py and site.js use the same
+   splits): up to 0.95 the upright plate, the words in the sky above, officer and
+   tower below; the plate is wider than any phone, so every phone sees all of it
+   top to bottom. From 0.95 to 1.7 a 4:3 plate, and wider than that a 1.8:1 one;
+   both put the words on the sky to his left. */
+.stop--home{align-items:flex-start}
+.stop--home .stop__media picture{display:block;height:100%}
+.stop--home .stop__img{object-position:55% 100%}
+.stop--home .stop__media::after{background:linear-gradient(180deg,rgba(var(--ink-rgb),.5) 0%,rgba(var(--ink-rgb),0) 48%)}
+.home{display:flex;flex-direction:column;gap:clamp(10px,1.9svh,18px);
+  padding-top:calc(var(--mast) + clamp(12px,4.2svh,48px))}
+.home__line{font-size:11.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-hi)}
+.home__motto{font-family:var(--display);font-weight:800;font-stretch:115%;text-transform:uppercase;
+  line-height:1.02;letter-spacing:.005em;font-size:min(calc((100vw - 2 * var(--pad)) / 11.6),5.6svh,60px)}
+.home__motto em{font-style:normal;color:var(--gold-hi)}
+.home__nw{white-space:nowrap}
+.home__lede{color:var(--bone-2);font-size:clamp(14px,3.9vw,17px);line-height:1.5;max-width:34ch}
+@media (max-width:480px){ .home__dot{display:none} .home__where{display:block;margin-top:5px} }
+/* short phones, and upright screens near square, where the sky is shorter */
+@media (max-aspect-ratio:19/20) and (max-height:600px),(min-aspect-ratio:3/4) and (max-aspect-ratio:19/20){
+  .home__lede{display:none}
+  .home__motto{font-size:min(calc((100vw - 2 * var(--pad)) / 11.6),4.6svh,52px)}
+}
+html.fx .stop__copy.home{top:0;bottom:auto}
+html.fx .home::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(var(--ink-rgb),.45) 0%,rgba(var(--ink-rgb),0) 100%)}
+/* landscape: the words on the sky to his left, centred top to bottom */
+@media (min-aspect-ratio:951/1000){
+  .stop--home{align-items:center}
+  .stop--home .stop__img{object-position:100% 50%}
+  .stop--home .stop__media::after{background:linear-gradient(90deg,rgba(var(--ink-rgb),.8) 0%,rgba(var(--ink-rgb),.45) 34%,rgba(var(--ink-rgb),0) 56%)}
+  .home{width:min(54%,800px);padding-top:var(--mast);padding-bottom:0}
+  .home__motto{font-size:min(3.6vw,7svh,60px)}
+  .home__lede{font-size:clamp(14px,1.15vw,18px);max-width:40ch}
+  html.fx .stop__copy.home{top:0;bottom:0;justify-content:center}
+  html.fx .home::before{background:linear-gradient(90deg,rgba(var(--ink-rgb),.72) 0%,rgba(var(--ink-rgb),.4) 55%,rgba(var(--ink-rgb),0) 100%)}
+}
+@media (min-aspect-ratio:951/1000) and (max-aspect-ratio:13/10){
+  .home{width:42%}
+  .home__motto{font-size:min(3.1vw,6svh,48px)}
+}
+@media (min-aspect-ratio:1701/1000){
+  .stop--home .stop__img{object-position:60% 45%}
+}
 
 /* 2 · what we do */
 .stop--services .stop__img{object-position:52% 42%}
@@ -100,11 +131,17 @@ h2{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:u
   linear-gradient(90deg,rgba(var(--ink-rgb),.92) 0%,rgba(var(--ink-rgb),.62) 38%,rgba(var(--ink-rgb),.1) 70%),
   linear-gradient(0deg,rgba(var(--ink-rgb),.8) 0%,rgba(var(--ink-rgb),0) 40%)}
 .svc{max-width:min(620px,100%)}
-.svc__list{margin-top:18px;display:grid;gap:clamp(12px,2vh,22px)}
-.svc__list li{display:flex;flex-direction:column;gap:2px}
+.svc__list{margin-top:16px;display:grid;gap:clamp(9px,1.5vh,16px)}
+.svc__list li{display:flex;flex-direction:column}
+.svc__list a{text-decoration:none;display:flex;flex-direction:column;gap:1px;
+  border-left:2px solid transparent;padding-left:0;transition:border-color .25s var(--ease),padding-left .25s var(--ease)}
 .svc__list b{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:uppercase;
-  letter-spacing:.01em;line-height:1;font-size:clamp(26px,3.5vw,48px)}
-.svc__list span{color:var(--bone-2);font-size:clamp(14px,1.1vw,16px);letter-spacing:.02em}
+  letter-spacing:.01em;line-height:1;font-size:clamp(23px,2.7vw,40px)}
+.svc__list span{color:var(--bone-2);font-size:clamp(13px,1vw,15px);letter-spacing:.02em}
+@media (min-width:1180px){
+  .svc{max-width:min(860px,100%)}
+  .svc__list{grid-template-columns:1fr 1fr;gap:12px 44px}
+}
 .creds{margin-top:clamp(20px,3.4vh,34px);display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12px;
   letter-spacing:.16em;text-transform:uppercase;color:var(--bone)}
 .creds li{display:flex;align-items:center;gap:9px}
@@ -168,7 +205,20 @@ h2{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:u
 .qa__more a{color:var(--gold-hi);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
   text-decoration:none;border-bottom:1px solid var(--gold-dim);padding-bottom:3px}
 
-/* 5 · the crew */
+/* 5 · why us — the standard, the screen that answers "why these people" */
+.stop--elite{background:var(--ink);align-items:center}
+.why{display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2.6vh,28px);text-align:center}
+.why__head h2{margin-top:10px;font-size:clamp(28px,4.2vw,58px);max-width:18ch}
+.why__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(14px,2.4vh,26px) clamp(24px,4vw,60px);width:min(1020px,100%);text-align:left}
+.why__list li{display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--edge-2);padding-top:12px}
+.why__list b{font-family:var(--display);font-weight:720;font-stretch:108%;letter-spacing:.01em;
+  font-size:clamp(16px,1.5vw,21px);color:var(--bone)}
+.why__list span{color:var(--bone-2);font-size:clamp(13.5px,1vw,15px);line-height:1.5}
+.why__more a{color:var(--gold-hi);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  text-decoration:none;border-bottom:1px solid var(--gold-dim);padding-bottom:3px}
+
+/* 5b · the crew tiles (now on about.html, kept for the placeholder grid) */
 .stop--crew{background:var(--ink);align-items:center}
 .crew{display:flex;flex-direction:column;align-items:center;gap:clamp(18px,3vh,30px)}
 .crew__head{text-align:center}
@@ -225,6 +275,8 @@ h2{font-family:var(--display);font-weight:760;font-stretch:112%;text-transform:u
   .btn:hover{background:var(--gold-hi)}
   .btn--ghost:hover{background:rgba(var(--bone-rgb),.08);box-shadow:inset 0 0 0 1px var(--gold-dim)}
   .mast__nav a:hover{color:var(--bone);border-color:var(--gold)}
+  .svc__list a:hover{border-color:var(--gold);padding-left:14px}
+  .svc__list a:hover b{color:var(--gold-hi)}
   .contact__tel:hover{color:var(--gold-hi)}
   .social a:hover{box-shadow:inset 0 0 0 1px var(--gold)}
   .social a:hover svg{fill:var(--gold-hi)}
@@ -252,8 +304,8 @@ html.fx .map{z-index:1}
 html.fx .stop__copy{z-index:5;top:auto;pointer-events:none;will-change:transform,opacity}
 html.fx .stop__copy.is-on{pointer-events:auto}
 html.fx .work,html.fx .cov{top:0;bottom:auto}
-html.fx .crew,html.fx .qa{top:0;bottom:0;justify-content:center;padding-top:calc(var(--mast) + 10px)}
-html.fx .stop--crew,html.fx .stop--coverage,html.fx .stop--faq{background:none}
+html.fx .crew,html.fx .qa,html.fx .why{top:0;bottom:0;justify-content:center;padding-top:calc(var(--mast) + 10px)}
+html.fx .stop--crew,html.fx .stop--coverage,html.fx .stop--faq,html.fx .stop--elite{background:none}
 html.fx .stop--coverage .map{background:radial-gradient(90% 80% at 55% 55%,var(--map-glow),var(--ink) 70%)}
 html.fx .contact{box-shadow:0 -40px 80px rgba(var(--ink-rgb),.55)}
 html.fx .gm__route{stroke-dashoffset:var(--route,0)}
@@ -266,6 +318,9 @@ html.fx .gm__route{stroke-dashoffset:var(--route,0)}
 /* portrait screens (phones and upright tablets) stack the split and see the
    map through the tighter window the script switches to */
 @media (orientation:portrait){
+  html.fx .shade{background:
+    linear-gradient(0deg,rgba(var(--ink-rgb),.96) 0%,rgba(var(--ink-rgb),.78) 24%,rgba(var(--ink-rgb),.2) 48%,rgba(var(--ink-rgb),0) 62%),
+    linear-gradient(180deg,rgba(var(--ink-rgb),.6) 0%,rgba(var(--ink-rgb),0) 20%)}
   .split{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
   .split__half + .split__half{box-shadow:inset 0 1px 0 rgba(var(--gold-hi-rgb),.45)}
   .split__half figcaption{bottom:22px}
@@ -287,11 +342,11 @@ html.fx .gm__route{stroke-dashoffset:var(--route,0)}
   .mast__call span{display:none}
   .mast__call{padding:10px}
   .btn--sm{padding:10px 13px;font-size:12px}
-  .home__acts{width:100%}
-  .home__acts .btn{flex:1 1 0}
   .map{padding:calc(var(--mast) + 108px) 0 4vh}
   .cov__away{gap:10px}
   .qa__list{grid-template-columns:1fr;gap:9px}
+  .why__list{grid-template-columns:1fr;gap:10px}
+  .why__list li{padding-top:9px}
   .qa__item dt{font-size:14.5px}
   .qa__item dd{margin-top:2px;font-size:13px;line-height:1.45}
   .qa{gap:12px}
