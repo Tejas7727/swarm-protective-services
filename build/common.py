@@ -96,7 +96,12 @@ def asset_version(rel):
 
 
 def canonical(path):
+    """The public URL: clean, as Cloudflare Pages serves it (/about, not /about.html)."""
     base = MODE["preview_base"] if MODE["preview"] else BIZ["base"]
+    if path.endswith("index.html"):
+        path = path[:-len("index.html")]
+    elif path.endswith(".html"):
+        path = path[:-len(".html")]
     return base.rstrip("/") + path
 
 

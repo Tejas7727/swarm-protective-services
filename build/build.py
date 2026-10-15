@@ -5,6 +5,7 @@
     python build/build.py --preview URL   # client preview: noindex + preview canonicals
 """
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +24,29 @@ sys.path.insert(0, os.path.join(HERE, "cinema"))
 import assets as scene_assets        # noqa: E402
 
 
+# Cloudflare Pages (and GitHub Pages) serve about.html at /about and redirect
+# the .html form, so every internal link is written in the clean form: no
+# redirect on a click, and the URL people share is the one search engines index.
+LINK = re.compile(r'href="(?!https?:|mailto:|tel:|//|#)([^"#?]*?)(index)?\.html([?#][^"]*)?"')
+
+
+def clean_links(html):
+    def fix(m):
+        path, idx, tail = m.group(1), m.group(2), m.group(3) or ""
+        return 'href="%s%s"' % ((path or "./") if idx else path, tail)
+    return LINK.sub(fix, html)
+
+
+def clean_url(rel):
+    """docs-relative file -> the clean public path."""
+    if rel.endswith("index.html"):
+        return "/" + rel[:-len("index.html")]
+    return "/" + rel[:-len(".html")] if rel.endswith(".html") else "/" + rel
+
+
 def write(rel, text):
+    if rel.endswith(".html"):
+        text = clean_links(text)
     path = os.path.join(OUT, rel.replace("/", os.sep))
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as fh:
@@ -47,7 +70,7 @@ def llms_txt(base):
            "we travel with clients anywhere in Canada.", "",
            "Motto: %s." % C.HOME["motto"], "",
            "## Services", ""]
-    out += ["- **%s** — %s. [Details](%s/%s.html)" % (name, line, base, slug)
+    out += ["- **%s** — %s. [Details](%s/%s)" % (name, line, base, slug)
             for slug, name, line in C.SERVICES["items"]]
     out += ["", "## Coverage", "",
             "- %s %s" % (C.COVERAGE["line"], C.COVERAGE["national"]),
@@ -88,7 +111,7 @@ def main():
     for rel, _ in written:
         if rel == "404.html":
             continue
-        loc = "/" if rel == "index.html" else "/" + rel.replace("journal/index.html", "journal/")
+        loc = clean_url(rel)
         pri = "1.0" if loc == "/" else "0.7"
         urls.append('<url><loc>%s%s</loc><changefreq>monthly</changefreq>'
                     '<priority>%s</priority></url>' % (base, loc, pri))

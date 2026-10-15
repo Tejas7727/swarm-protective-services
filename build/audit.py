@@ -53,8 +53,10 @@ def main():
                 target = norm(os.path.normpath(os.path.join(here, u)))
                 if not target.startswith("/"):
                     target = "/" + target
-            if is_dir:
-                target = target.rstrip("/") + "/index.html"
+            if is_dir or target.endswith("/."):
+                target = target.rstrip("/.") + "/index.html"
+            elif "." not in target.rsplit("/", 1)[-1]:
+                target += ".html"                    # a clean link: /about is about.html
             return target
 
         for href in re.findall(r'href="([^"]+)"', s):
@@ -114,7 +116,7 @@ def main():
         if len(cards) != 6:
             errs.append("index.html: %d service cards, expected 6" % len(cards))
         for href in cards:
-            if not os.path.exists(os.path.join(SITE, href)):
+            if not os.path.exists(os.path.join(SITE, href if "." in href else href + ".html")):
                 errs.append("index.html: service card points at missing %s" % href)
         if len(re.findall(r'class="qf__step" data-step="\d"', page_html)) != 3:
             errs.append("index.html: the quote form needs its three steps")
@@ -149,6 +151,10 @@ def main():
             if target.startswith(("http", "mailto:", "tel:")):
                 continue
             tpath = rel if not target else "/" + norm(os.path.normpath(os.path.join(here.lstrip("/"), target)))
+            if target and (target.endswith("/") or target in (".", "./")):
+                tpath = tpath.rstrip("/.") + "/index.html"
+            elif target and "." not in tpath.rsplit("/", 1)[-1]:
+                tpath += ".html"
             if tpath in ids and frag not in ids[tpath]:
                 errs.append("%s: link to %s#%s — no such id" % (rel, tpath, frag))
 

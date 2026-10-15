@@ -261,7 +261,7 @@ def _others(slug):
 
 def _schema(s):
     return ('<script type="application/ld+json">{"@context":"https://schema.org",'
-            '"@type":"Service","name":"%s","serviceType":"%s","url":"%s/%s.html",'
+            '"@type":"Service","name":"%s","serviceType":"%s","url":"%s/%s",'
             '"provider":{"@id":"%s/#org"},"areaServed":[{"@type":"State","name":"Ontario"},'
             '{"@type":"Country","name":"Canada"}]}</script>'
             % (s["name"], s["name"], BIZ["base"], s["slug"], BIZ["base"]))

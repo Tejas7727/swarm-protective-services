@@ -269,7 +269,7 @@ def render():
                          ("crew", "100vw", cinema.WIDE)))
     svc = "".join(
         '<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service",'
-        '"name":"%s","serviceType":"%s","url":"%s/%s.html","provider":{"@id":"%s/#org"},'
+        '"name":"%s","serviceType":"%s","url":"%s/%s","provider":{"@id":"%s/#org"},'
         '"areaServed":[{"@type":"State","name":"Ontario"},{"@type":"Country","name":"Canada"}]}</script>'
         % (s["name"], s["name"], BIZ["base"], s["slug"], BIZ["base"]) for s in SERVICES)
     film = '<div class="film" data-film>%s\n%s\n</div>' % (welcome(scene), services())
