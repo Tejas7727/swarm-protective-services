@@ -341,7 +341,7 @@ FAQS = [
      "<p>It depends on the room, the hours and the risk, so we price from a site plan rather "
      "than a phone call. Recurring venue work goes on a flat weekly rate so you can budget; "
      "events are quoted per floor plan; protection details are quoted per assignment.</p>"
-     "<p>Send us the night and you will have a written number, usually the same day, with the "
+     "<p>Send us the date, the place and the headcount and you will have a written number, usually the same day, with the "
      "name of the lead who would run it.</p>"),
     ("Are your officers actually licensed?",
      "<p>Yes. Every officer holds a current licence under Ontario's <em>Private Security and "
@@ -371,7 +371,7 @@ FAQS = [
     ("What happens if something does go wrong?",
      "<p>The officer on scene manages it, the lead takes command, and emergency services are "
      "called when the situation crosses that line — not after a debate about how it looks. You "
-     "get a verbal from the lead that night and a written incident report before the crew "
+     "get a verbal from the lead the same day and a written incident report before the crew "
      "leaves your building.</p>"
      "<p>We carry $5M commercial general liability and full WSIB coverage, and our officers are "
      "trained on the limits of a guard's lawful authority. Knowing what you may not do is most "

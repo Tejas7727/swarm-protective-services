@@ -86,7 +86,7 @@ def llms_txt(base):
             "- Quote form: %s/#contact" % base,
             "- Prices are quoted per job; nothing is published.", "",
             "## More", "",
-            "- [Meet us](%s/about.html): who turns up and the standard they are held to." % base,
+            "- [Meet us](%s/about.html): who we are and the standard our people are held to." % base,
             "- [Coverage](%s/coverage.html): the 18 GTA cities we cover, and travel across Canada." % base,
             "- [Answers](%s/answers.html): the longer answers to these questions." % base,
             "- [Journal](%s/journal/): field notes for venue owners and event organisers." % base,

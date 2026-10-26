@@ -6,7 +6,8 @@
     2  services      one scroll pushes the camera into his jacket and a gold
                      ring opens from it onto a night event; the six services
                      arrive over it (each card opens its page)
-    3  the people    the owners in Swarm vests, on warm stone; the standard;
+    3  who we are    "Canadian Owned. Canadian Operated. Trusted to Protect." on
+                     warm stone, an on-the-job photograph, three standards;
                      "Meet the crew" for the visitor who came for the people
     4  how it works  three steps, the trust facts, "start with step one"
     5  coverage      the map and one line; every city lives on coverage.html
@@ -48,11 +49,6 @@ BAND = [
     ('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>', "Answered 24/7"),
 ]
 
-STEPS = [
-    ("Tell us the night", "Date, place and headcount, by phone or the form. It takes a minute."),
-    ("Get a written plan", "The number of officers, the hours and one named lead, usually the same day."),
-    ("We run it", "A briefed crew on time, one line of contact, and a report before we leave."),
-]
 
 SIZES = ["Just me or my family", "Under 50", "50 to 150", "150 to 500", "Over 500", "Not sure yet"]
 
@@ -129,38 +125,38 @@ def services():
 
 
 def people():
+    P = C.PEOPLE
     items = "".join('<li style="--k:%d"><h3>%s</h3><p>%s</p></li>' % (i, t, d)
-                    for i, (t, d) in enumerate(C.ELITE["items"]))
-    return """<section class="scr px" id="people" data-label="The people" aria-labelledby="h-people">
+                    for i, (t, d) in enumerate(P["items"]))
+    return """<section class="scr px" id="people" data-label="Who we are" aria-labelledby="h-people">
 <div class="wrap scr__in px__in">
-<figure class="px__pic"><img src="assets/img/own-pair-cut-1000.webp"
- srcset="assets/img/own-pair-cut-600.webp 600w, assets/img/own-pair-cut-1000.webp 1000w"
- sizes="(max-width:899px) 46vw, 30vw" width="1000" height="1535" loading="lazy" decoding="async"
- alt="The two owners of Swarm Protective Services in black tactical vests with the Swarm emblem."></figure>
+<figure class="px__pic px__pic--photo"><img src="assets/img/own-escort-caps-1000.webp"
+ srcset="assets/img/own-escort-caps-600.webp 600w, assets/img/own-escort-caps-1000.webp 1000w"
+ sizes="(max-width:899px) 100vw, 34vw" width="1000" height="1333" loading="lazy" decoding="async"
+ alt="Two Swarm close protection officers escorting a client through a crowded event hall."></figure>
 <div class="px__txt">
-<p class="eyebrow">Who turns up</p>
-<h2 id="h-people">Run by the people on the floor</h2>
-<p class="px__lede">Founded by {founder}. The owners still work details themselves, and they are
-the first names on every standing order we write.</p>
-<ul class="px__std">{items}</ul>
+<p class="eyebrow">{k}</p>
+<h2 id="h-people">{h}</h2>
+<p class="px__lede">{line}</p>
+<ul class="px__std px__std--3">{items}</ul>
 <a class="go" href="about.html">Meet the crew {arrow}</a>
 </div>
 </div>
-</section>""".format(founder=BIZ["founder"], items=items, arrow=ARROW)
+</section>""".format(k=P["kicker"], h=P["h"], line=P["line"], items=items, arrow=ARROW)
 
 
 def how():
     steps = "".join('<li class="hw__step" style="--k:%d"><span class="hw__n">%02d</span><h3>%s</h3><p>%s</p></li>'
-                    % (i, i + 1, t, d) for i, (t, d) in enumerate(STEPS))
+                    % (i, i + 1, t, d) for i, (t, d) in enumerate(C.STEPS["items"]))
     facts = "".join("<li>%s%s</li>" % (svg(p), t) for p, t in BAND)
     return """<section class="scr hw" id="how" data-label="How it works" aria-labelledby="h-how">
 <div class="wrap scr__in">
-<p class="eyebrow">How it works</p><h2 id="h-how">Booked in three steps</h2>
+<p class="eyebrow">How it works</p><h2 id="h-how">{h}</h2>
 <ol class="hw__steps">{steps}</ol>
 <a class="go" href="#contact">Start with step one {arrow}</a>
 </div>
 <ul class="facts" aria-label="Licences and insurance">{facts}</ul>
-</section>""".format(steps=steps, facts=facts, arrow=ARROW)
+</section>""".format(h=C.STEPS["h"], steps=steps, facts=facts, arrow=ARROW)
 
 
 def coverage():
@@ -204,7 +200,7 @@ def quote():
 <div class="wrap scr__in kx__in">
 <div class="kx__side">
 <p class="eyebrow">Get a quote</p>
-<h2 id="h-contact">Tell us the night</h2>
+<h2 id="h-contact">Tell us what you need</h2>
 <p class="kx__lede">Three short steps. You get a written number and a named lead, usually the same day.</p>
 <a class="kx__tel" href="tel:{tel}">{i_phone}<span>{phone}</span></a>
 <p class="kx__note"><span class="dot" aria-hidden="true"></span>Answered 24/7 &middot; or email

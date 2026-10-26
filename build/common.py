@@ -43,7 +43,7 @@ MODE = {"preview": False, "preview_base": ""}
 # The menu: the funnel's five doors. Paths are from the site root.
 NAV = [
     ("index.html#services", "Services", "Close protection, events, venues, buses, limos, monitoring"),
-    ("about.html",          "Meet us",  "The people who turn up"),
+    ("about.html",          "Meet us",  "Who we are and how we work"),
     ("coverage.html",       "Coverage", "Toronto, the GTA, and anywhere in Canada"),
     ("answers.html",        "Answers",  "What people ask before they book"),
     ("index.html#contact",  "Contact",  "Get a quote"),
@@ -173,7 +173,7 @@ def foot_html(depth):
 <div class="foot__grid">
 <div>
 <a class="foot__logo" href="{home}" aria-label="{name} — home"><img src="{p}assets/logo/swarm-horizontal-gold.svg" alt="{name}" width="188" height="49" loading="lazy"></a>
-<p class="foot__blurb">Licensed door staff, event security and close protection across the Greater Toronto Area. The product is a night where nothing happened.</p>
+<p class="foot__blurb">Canadian owned. Canadian operated. Licensed protection for people, property and operations across Toronto, the GTA and Canada.</p>
 {social}
 </div>
 <div><h4>What we do</h4><ul>{svc}</ul></div>
@@ -392,9 +392,9 @@ def ihero(crumbs, eyebrow, h1, lede, pic, ctas="", label="Overview"):
 </section>""".format(pic=pic, crumbs=crumbs, eyebrow=eyebrow, h1=h1, lede=lede, ctas=ctas, label=label)
 
 
-def cta_final(depth=0, heading="Tell us the night.",
-              lede="Date, venue and headcount is enough to start. You get a written number and "
-                   "a named lead, usually the same day.", quote=None):
+def cta_final(depth=0, heading="Tell us what you need.",
+              lede="Date, place and headcount is enough to start. You get a written plan and "
+                   "one point of contact, usually the same day.", quote=None):
     return """<section class="scr cta-final" id="quote" data-label="Get a quote">
 <div class="wrap scr__in">
 <img class="cta-final__em" src="{p}assets/logo/emblem-216.webp"

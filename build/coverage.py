@@ -29,12 +29,6 @@ REGIONS = [
     ("East", ["Pickering", "Ajax", "Whitby", "Oshawa"]),
 ]
 
-TRAVEL = [
-    ("We travel with you", "Anywhere in Canada, and the same crew stays with you for the trip."),
-    ("Licensed where it counts", "Outside Ontario we work with licensed partners where the province "
-                                 "requires it."),
-    ("One lead, one report", "The same named lead and the same written report, wherever the night is."),
-]
 
 
 def body():
@@ -42,7 +36,7 @@ def body():
         '<div class="reg" style="--k:%d"><h3>%s</h3><ul>%s</ul></div>'
         % (i, r, "".join("<li>%s</li>" % c for c in cities)) for i, (r, cities) in enumerate(REGIONS))
     travel = "".join('<li class="hw__step" style="--k:%d"><span class="hw__n">%02d</span><h3>%s</h3><p>%s</p></li>'
-                     % (i, i + 1, t, d) for i, (t, d) in enumerate(TRAVEL))
+                     % (i, i + 1, t, d) for i, (t, d) in enumerate(C.TRAVEL["items"]))
     return """<div class="cov" data-cov>
 <div class="cov__stage" aria-hidden="true">
 <div class="cov__gta">{gta}</div>
@@ -69,13 +63,13 @@ def body():
 
 <section class="scr hw travel" id="travel" data-label="Travel" aria-labelledby="h-travel">
 <div class="wrap scr__in">
-<p class="eyebrow">Outside the GTA</p><h2 id="h-travel">When the night is somewhere else</h2>
+<p class="eyebrow">{travel_k}</p><h2 id="h-travel">{travel_h}</h2>
 <ol class="hw__steps">{travel}</ol>
 </div>
 </section>
 {cta}""".format(gta=cinema.map_svg(narrow_aspect=0.6), can=cinema.canada_svg(),
                 line=C.COVERAGE["line"], national=C.COVERAGE["national"],
-                regions=regions, travel=travel,
+                regions=regions, travel=travel, travel_k=C.TRAVEL["kicker"], travel_h=C.TRAVEL["h"],
                 cta=cta_final(0, heading="Tell us where.",
                               lede="City, date and headcount is enough to start. We reply the same day."))
 

@@ -43,24 +43,74 @@ WORK = {
     "right": ("At your side", "Discreet. Suited. Trained."),
 }
 
-# Why our people, specifically. Every line here is something we can prove on
-# request — no awards, no numbers we cannot show.
+# The client's own words, from their review deck (SWARM Protection.pptx,
+# October 2026). Keep them as written. Nothing here promises that the owners
+# themselves attend a job — the client asked for that to stay off the site.
+
+# Meet us: the standard (deck slide 1)
 ELITE = {
     "kicker": "Why Swarm",
     "h": "The standard our people are held to",
     "items": [
-        ("Licensed, every one of them",
-         "PSISA licence checked before a shift is assigned. The agency is licensed, "
-         "$5M insured and WSIB covered."),
-        ("Trained to end it, not start it",
-         "De-escalation first: position, distance, tone. Hands are the last resort and "
-         "the report says why."),
-        ("The owners work the floor",
-         "You meet the people who turn up. The same crew comes back, so your room is "
-         "learned, not guessed."),
-        ("Written up before we leave",
-         "An incident report lands before the shift ends — times, people, actions. "
-         "It is what answers a claim months later."),
+        ("Continuously trained &amp; certified",
+         "Our security personnel complete annual recertification and ongoing training, ensuring "
+         "strict compliance with Ontario regulations and national Canadian industry standards."),
+        ("Strategic resolution first",
+         "Our team leads with articulate communication, situational awareness, and professional "
+         "presence to control environments and resolve issues before they escalate."),
+        ("Single point of command",
+         "One dedicated Security Concierge manages your detail from start to finish, keeping "
+         "communication streamlined and your team&rsquo;s operations completely synchronized."),
+        ("Comprehensive shift logs",
+         "Complete transparency from briefing to debrief. Meticulously maintained incident and "
+         "shift reports are kept strictly on record and provided on demand for total accountability."),
+    ],
+}
+
+# Home: who we are (deck slide 3)
+PEOPLE = {
+    "kicker": "Who we are",
+    "h": "Canadian Owned. Canadian Operated. Trusted to Protect.",
+    "line": "Swarm Protective Services combines extensive security experience with professional "
+            "protection strategies to safeguard people, property, and operations.",
+    "items": [
+        ("Trained, Certified, Accountable",
+         "Annual training and performance development ensure our personnel remain prepared to "
+         "deliver professional security services in accordance with industry standards and "
+         "client expectations."),
+        ("Prevent, Defuse, and Control",
+         "Control the environment. Communicate professionally. Maintain reactionary distance. "
+         "Physical intervention is a last resort."),
+        ("Observe &rarr; Respond &rarr; Report",
+         "Every incident is documented accurately and promptly, ensuring operational "
+         "accountability, investigative integrity, and a defensible record of events."),
+    ],
+}
+
+# Meet us: the statement (deck slide 2), lit word by word
+STATEMENT = ("Peace of mind is our product. We deliver it through proactive planning, skilled "
+             "communication, and unyielding professionalism.")
+STATEMENT_2 = ("After all, true security isn&rsquo;t measured by how a crisis is handled, "
+               "it&rsquo;s measured by the total absence of one.")
+
+# Home: how it works (deck slide 6)
+STEPS = {
+    "h": "Protection delivered in three steps",
+    "items": [
+        ("Initial consultation", "Discuss your security requirements and operational objectives."),
+        ("Customized service plan", "Receive a tailored protection strategy and deployment plan."),
+        ("Professional execution", "Trained personnel, dedicated oversight, and documented results."),
+    ],
+}
+
+# Coverage: outside the GTA (deck slide 5)
+TRAVEL = {
+    "kicker": "Wherever protection is required, we deliver",
+    "h": "Protection without boundaries.",
+    "items": [
+        ("Nationwide coverage", "Professional protection services across Canada."),
+        ("Operational excellence", "Trained personnel. Proven performance."),
+        ("One lead, one report", "One point of contact. One standard of protection."),
     ],
 }
 

@@ -34,6 +34,9 @@ PORTRAITS = {
     "owners-car": ("source-art/owners/2.jpg", 0.46),
     "owners-wide": ("source-art/owners/4.jpg", 0.46),
     "crew-venue": ("ClientImages/WhatsApp Image 5.jpeg", 0.42),
+    # on-the-job action photographs the client supplied in their review deck
+    "escort-suits": ("source-art/client-deck/escort-suits.png", 0.36),
+    "escort-caps": ("source-art/client-deck/escort-caps.png", 0.36),
 }
 PORTRAIT_AR = 3 / 4.0
 

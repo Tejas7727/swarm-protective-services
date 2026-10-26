@@ -1163,3 +1163,28 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
   #answers .qx__side{display:none}                                /* the opening screen introduced them */
   .next7{min-height:30px}
 }
+
+/* ---------- client review (2026-10): working photographs, their words -------- */
+.px__pic--photo{display:block;height:min(70svh,620px);aspect-ratio:3/4;overflow:hidden;border:1px solid rgba(22,24,26,.22)}
+.px__pic--photo img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:none}
+.px h2{font-size:clamp(1.5rem,3.2vw,2.5rem)}
+.px__std--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.own__photo{margin:0;height:min(70svh,620px);overflow:hidden;border:1px solid var(--rule)}
+.own__photo img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.say__after{margin:clamp(18px,3vh,30px) 0 0;max-width:46ch;color:var(--bone-2);font-style:italic;
+  font-size:clamp(1rem,1.8vw,1.35rem);line-height:1.5}
+@media (max-width:1100px){ .px__std--3{grid-template-columns:1fr} .px__std--3 li{padding-top:8px} }
+@media (max-width:899px){
+  .px__pic--photo{height:clamp(140px,24svh,240px);aspect-ratio:auto;width:100%}
+  .px__pic--photo img{object-position:50% 22%}
+  .own__photo{height:clamp(170px,30svh,280px)}
+}
+@media (max-width:699px){
+  .px__pic--photo{height:clamp(96px,15svh,170px)}
+  .std7 h2{font-size:clamp(1.2rem,5.6vw,1.5rem)}
+  .std7__grid li{grid-template-columns:24px minmax(0,1fr);gap:1px 8px;padding:8px 10px}
+  .std7__grid h3{font-size:.9rem}
+  .std7__grid p{font-size:.76rem;line-height:1.34}
+  .std7__grid li{padding:7px 10px}
+  .px__in{gap:8px} .px__lede{margin-bottom:8px}
+}

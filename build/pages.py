@@ -88,7 +88,7 @@ ANSWERS = page(
     path="/answers.html", depth=0,
     title="Security Questions Answered — Swarm Protective Services",
     desc="Straight answers about hiring security in Toronto and the GTA: licensing, armed "
-         "guards, how many officers an event needs, response times and what happens on the night.",
+         "guards, how many officers an event needs, response times and what happens on the day.",
     og="/assets/og/og-default.jpg",
     schema=faq_schema([(q, plain(a)) for q, a in FAQS]),
     bodyattr=' class="screens"',
@@ -103,7 +103,7 @@ ANSWERS = page(
 </section>
 {cta}""".format(hero=ihero('<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Answers</span></div>',
                            "Answers", "What people ask before they book.",
-                           "Licences, armed guards, headcounts, timing and what happens on the night.",
+                           "Licences, armed guards, headcounts, timing and what happens on the day.",
                            img("svc-venue-security", (800, 1600), "100vw",
                                "The brass doors of a venue at night.", loading="eager", priority=True,
                                ratio=1216 / 832.0), label="Answers"),

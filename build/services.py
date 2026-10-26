@@ -300,9 +300,7 @@ def _body(s):
 <div class="others"><p class="eyebrow">The rest of what we do</p><ul>{others}</ul></div></div>
 </div>
 </section>""".format(name_l=s["name"].lower(), arrow=ARROW, faq=faq_html(s["faq"]), others=_others(s["slug"])),
-        cta_final(0, heading="Tell us the night.",
-                  lede="Date, place and headcount is enough to start. You get a written number "
-                       "and a named lead, usually the same day.", quote=quote),
+        cta_final(0, quote=quote),
     ])
 
 
