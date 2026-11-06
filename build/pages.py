@@ -102,7 +102,7 @@ ANSWERS = page(
 </div>
 </section>
 {cta}""".format(hero=ihero('<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Answers</span></div>',
-                           "Answers", "What people ask before they book.",
+                           "What people ask before they book",
                            "Licences, armed guards, headcounts, timing and what happens on the day.",
                            img("svc-venue-security", (800, 1600), "100vw",
                                "The brass doors of a venue at night.", loading="eager", priority=True,

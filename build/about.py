@@ -33,8 +33,8 @@ ON_THE_JOB = [
 
 
 def _standard():
-    return "".join('<li style="--k:%d"><span class="gx__k">%02d</span><h3>%s</h3><p>%s</p></li>'
-                   % (i, i + 1, t, b) for i, (t, b) in enumerate(C.ELITE["items"]))
+    return "".join('<li style="--k:%d"><h3>%s</h3><p>%s</p></li>'
+                   % (i, t, b) for i, (t, b) in enumerate(C.ELITE["items"]))
 
 
 def _gallery():
@@ -58,7 +58,6 @@ BODY = """{hero}
  sizes="(max-width:899px) 100vw, 40vw" width="1000" height="1333" loading="lazy" decoding="async"
  alt="Two Swarm close protection officers escorting a client through an event hall."></figure>
 <div class="own__txt">
-<p class="eyebrow">Leadership</p>
 <h2 id="h-own">Founded by {founder}</h2>
 <p class="lede">{founder}, {role}, built Swarm Protective Services on one standard of protection:
 trained personnel, one point of contact, and documented results.</p>
@@ -76,7 +75,7 @@ trained personnel, one point of contact, and documented results.</p>
 
 <section class="scr job" id="on-the-job" data-label="On the job" aria-labelledby="h-job">
 <div class="wrap scr__in">
-<p class="eyebrow">On the job</p><h2 id="h-job">Real work, real crew</h2>
+<h2 id="h-job">Real work, real crew</h2>
 <ul class="job__pics">{gallery}</ul>
 </div>
 </section>
@@ -91,7 +90,7 @@ ABOUT = page(
     og="/assets/og/og-default.jpg",
     bodyattr=' class="screens"',
     body=BODY.format(
-        hero=ihero(crumb_html([("Home", "index.html"), ("Meet us", "")]), "Meet us", "Who we are.",
+        hero=ihero(crumb_html([("Home", "index.html"), ("Meet us", "")]), "Who we are",
                    "Licensed, trained personnel who plan ahead, communicate first, and document every detail.",
                    img("crew-hero", (640, 900, 1200, 1600), "100vw",
                        "Five Swarm officers in black under a lit venue sign.", loading="eager",

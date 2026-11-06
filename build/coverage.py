@@ -44,19 +44,19 @@ def body():
 </div>
 <section class="scr cov__beat" id="top" data-label="Toronto" aria-labelledby="h-cov">
 <div class="wrap scr__in"><p class="eyebrow">Coverage</p>
-<h1 id="h-cov">Based in Toronto.</h1><p class="lede">Dispatch answers from here, 24 hours a day.</p></div>
+<h1 id="h-cov">Based in Toronto</h1><p class="lede">Dispatch answers from here, 24 hours a day.</p></div>
 </section>
 <section class="scr cov__beat" id="gta" data-label="The GTA">
-<div class="wrap scr__in"><h2>Across the GTA.</h2><p class="lede">{line}</p></div>
+<div class="wrap scr__in"><h2>Across the GTA</h2><p class="lede">{line}</p></div>
 </section>
 <section class="scr cov__beat" id="canada" data-label="Canada">
-<div class="wrap scr__in"><h2>Anywhere in Canada.</h2><p class="lede">{national}</p></div>
+<div class="wrap scr__in"><h2>Anywhere in Canada</h2><p class="lede">{national}</p></div>
 </section>
 </div>
 
 <section class="scr regions" id="cities" data-label="Every city" aria-labelledby="h-reg">
 <div class="wrap scr__in">
-<p class="eyebrow">Every city we cover</p><h2 id="h-reg">Eighteen cities, one dispatch</h2>
+<h2 id="h-reg">Eighteen cities, one dispatch</h2>
 <div class="regions__grid">{regions}</div>
 </div>
 </section>
@@ -70,7 +70,7 @@ def body():
 {cta}""".format(gta=cinema.map_svg(narrow_aspect=0.6), can=cinema.canada_svg(),
                 line=C.COVERAGE["line"], national=C.COVERAGE["national"],
                 regions=regions, travel=travel, travel_k=C.TRAVEL["kicker"], travel_h=C.TRAVEL["h"],
-                cta=cta_final(0, heading="Tell us where.",
+                cta=cta_final(0, heading="Tell us where",
                               lede="City, date and headcount is enough to start. We reply the same day."))
 
 

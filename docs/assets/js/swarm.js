@@ -320,6 +320,7 @@
     var send = form.querySelector('[data-send]'), prog = form.querySelector('[data-prog]');
     var bar = form.querySelector('.qf__prog');
     var show = function (i, focus) {
+      form.classList.toggle('is-back', i < at);
       at = i;
       steps.forEach(function (s, k) { s.classList.toggle('is-on', k === i); });
       back.hidden = i === 0;

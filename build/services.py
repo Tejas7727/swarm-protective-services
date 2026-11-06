@@ -22,7 +22,7 @@ SERVICES = [
         "title": "Close Protection & Bodyguards — Toronto &amp; GTA",
         "desc": "Licensed close protection in Toronto and the GTA: executives, artists, visiting "
                 "clients and families. Advance work, discreet officers, secure transport, same-day quotes.",
-        "h1": "Close protection.",
+        "h1": "Close protection",
         "lede": "A licensed officer at your side, or a team around you. Suited, briefed, and boring "
                 "to look at — which is the point.",
         "includes": [
@@ -61,7 +61,7 @@ SERVICES = [
         "title": "Event Security Toronto — Concerts, Weddings, Galas",
         "desc": "Licensed event security across Toronto and the GTA: concerts, weddings, galas, "
                 "festivals and private parties. Door, barrier, floor and close-out, quoted per event.",
-        "h1": "Event security.",
+        "h1": "Event security",
         "lede": "From a 60-person wedding to a room of two thousand: the right number of licensed "
                 "officers, in the right places, from load-in to lock-up.",
         "includes": [
@@ -97,7 +97,7 @@ SERVICES = [
         "title": "Bar &amp; Nightclub Security Toronto — Door Staff",
         "desc": "Licensed door staff and floor security for Toronto bars, clubs and lounges. The same "
                 "crew every week, trained to de-escalate, with a written incident report every night.",
-        "h1": "Venue security.",
+        "h1": "Venue security",
         "lede": "Door, floor and close. The same faces every week, so the regulars are known and the "
                 "trouble is spotted before it starts.",
         "includes": [
@@ -132,7 +132,7 @@ SERVICES = [
         "title": "Party Bus Security Toronto — Officers On Board",
         "desc": "Licensed security on party buses and group transport in Toronto and the GTA: on board, "
                 "at each stop, and at the door of every venue on the route. Quoted per night.",
-        "h1": "Party bus security.",
+        "h1": "Party bus security",
         "lede": "A moving room with a bar in it and a new door every hour. We ride with it.",
         "includes": [
             ("An officer on board", "On the bus for the whole route, not meeting you at the venue."),
@@ -167,7 +167,7 @@ SERVICES = [
         "title": "Limousine Service with Security — Toronto &amp; GTA",
         "desc": "Chauffeured limousine and executive transport in Toronto and the GTA with a licensed "
                 "security officer on the detail: airport runs, events, nights out and client visits.",
-        "h1": "Limousine service.",
+        "h1": "Limousine service",
         "lede": "The car, the driver, and an officer who travels with it. One booking, one number, "
                 "one person responsible for the whole trip.",
         "includes": [
@@ -203,7 +203,7 @@ SERVICES = [
         "title": "Home &amp; Business Monitoring — Toronto &amp; GTA",
         "desc": "Monitoring and patrols for homes, businesses, sites and vacant property across Toronto "
                 "and the GTA: scheduled checks, alarm response support and a written log every visit.",
-        "h1": "Monitoring.",
+        "h1": "Monitoring",
         "lede": "Somebody checks. On a schedule you set, with a record you can show an insurer.",
         "includes": [
             ("Scheduled checks", "Nightly, weekly or to a pattern you choose — doors, windows, gates, lights."),
@@ -242,8 +242,8 @@ ARROW = ('<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="curren
 
 def gets(items):
     """What you get: every item on one screen, arriving in a gentle stagger."""
-    return "".join('<li style="--k:%d"><span class="gx__k">%02d</span><h3>%s</h3><p>%s</p></li>'
-                   % (i % 3 + i // 3, i + 1, t, d) for i, (t, d) in enumerate(items))
+    return "".join('<li style="--k:%d"><h3>%s</h3><p>%s</p></li>'
+                   % (i % 3 + i // 3, t, d) for i, (t, d) in enumerate(items))
 
 
 def steps(items):
@@ -275,7 +275,7 @@ def _body(s):
     who = "".join("<li>%s</li>" % w for w in s["for_whom"])
     return "\n".join([
         ihero(crumb_html([("Home", "index.html"), ("Services", "index.html#services"), (s["name"], "")]),
-              "Service", s["h1"], s["lede"],
+              s["h1"], s["lede"],
               img(s["art"], (800, 1600), "100vw", s["alt"], loading="eager", priority=True, ratio=1216 / 832.0),
               ctas, label=s["name"]),
         """<section class="scr gx" id="includes" data-label="What you get" aria-labelledby="h-gets">
@@ -287,14 +287,14 @@ def _body(s):
 </section>""".format(gets=gets(s["includes"]), q=quote, name_l=s["name"].lower(), arrow=ARROW),
         """<section class="scr hw" id="runs" data-label="How it runs" aria-labelledby="h-runs">
 <div class="wrap scr__in">
-<p class="eyebrow">How a booking runs</p><h2 id="h-runs">Three steps, one lead</h2>
+<h2 id="h-runs">Three steps, one lead</h2>
 <ol class="hw__steps">{steps}</ol>
 <div class="whofor"><p class="eyebrow">Who it is for</p><ul>{who}</ul></div>
 </div>
 </section>""".format(steps=steps(s["steps"]), who=who),
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
-<div><p class="eyebrow">Questions</p><h2 id="h-q">Asked about {name_l}</h2>
+<div><h2 id="h-q">Asked about {name_l}</h2>
 <p class="qx__more"><a class="go" href="answers.html">More answers {arrow}</a></p></div>
 <div>{faq}
 <div class="others"><p class="eyebrow">The rest of what we do</p><ul>{others}</ul></div></div>

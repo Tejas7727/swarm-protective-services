@@ -93,9 +93,9 @@ def welcome(scene):
 <h1 id="h-home">{first},<br> <span class="hx__nw">{rest}</span></h1>
 <p class="hx__lede">{lede}</p>
 <nav class="doors" aria-label="Where to start">
-<a class="doors__a doors__a--go" href="#contact"><b>Get a quote</b><span>Three short steps</span>{arrow}</a>
-<a class="doors__a" href="about.html"><b>Meet the crew</b><span>Who turns up</span>{arrow}</a>
-<a class="doors__a" href="#services"><b>Our services</b><span>Six ways we cover you</span>{down}</a>
+<a class="doors__a doors__a--go" href="#contact"><b>Get a quote</b>{arrow}</a>
+<a class="doors__a" href="about.html"><b>Meet the crew</b>{arrow}</a>
+<a class="doors__a" href="#services"><b>Our services</b>{down}</a>
 </nav>
 </div>
 </section>""".format(up=cinema.UPRIGHT, mid=cinema.MIDDLE, mset=srcset(P["crew-m"]["sizes"]),
@@ -117,7 +117,7 @@ def services():
         for i, s in enumerate(SERVICES))
     return """<section class="scr sx" id="services" data-label="Services" aria-labelledby="h-services">
 <div class="wrap scr__in">
-<div class="sx__head"><p class="eyebrow">{k}</p><h2 id="h-services">{h}</h2>
+<div class="sx__head"><h2 id="h-services">{h}</h2>
 <p class="sx__lede">Pick one: what you get, how it runs, who it is for.</p></div>
 <ul class="scards">{cards}</ul>
 </div>
@@ -151,7 +151,7 @@ def how():
     facts = "".join("<li>%s%s</li>" % (svg(p), t) for p, t in BAND)
     return """<section class="scr hw" id="how" data-label="How it works" aria-labelledby="h-how">
 <div class="wrap scr__in">
-<p class="eyebrow">How it works</p><h2 id="h-how">{h}</h2>
+<h2 id="h-how">{h}</h2>
 <ol class="hw__steps">{steps}</ol>
 <a class="go" href="#contact">Start with step one {arrow}</a>
 </div>
@@ -166,7 +166,7 @@ def coverage():
     return """<section class="scr cx" id="coverage" data-label="Coverage" aria-labelledby="h-coverage" data-draw>
 <div class="wrap scr__in cx__in">
 <div class="cx__txt">
-<p class="eyebrow">{k}</p><h2 id="h-coverage">{h}</h2>
+<h2 id="h-coverage">{h}</h2>
 <p class="lede">{line} {national}</p>
 <a class="go" href="coverage.html">See every city we cover {arrow}</a>
 </div>
@@ -180,7 +180,7 @@ def faq():
     Q = C.FAQ
     return """<section class="scr qx" id="faq" data-label="Questions" aria-labelledby="h-faq">
 <div class="wrap scr__in qx__in">
-<div><p class="eyebrow">{k}</p><h2 id="h-faq">{h}</h2>
+<div><h2 id="h-faq">{h}</h2>
 <p class="qx__more"><a class="go" href="answers.html">{more} {arrow}</a></p></div>
 {faq}
 </div>
@@ -199,7 +199,6 @@ def quote():
     return """<section class="scr kx" id="contact" data-label="Get a quote" aria-labelledby="h-contact">
 <div class="wrap scr__in kx__in">
 <div class="kx__side">
-<p class="eyebrow">Get a quote</p>
 <h2 id="h-contact">Tell us what you need</h2>
 <p class="kx__lede">Three short steps. You get a written number and a named lead, usually the same day.</p>
 <a class="kx__tel" href="tel:{tel}">{i_phone}<span>{phone}</span></a>

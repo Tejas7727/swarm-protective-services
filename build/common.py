@@ -376,7 +376,7 @@ def crumb_html(items):
     return '<div class="crumbs">%s</div>' % "<i>/</i>".join(parts)
 
 
-def ihero(crumbs, eyebrow, h1, lede, pic, ctas="", label="Overview"):
+def ihero(crumbs, h1, lede, pic, ctas="", label="Overview"):
     """The opening of every inner page: a full-bleed photograph that pulls back
     into a frame as you scroll (swarm.js writes --h), the title on its dark
     lower left. `pic` is an <img>; `ctas` optional buttons."""
@@ -384,15 +384,14 @@ def ihero(crumbs, eyebrow, h1, lede, pic, ctas="", label="Overview"):
 <div class="ih__media">{pic}</div>
 <div class="wrap ih__in">
 {crumbs}
-<p class="eyebrow">{eyebrow}</p>
 <h1>{h1}</h1>
 <p class="lede">{lede}</p>
 {ctas}
 </div>
-</section>""".format(pic=pic, crumbs=crumbs, eyebrow=eyebrow, h1=h1, lede=lede, ctas=ctas, label=label)
+</section>""".format(pic=pic, crumbs=crumbs, h1=h1, lede=lede, ctas=ctas, label=label)
 
 
-def cta_final(depth=0, heading="Tell us what you need.",
+def cta_final(depth=0, heading="Tell us what you need",
               lede="Date, place and headcount is enough to start. You get a written plan and "
                    "one point of contact, usually the same day.", quote=None):
     return """<section class="scr cta-final" id="quote" data-label="Get a quote">
