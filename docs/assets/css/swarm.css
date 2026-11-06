@@ -1359,3 +1359,104 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
   .tl .hw__step{padding:0 0 0 30px}
   .tl .hw__step::before,.tl .hw__step::after{top:5px}
 }
+
+/* ---------- round 4 (2026-11): advance sketches and pictures on the screens that were only words ---------- */
+/* the sketches (build/plans.py): structure, then the route, then each officer's post, then the labels */
+.plan{margin:0;width:100%;aspect-ratio:1;max-height:min(66svh,600px);justify-self:center;color:var(--gold)}
+.pl{display:block;width:100%;height:100%;overflow:visible}
+.pl .w,.pl .w2,.pl .r{fill:none;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1}
+.pl .w{stroke:rgba(231,228,211,.62);stroke-width:1.6;stroke-dashoffset:calc(1 - clamp(0,var(--draw,1) * 1.7,1))}
+.pl .w2{stroke:rgba(231,228,211,.2);stroke-width:1.1;stroke-dashoffset:calc(1 - clamp(0,var(--draw,1) * 1.7,1))}
+.pl .r{stroke:var(--gold);stroke-width:2.8;stroke-dashoffset:calc(1 - clamp(0,(var(--draw,1) - .22) * 1.8,1))}
+.pl .r2{fill:none;stroke:var(--gold);stroke-width:1.6;stroke-dasharray:5 7;vector-effect:non-scaling-stroke;
+  opacity:clamp(0,(var(--draw,1) - .5) * 4,1)}
+.pl .z{fill:url(#hatch);color:var(--gold);opacity:calc(clamp(0,(var(--draw,1) - .3) * 3,1) * .32)}
+.pl path.z[d^="M140"]{fill:var(--gold);opacity:calc(clamp(0,(var(--draw,1) - .3) * 3,1) * .6)}   /* the line outside */
+.pl .p{fill:var(--gold-hi,var(--gold));stroke:var(--ink-0);stroke-width:3;paint-order:stroke;
+  opacity:clamp(0,(var(--draw,1) - var(--at)) * 8,1)}
+.pl .l{fill:var(--bone-2);font-family:var(--body);font-size:21px;font-weight:500;letter-spacing:.01em;
+  opacity:clamp(0,(var(--draw,1) - .66) * 5,1)}
+/* the process plan builds in three parts, one per step */
+.plan--build .st{--s:clamp(0,(var(--draw,1) - var(--at)) * 3,1)}
+.plan--build .w,.plan--build .r{stroke-dashoffset:calc(1 - var(--s))}
+.plan--build .z{opacity:calc(var(--s) * .32)}
+.plan--build .p{opacity:var(--s)}
+
+/* service pages: what you get beside the plan of that job */
+.gx__in{display:grid !important;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,4.5vw,80px);align-items:center}
+.gx--plan .gx__list{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:899px){
+  .gx__in{grid-template-columns:1fr;gap:10px;align-content:center}
+  .gx__in .plan{order:-1;width:auto;height:clamp(120px,21svh,220px);max-height:none}
+  .gx--plan .gx__list p{display:none}
+  .gx--plan .gx__list{gap:10px 16px}
+}
+
+/* steps beside the plan they build (process) */
+.tl__in{display:grid !important;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,5vw,90px);align-items:center}
+.tl--split .tl__line{left:5px;top:0;width:2px;height:100%}
+.tl--split .hw__steps{grid-template-columns:1fr;gap:clamp(16px,3vh,30px)}
+.tl--split .hw__step{padding:0 0 0 32px}
+.tl--split .hw__step::before,.tl--split .hw__step::after{top:5px}
+.tl--split .facts{justify-content:flex-start;padding:0;margin-left:0;gap:10px 22px}
+@media (max-width:899px){
+  .tl__in{grid-template-columns:1fr;gap:10px;align-content:center}
+  .tl__in .plan{order:-1;width:auto;height:clamp(84px,14svh,180px);max-height:none}
+}
+
+/* questions: a real job beside them (home), the crew at the car (answers), the other services (service pages) */
+.qx__pic{margin:clamp(16px,3vh,30px) 0 0;overflow:hidden;background:var(--ink-2)}
+.qx__pic img{width:100%;height:100%;object-fit:cover;display:block}
+.qx__pic--tall{height:min(50svh,470px);aspect-ratio:4/5;max-width:100%}
+.qx__pic--tall img{object-position:50% 35%}
+#answers .qx__pic{margin:0 0 clamp(18px,3.4vh,34px);aspect-ratio:2.33}
+.qx__side .others{margin-top:clamp(18px,3.4vh,34px)}
+.qx__side .others ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.qx__side .others li:first-child{grid-column:1/-1}
+.qx__side .others li:first-child img{aspect-ratio:16/7}
+.qx__side .olink img{border:0;transition:transform .8s var(--xo),filter .4s var(--xo);filter:brightness(.85)}
+.qx__side .olink{overflow:hidden}
+@media (hover:hover) and (pointer:fine){ .qx__side .olink:hover img{filter:brightness(1)} }
+@media (max-width:899px){
+  .qx__pic--tall{width:100%;height:clamp(92px,14.5svh,170px);aspect-ratio:auto;margin-top:4px}
+  .qx__pic--tall img{object-position:50% 18%}
+  .qx__side .others ul{display:flex;flex-wrap:wrap}
+}
+
+/* the quote: two of the crew standing by under the phone number (a cut-out, so they stand on the page) */
+.kx__side{display:flex;flex-direction:column}
+.kx__crew{margin:clamp(18px,3.6vh,36px) 0 0;height:min(40svh,380px);
+  -webkit-mask-image:linear-gradient(#000 78%,transparent);mask-image:linear-gradient(#000 78%,transparent)}
+.kx__crew img{height:100%;width:auto;display:block;filter:brightness(.9)}
+@media (max-width:899px){ .kx__crew{display:none} }
+
+/* 404: the route that ends at a wall */
+.nf{min-height:72svh;display:flex;align-items:center}
+.nf__in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(24px,5vw,80px);align-items:center;width:100%}
+.nf .plan{max-height:min(54svh,460px)}
+@media (max-width:899px){ .nf__in{grid-template-columns:1fr} .nf .plan{max-height:32svh} }
+/* the 404 has no screens to arrive at, so its sketch draws once as the page opens */
+@property --draw{syntax:"<number>";inherits:true;initial-value:1}
+@media (prefers-reduced-motion:no-preference){ .nf{animation:nf-draw 2.4s var(--xo) .25s both} }
+@keyframes nf-draw{from{--draw:0}to{--draw:1}}
+/* posts read bigger than a dot; who it is for sits under the list */
+.pl .p{transform-box:fill-box;transform-origin:center;scale:1.35}
+.gx--plan .whofor{margin-top:clamp(14px,2.6vh,26px)}
+@media (max-width:899px){ .gx--plan .whofor{display:none} }
+/* journal: each article card opens on a photograph of its subject */
+.post__pic{margin:-30px -28px 6px;aspect-ratio:16/10;overflow:hidden;background:var(--ink-2)}
+.post__pic img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.82) saturate(.9);
+  transition:transform 1s var(--xo),filter .4s var(--xo)}
+@media (hover:hover) and (pointer:fine){ .post:hover .post__pic img{transform:scale(1.03);filter:brightness(.95)} }
+/* journal openings: the photograph behind the title, dark where the words sit */
+.phero:has(.phero__media){min-height:min(80svh,780px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.phero__media{position:absolute;inset:0;z-index:0;margin:0}
+.phero__media img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;filter:brightness(.62) saturate(.9)}
+.phero__media::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(8,9,10,.55) 0%,rgba(8,9,10,.1) 35%,rgba(8,9,10,.92) 100%),
+             linear-gradient(90deg,rgba(8,9,10,.6),transparent 70%)}
+.phero:has(.phero__media) .wrap{position:relative;z-index:1;width:100%}
+.phero:has(.phero__media) .lede{color:var(--bone-2);max-width:56ch}
+@media (max-width:899px){ #answers .qx__pic{display:none} }   /* stacked, the questions need the room */
+/* the lines under the list travel with its last row, so nothing overlaps while the screen arrives */
+.fx7 .gx--plan .whofor,.fx7 .gx--plan .go{transform:translate3d(0,calc(var(--d,0) * (3.6 * 2.6vh + 2vh)),0)}

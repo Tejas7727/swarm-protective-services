@@ -120,10 +120,12 @@ def faq():
     Q = C.FAQ
     return """<section class="scr qx" id="faq" data-label="Questions" aria-labelledby="h-faq">
 <div class="wrap scr__in qx__in">
-<h2 id="h-faq">{h}</h2>
+<div class="qx__side"><h2 id="h-faq">{h}</h2><figure class="qx__pic qx__pic--tall">{pic}</figure></div>
 {faq}
 </div>
-</section>""".format(h=Q["h"], faq=faq_html(Q["items"]))
+</section>""".format(h=Q["h"], faq=faq_html(Q["items"]),
+           pic=img("own-escort-suits", (600, 1000), "(max-width:899px) 100vw, 32vw",
+                   "Swarm officers in black suits escorting guests through a gala.", ratio=0.75))
 
 
 def quote(tag="h2"):
@@ -144,6 +146,7 @@ def quote(tag="h2"):
 <p class="kx__lede">Three short steps. You get a written plan and one point of contact, usually the same day.</p>
 <a class="kx__tel" href="tel:{tel}">{i_phone}<span>{phone}</span></a>
 <p class="kx__note">Answered 24/7, or email <a href="mailto:{email}">{email}</a></p>
+<figure class="kx__crew" aria-hidden="true"><img src="assets/img/own-pair-cut-1000.webp" srcset="assets/img/own-pair-cut-600.webp 600w, assets/img/own-pair-cut-1000.webp 1000w" sizes="16vw" alt="" width="1000" height="1535" loading="lazy" decoding="async"></figure>
 </div>
 <form class="qf" data-quote data-to="{email}" aria-labelledby="h-contact">
 <p class="qf__prog" aria-live="polite"><span data-prog>Three short steps</span><i aria-hidden="true"><b></b></i></p>

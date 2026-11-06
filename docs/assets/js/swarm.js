@@ -135,7 +135,8 @@
     railLinks = [].slice.call(rail.querySelectorAll('a'));
   }
 
-  if (!reduced && screens.length) { html.classList.add('snap'); }
+  // snap only pages built of screens: a long read with one closing screen would be pulled to it
+  if (!reduced && screens.length && document.body.classList.contains('screens')) { html.classList.add('snap'); }
   if (!reduced && (screens.length || pheros.length)) {
     html.classList.add('fx7');
     var VW = 1, VH = 1, diag = 1, filmTop = 0, covTop = 0, tops = [], hts = [];

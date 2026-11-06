@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """The two pages that cannot live on the single page: privacy and 404."""
 from common import BIZ, faq_html, faq_schema, ihero, img, page, plain
+import plans
 from home import FAQS
 
 PRIVACY = page(
@@ -71,8 +72,9 @@ NOT_FOUND = page(
     desc="That page does not exist. Licensed door staff, event security and close protection "
          "across the Greater Toronto Area. Dispatch answered 24 hours.",
     og="/assets/og/og-default.jpg",
-    body="""<section class="phero" style="min-height:62svh;display:flex;align-items:center;border:0">
-<div class="wrap">
+    body="""<section class="phero nf" data-draw style="border:0">
+<div class="wrap nf__in">
+<div>
 <p class="eyebrow">404</p>
 <h1>Nothing here.</h1>
 <p class="lede">Usually a good sign. Not this time. The page you asked for does not exist.</p>
@@ -81,7 +83,9 @@ NOT_FOUND = page(
 <a class="btn btn--ghost" href="quote.html"><span>Request a quote</span></a>
 </div>
 </div>
-</section>""",
+<figure class="plan">%s</figure>
+</div>
+</section>""" % plans.dead_end(),
 )
 
 ANSWERS = page(
@@ -95,7 +99,7 @@ ANSWERS = page(
     body="""{hero}
 <section class="scr qx" id="answers" data-label="The answers" aria-label="The answers">
 <div class="wrap scr__in qx__in">
-<div class="qx__side"><p class="eyebrow">Still unsure?</p><h2>Ask us directly</h2>
+<div class="qx__side"><figure class="qx__pic">{pic}</figure><p class="eyebrow">Still unsure?</p><h2>Ask us directly</h2>
 <p class="lede">Call <a href="tel:{tel}">{phone}</a>, answered 24/7, or
 <a href="quote.html">send the date and the place</a>.</p></div>
 {faq}
@@ -106,7 +110,9 @@ ANSWERS = page(
                            img("svc-venue-security", (800, 1600), "100vw",
                                "The brass doors of a venue at night.", loading="eager", priority=True,
                                ratio=1216 / 832.0), label="Answers"),
-                tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], faq=faq_html(FAQS)),
+                tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], faq=faq_html(FAQS),
+                pic=img("lot-cine", (900, 1200), "(max-width:899px) 100vw, 40vw",
+                        "Three Swarm officers standing in front of a car at night.", ratio=1200 / 515.0)),
 )
 
 PAGES = {

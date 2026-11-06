@@ -7,6 +7,7 @@ import os
 import sys
 
 from common import crumb_html, ihero, img, page
+import plans
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "cinema"))
 import content as C                                              # noqa: E402
@@ -35,8 +36,9 @@ def _steps():
 
 BODY = """{hero}
 
-<section class="scr hw tl" id="steps" data-label="Three steps" aria-labelledby="h-how" data-draw>
-<div class="wrap scr__in">
+<section class="scr hw tl tl--split" id="steps" data-label="Three steps" aria-labelledby="h-how" data-draw>
+<div class="wrap scr__in tl__in">
+<div class="tl__text">
 <h2 id="h-how">{h}</h2>
 <div class="tl__run">
 <svg class="tl__line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -44,6 +46,8 @@ BODY = """{hero}
 <ol class="hw__steps tl__steps">{steps}</ol>
 </div>
 <ul class="facts" aria-label="Licences and insurance">{facts}</ul>
+</div>
+<figure class="plan plan--build">{plan}</figure>
 </div>
 </section>"""
 
@@ -59,7 +63,7 @@ PROCESS = page(
                    img("stock-earpiece", (800, 1600), "100vw",
                        "A close protection officer in a black suit speaking into an earpiece.", cls="at-face", loading="eager",
                        priority=True, ratio=2 / 3.0), label="How we work"),
-        h=C.STEPS["h"], steps=_steps(), facts=_facts()),
+        h=C.STEPS["h"], steps=_steps(), facts=_facts(), plan=plans.process()),
 )
 
 PAGES = {"process.html": PROCESS}

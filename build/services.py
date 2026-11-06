@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 """The six service pages — what the home page's one-liners actually mean.
 
-The home page sells; these pages answer. Each one says what you get, how a
-booking runs, who it is for, and the two or three questions people ask about
+The home page sells; these pages answer. Each one says what you get (beside a
+plan of that kind of job), who it is for, and the two or three questions people ask about
 that service specifically. No prices: every job is quoted.
 
 Edit the copy here. `build/service_art.py` exports the photographs.
 """
 from common import BIZ, crumb_html, faq_html, faq_schema, ihero, img, page, plain
+import plans
 
 # the quote page, with this service already picked
 QUOTE = "quote.html?service=%s"
 
 # slug, name, art, title, h1, lede, includes, steps, for_whom, faq
+# ("steps" is not drawn any more: the three steps live on process.html; kept as the
+#  per-service wording for the quote follow-up)
 SERVICES = [
     {
         "slug": "close-protection",
@@ -242,9 +245,6 @@ def gets(items):
                    % (i % 3 + i // 3, t, d) for i, (t, d) in enumerate(items))
 
 
-def steps(items):
-    return "".join('<li class="hw__step" style="--k:%d"><span class="hw__n">%02d</span><h3>%s</h3><p>%s</p></li>'
-                   % (i, i + 1, t, d) for i, (t, d) in enumerate(items))
 
 
 def _others(slug):
@@ -274,25 +274,23 @@ def _body(s):
               s["h1"], s["lede"],
               img(s["art"], (800, 1600), "100vw", s["alt"], loading="eager", priority=True, ratio=1216 / 832.0),
               ctas, label=s["name"]),
-        """<section class="scr gx" id="includes" data-label="What you get" aria-labelledby="h-gets">
-<div class="wrap scr__in">
+        """<section class="scr gx gx--plan" id="includes" data-label="What you get" aria-labelledby="h-gets" data-draw>
+<div class="wrap scr__in gx__in">
+<div class="gx__text">
 <p class="eyebrow">What you get</p><h2 id="h-gets">In every booking</h2>
 <ol class="gx__list">{gets}</ol>
+<div class="whofor"><p class="eyebrow">Who it is for</p><ul>{who}</ul></div>
 <a class="go" href="{q}">Get a quote for {name_l}</a>
 </div>
-</section>""".format(gets=gets(s["includes"]), q=quote, name_l=s["name"].lower()),
-        """<section class="scr hw" id="runs" data-label="How it runs" aria-labelledby="h-runs">
-<div class="wrap scr__in">
-<h2 id="h-runs">Three steps, one lead</h2>
-<ol class="hw__steps">{steps}</ol>
-<div class="whofor"><p class="eyebrow">Who it is for</p><ul>{who}</ul></div>
+<figure class="plan">{plan}</figure>
 </div>
-</section>""".format(steps=steps(s["steps"]), who=who),
+</section>""".format(gets=gets(s["includes"]), q=quote, name_l=s["name"].lower(),
+                    plan=plans.SERVICE[s["slug"]](), who=who),
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
-<div><h2 id="h-q">Asked about {name_l}</h2></div>
-<div>{faq}
+<div class="qx__side"><h2 id="h-q">Asked about {name_l}</h2>
 <div class="others"><p class="eyebrow">The rest of what we do</p><ul>{others}</ul></div></div>
+<div>{faq}</div>
 </div>
 </section>""".format(name_l=s["name"].lower(), faq=faq_html(s["faq"]), others=_others(s["slug"])),
     ])

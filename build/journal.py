@@ -16,7 +16,7 @@ post(
     title="What Event Security Actually Costs in Toronto (2026 Rates) | Swarm",
     h1="What event security<br>actually costs in<br>Toronto.",
     desc="Real 2026 hourly rates for licensed security guards, event staff and close protection in Toronto and the "
-         "GTA — plus what a suspiciously cheap quote is hiding.",
+         "GTA, plus what a suspiciously cheap quote is hiding.",
     date="2026-09-02", read="7 min", cat="Money",
     og="/assets/og/og-default.jpg",
     lead="Everybody asks the price first and almost nobody asks what is inside it. Here are the real numbers for "
@@ -27,20 +27,20 @@ post(
     body="""
 <h2 id="rates">The going rate in the GTA, 2026</h2>
 <p>Security pricing in Ontario is not a mystery, it is just badly published. Across the market this year, licensed
-unarmed guards run roughly <strong>$28–$45 per hour</strong>, with Toronto sitting toward the upper half of that
+unarmed guards run roughly <strong>$28-$45 per hour</strong>, with Toronto sitting toward the upper half of that
 because of wages, parking and the simple fact that downtown shifts start late and end later. Specialised event
-work — where an officer needs to run access control, manage a barrier or handle a VIP route — sits nearer
-<strong>$35–$60</strong>. Close protection is a different product entirely, generally <strong>$80–$150 per hour
+work (where an officer runs access control, a barrier or a VIP route) sits nearer
+<strong>$35-$60</strong>. Close protection is a different product entirely, generally <strong>$80-$150 per hour
 per agent</strong>.</p>
 
 <table>
 <thead><tr><th>Service</th><th>GTA market range</th><th>Typical minimum</th></tr></thead>
 <tbody>
-<tr><td>Licensed guard, venue or door</td><td>$28–$45/hr</td><td>4 hours</td></tr>
-<tr><td>Event security guard</td><td>$35–$60/hr</td><td>4 hours</td></tr>
-<tr><td>Supervisor or named lead</td><td>$45–$70/hr</td><td>4 hours</td></tr>
-<tr><td>Overnight site and equipment watch</td><td>$32–$50/hr</td><td>8–12 hours</td></tr>
-<tr><td>Close protection agent</td><td>$80–$150/hr</td><td>8 hours</td></tr>
+<tr><td>Licensed guard, venue or door</td><td>$28-$45/hr</td><td>4 hours</td></tr>
+<tr><td>Event security guard</td><td>$35-$60/hr</td><td>4 hours</td></tr>
+<tr><td>Supervisor or named lead</td><td>$45-$70/hr</td><td>4 hours</td></tr>
+<tr><td>Overnight site and equipment watch</td><td>$32-$50/hr</td><td>8-12 hours</td></tr>
+<tr><td>Close protection agent</td><td>$80-$150/hr</td><td>8 hours</td></tr>
 </tbody>
 </table>
 
@@ -52,7 +52,7 @@ What you should insist on from anyone you ask is a written figure with a named l
 <p>Six things, roughly in order of impact.</p>
 <ul>
 <li><strong>How many officers, for how long.</strong> A 10-officer, two-day festival is cheaper per hour than two
-officers for one six-hour shift. Fixed costs — the lead's planning time, the site visit, scheduling, reporting —
+officers for one six-hour shift. Fixed costs (the lead's planning time, the site visit, scheduling, reporting)
 spread across more hours.</li>
 <li><strong>When.</strong> Overnight, statutory holidays and New Year's Eve cost more because staff cost more. Any
 agency quoting you the same rate for a Tuesday at 18:00 and December 31st at 01:00 is either mistaken or is not
@@ -73,7 +73,7 @@ one of four things, and all four end up on your side of the ledger.</p>
 
 <h3>1. The licence</h3>
 <p>Every security guard working in Ontario must hold a current licence under the <em>Private Security and
-Investigative Services Act</em> — 40 hours of ministry-approved training, a provincial exam, a Criminal Record and
+Investigative Services Act</em>: 40 hours of ministry-approved training, a provincial exam, a Criminal Record and
 Judicial Matters Check, and emergency first aid. Licences are digital now and must be carried on shift. An
 unlicensed guard is not cheap security; it is an unlicensed person on your premises who your insurer does not know
 about.</p>
@@ -99,24 +99,24 @@ is the part you are actually buying.</p></blockquote>
 <h2 id="examples">Three worked examples</h2>
 
 <h3>A 250-capacity bar, Friday and Saturday</h3>
-<p>Three officers — one on ID, one on door, one on floor — 21:00 to 03:00, both nights. That is twelve
+<p>Three officers (one on ID, one on door, one on floor), 21:00 to 03:00, both nights. That is twelve
 officer-shifts of six hours. At the market rates above it lands in the low four figures per weekend, and for a
 room doing that volume it is a smaller line item than your bar spill. Recurring bookings should be quoted as a
 flat monthly rate so you can budget.</p>
 
 <h3>A 300-guest wedding at a banquet hall</h3>
-<p>Four suited officers from 17:00 to 01:00 — two on the entrance and gift table, two on the floor and parking
+<p>Four suited officers from 17:00 to 01:00: two on the entrance and gift table, two on the floor and parking
 lot at the end. Thirty-two officer-hours, plus a supervisor if the guest list is complicated. Ask for the
 supervisor to be priced separately so you can see what you are paying for.</p>
 
 <h3>A one-day outdoor event, 1,500 attendees</h3>
 <p>Ten officers plus a lead, 10:00 to 23:00 including set-up and clear, with overnight equipment watch. The
 number of gates, whether alcohol is served and whether the site needs holding overnight move this more than the
-attendee count does — which is why a quote given over the phone without a site plan is a guess.</p>
+attendee count does. That is why a quote given over the phone without a site plan is a guess.</p>
 
 <h2 id="ask">Five questions to ask before you sign anything</h2>
 <ol>
-<li>What is your Ontario security agency licence number? (Not the guards' — the company's.)</li>
+<li>What is your Ontario security agency licence number? (Not the guards'. The company's.)</li>
 <li>Can I see a WSIB clearance certificate and a $5M certificate of insurance?</li>
 <li>Will it be the same officers each week, and who is the named lead?</li>
 <li>Do I get a written incident report, and when?</li>
@@ -132,11 +132,11 @@ post(
     slug="how-many-security-guards-event",
     title="How Many Security Guards Do You Need for an Event? | Swarm",
     h1="How many guards<br>does your event<br>actually need?",
-    desc="A practical method for sizing event security in Ontario — ratios by event type, the positions you must "
+    desc="A practical method for sizing event security in Ontario: ratios by event type, the positions you must "
          "cover regardless of headcount, and the mistakes that leave a gap.",
     date="2026-08-19", read="6 min", cat="Planning",
     lead="Headcount is where the conversation starts and it is the least useful number in it. Here is how a "
-         "staffing plan is actually built — and why two events with 500 guests can need four officers or fourteen.",
+         "staffing plan is actually built, and why two events with 500 guests can need four officers or fourteen.",
     toc=[("Start with positions, not ratios", "positions"), ("Ratios that hold up", "ratios"),
          ("What pushes the number up", "up"), ("The four gaps we see most", "gaps"),
          ("A worked plan", "plan")],
@@ -151,7 +151,7 @@ is the list of positions that must be physically occupied for your site to be co
 <li>Every point where a ticket, wristband or ID is checked</li>
 <li>Back of house, loading and any door that can be pushed open from inside</li>
 <li>The bar or cash area, if either exists</li>
-<li>Each distinct area you cannot see from another — patio, mezzanine, green room, parking</li>
+<li>Each distinct area you cannot see from another: patio, mezzanine, green room, parking</li>
 <li>One roving lead who holds none of the above and can go anywhere</li>
 </ul>
 <p>That list is your floor. Ratios only tell you how much to add on top of it.</p>
@@ -160,16 +160,16 @@ is the list of positions that must be physically occupied for your site to be co
 <table>
 <thead><tr><th>Event type</th><th>Working ratio</th><th>Notes</th></tr></thead>
 <tbody>
-<tr><td>Corporate, ticketed, no alcohol</td><td>1 per 150–200</td><td>Access control does most of the work</td></tr>
+<tr><td>Corporate, ticketed, no alcohol</td><td>1 per 150-200</td><td>Access control does most of the work</td></tr>
 <tr><td>Private function with bar</td><td>1 per 100</td><td>Plus a gift-table or cash position</td></tr>
-<tr><td>Wedding</td><td>1 per 75–100</td><td>Suits; departures matter as much as arrivals</td></tr>
-<tr><td>Licensed venue, late night</td><td>1 per 75–100</td><td>Plus dedicated ID once a line forms</td></tr>
-<tr><td>Concert or club night</td><td>1 per 50–75</td><td>Barrier and artist route are separate positions</td></tr>
-<tr><td>Free public / outdoor event</td><td>1 per 75–125</td><td>Perimeter length often drives it, not headcount</td></tr>
+<tr><td>Wedding</td><td>1 per 75-100</td><td>Suits; departures matter as much as arrivals</td></tr>
+<tr><td>Licensed venue, late night</td><td>1 per 75-100</td><td>Plus dedicated ID once a line forms</td></tr>
+<tr><td>Concert or club night</td><td>1 per 50-75</td><td>Barrier and artist route are separate positions</td></tr>
+<tr><td>Free public / outdoor event</td><td>1 per 75-125</td><td>Perimeter length often drives it, not headcount</td></tr>
 </tbody>
 </table>
 <p>Use the ratio to sanity-check the position count, not to replace it. If the ratio says six and the positions say
-nine, the answer is nine — you cannot leave a fire exit unwatched because the maths said so.</p>
+nine, the answer is nine. You cannot leave a fire exit unwatched because the maths said so.</p>
 
 <h2 id="up">What pushes the number up</h2>
 <ul>
@@ -181,13 +181,13 @@ regardless. That is a perimeter problem, and perimeter problems are staffing pro
 a fraction of one.</li>
 <li><strong>Cash on site.</strong> A cash bar or door take needs a position of its own and a plan for moving it.</li>
 <li><strong>Anything that has happened before.</strong> A barred patron, an ongoing dispute, a previous incident at
-the same event — tell your agency. It changes the plan and it is the single most useful thing you can say.</li>
+the same event, tell your agency. It changes the plan and it is the single most useful thing you can say.</li>
 </ul>
 
 <h2 id="gaps">The four gaps we see most</h2>
 <h3>Nobody owns the exit</h3>
 <p>Entrances get staffed because they are visible. The exit that people use at 01:00, the one that opens onto a
-side street with no lighting, gets forgotten — and that is where the event's worst five minutes usually happen.</p>
+side street with no lighting, gets forgotten, and that is where the event's worst five minutes usually happen.</p>
 <h3>The lead is also holding a post</h3>
 <p>If your supervisor is standing on the door, you do not have a supervisor. You have a fourth guard with a title.
 Someone has to be free to move.</p>
@@ -209,7 +209,7 @@ discussed.</p>
 <li>1 × roving lead, no fixed post</li>
 <li>+2 for the final ninety minutes and the clear</li>
 </ul>
-<p>That is eight for most of the night, ten at the end — against a ratio that would have suggested six to eight.
+<p>That is eight for most of the night, ten at the end, against a ratio that would have suggested six to eight.
 The extra two are the ones that stop the night ending badly, and they are the first two a cheap quote deletes.</p>
 """,
 )
@@ -219,7 +219,7 @@ post(
     slug="ontario-security-guard-powers",
     title="What Security Guards Can and Cannot Do in Ontario | Swarm",
     h1="What a guard<br>may legally do<br>in Ontario.",
-    desc="A plain-language guide to the powers and limits of licensed security guards in Ontario — refusals, "
+    desc="A plain-language guide to the powers and limits of licensed security guards in Ontario: refusals, "
          "ejections, reasonable force and lawful detention.",
     date="2026-08-05", read="8 min", cat="Law",
     lead="Most complaints about door staff come from one gap: the public does not know what a guard may do, and a "
@@ -233,7 +233,7 @@ your post orders.</p>
 
 <h2 id="start">The starting point: a guard has no special powers</h2>
 <p>This surprises people. A licensed security guard in Ontario does not have police powers. What they have is the
-authority of the occupier — the venue — plus the same rights any member of the public has, exercised on the
+authority of the occupier (the venue), plus the same rights any member of the public has, exercised on the
 occupier's behalf. That is a narrower set of tools than most patrons assume and, occasionally, than the guard
 assumes.</p>
 <p>Licensing under the <em>Private Security and Investigative Services Act</em> sets the training and background
@@ -242,7 +242,7 @@ standard. It does not grant authority. A uniform is not a warrant.</p>
 <h2 id="refuse">Refusing entry</h2>
 <p><strong>Allowed.</strong> A venue may refuse admission, and a guard may communicate that refusal. You do not
 need to give a reason, and the refusal does not have to be fair in the sense of being deserved.</p>
-<p><strong>Not allowed.</strong> Refusal on a ground protected by the <em>Human Rights Code</em> — race, ancestry,
+<p><strong>Not allowed.</strong> Refusal on a ground protected by the <em>Human Rights Code</em>: race, ancestry,
 place of origin, colour, ethnic origin, citizenship, creed, sex, sexual orientation, gender identity, gender
 expression, age, marital status, family status or disability. This is where door policy most often goes wrong, and
 where a complaint has real teeth.</p>
@@ -284,14 +284,14 @@ police arrest them.</p>
 
 <h2 id="search">Searches, ID and phones</h2>
 <ul>
-<li><strong>Searches</strong> require consent, and consent can be a condition of entry — "bags are searched at this
+<li><strong>Searches</strong> require consent, and consent can be a condition of entry ("bags are searched at this
 door" is fine. What is not fine is searching someone who has refused, or continuing after consent is withdrawn.</li>
 <li><strong>ID</strong> may be required as a condition of entry to a licensed premises, and a guard may examine it.
 A guard may not confiscate it. Suspected fraudulent ID is a police matter; seizing someone's driver's licence and
 keeping it is not lawful.</li>
 <li><strong>Phones and filming.</strong> A patron filming in a public-facing venue is generally allowed to. A guard
 may not seize a phone, demand deletion, or use the filming as a reason to escalate. Assume everything is being
-recorded and behave accordingly — that is good practice regardless of the law.</li>
+recorded and behave accordingly. That is good practice regardless of the law.</li>
 </ul>
 
 <h2 id="sued">The four things that actually get a venue sued</h2>
@@ -315,14 +315,14 @@ post(
     slug="hiring-door-staff-questions",
     title="9 Questions to Ask Before Hiring Door Staff | Swarm Protective Services",
     h1="Nine questions<br>a real agency<br>answers instantly.",
-    desc="A checklist for bar and nightclub owners hiring door staff in Ontario — the questions that separate a "
+    desc="A checklist for bar and nightclub owners hiring door staff in Ontario: the questions that separate a "
          "licensed agency from a phone number with a van.",
     date="2026-07-22", read="6 min", cat="Hiring",
     lead="Every one of these can be answered in a single email by an agency that has its house in order. Send them "
-         "all nine at once and see what comes back — and how fast.",
+         "all nine at once and see what comes back, and how fast.",
     body="""
 <h2>1. What is your Ontario security agency licence number?</h2>
-<p>Not the guards' licences — the company's. A business cannot lawfully supply security guards in Ontario without
+<p>Not the guards' licences. The company's. A business cannot lawfully supply security guards in Ontario without
 an agency licence, and plenty of operations in this city are effectively brokers with no licence of their own.
 Ask for the number, then check it. If the answer is vague, stop there.</p>
 
@@ -361,7 +361,7 @@ use-of-force refreshers, naloxone, Standard First Aid and CPR-C, and how often e
 
 <h2>9. What would make you turn down a job?</h2>
 <p>This is the question that tells you the most and the one nobody expects. An agency with standards has a ready
-answer — unlawful work, intimidation dressed up as security, clients who want presence in order to start something.
+answer: unlawful work, intimidation dressed up as security, clients who want presence in order to start something.
 An agency that has never considered the question will say something like "we're pretty flexible", which is exactly
 what you do not want at your door.</p>
 
@@ -370,7 +370,7 @@ and sends it the same day.</p></blockquote>
 
 <h2>What to do with the answers</h2>
 <p>Put them side by side. You will usually find that the cheapest quote is missing three or four of the underlying
-items entirely — which means it is not the cheapest quote for the same thing, it is a quote for a different and
+items entirely. That means it is not the cheapest quote for the same thing, it is a quote for a different and
 much thinner thing.</p>
 <p>Then do one more step that almost nobody does: ask for a walk-through before you commit. Twenty minutes in your
 room tells you more about how an agency thinks than any document. Watch whether they look at your exits, ask about
@@ -383,7 +383,7 @@ post(
     slug="armed-bodyguards-canada-legal",
     title="Can You Hire an Armed Bodyguard in Canada? The Honest Answer | Swarm",
     h1="Armed bodyguards<br>in Canada: what<br>is actually legal.",
-    desc="The straight answer on armed private security and bodyguards in Ontario — what an Authorization to Carry "
+    desc="The straight answer on armed private security and bodyguards in Ontario: what an Authorization to Carry "
          "covers, what it does not, and what to do if your risk is genuinely serious.",
     date="2026-07-08", read="5 min", cat="Law",
     lead="We get this call most weeks and the answer disappoints people. It is still better than the alternative, "
@@ -404,7 +404,7 @@ handling, transportation or protection of cash, negotiable instruments or other 
 a firearm is required to protect life during that activity.</p>
 <p>That is armoured car and high-value transport work. It is why you see armed officers moving cash from a bank and
 never see one standing behind a CEO.</p>
-<p>The second situation — protection of life where police protection is inadequate — is issued so rarely that it is
+<p>The second situation (protection of life where police protection is inadequate) is issued so rarely that it is
 not a service anyone can sell you. It is not a product; it is an exceptional individual authorization.</p>
 <p>Where an authorization does apply, there are obligations on the agency too: under Ontario's <em>Private Security
 and Investigative Services Act</em>, the Ministry must be notified in writing within five days of an authorization
@@ -431,7 +431,7 @@ by someone with a clipboard, days before anything could happen.</li>
 <li><strong>Vehicle discipline.</strong> Arrivals and departures are where a principal is most exposed. Almost every
 serious incident happens within ten metres of a car.</li>
 <li><strong>Presence.</strong> Two large, calm, visibly professional agents change the arithmetic for anyone
-considering an approach. This is not a consolation prize — it is the mechanism.</li>
+considering an approach. This is not a consolation prize. It is the mechanism.</li>
 <li><strong>Documentation.</strong> Logging approaches, repeat faces and repeat plates is what turns a vague fear
 into something police can act on.</li>
 </ul>
@@ -440,7 +440,7 @@ into something police can act on.</li>
 <p>Then the honest advice is that private security is one part of the answer and not the first part. Report it.
 Build a documented record of incidents with dates, times, screenshots and witnesses. Speak to a lawyer about a
 restraining or peace-bond application. Change what is predictable about your routine. And put coverage in place
-while all of that is happening — we will place a detail within 24 hours and run the assessment in parallel rather
+while all of that is happening, we will place a detail within 24 hours and run the assessment in parallel rather
 than leaving someone uncovered while paperwork is written.</p>
 <p>What we will not do is sell you a firearm-shaped fantasy. <a href="../answers.html">Our high-risk
 section</a> sets out exactly what we can and cannot lawfully provide.</p>
@@ -466,7 +466,7 @@ post(
 reconstruction, and any competent lawyer will treat it as one.</p>
 <p>The practical difference is detail. At 03:05 the officer remembers the exact words that were said, which hand
 the glass was in, and that the manager was standing by the till. By Sunday lunchtime that has collapsed into "he
-was being aggressive so we walked him out" — which is not evidence of anything.</p>
+was being aggressive so we walked him out", which is not evidence of anything.</p>
 <p>Limitation periods in Ontario mean a claim can land two years later. An AGCO review can look back further. The
 report is the only thing that will still be accurate then.</p>
 
@@ -493,7 +493,7 @@ matches your CCTV timestamp.</p>
 report is biased. Record behaviour, not verdicts.</li>
 <li><strong>Medical conclusions.</strong> An officer can write "unresponsive, breathing, naloxone administered at
 01:22". An officer cannot write "overdose".</li>
-<li><strong>Legal conclusions.</strong> Not "he assaulted her" — "she stated that he had struck her; I observed
+<li><strong>Legal conclusions.</strong> Not "he assaulted her" but "she stated that he had struck her; I observed
 redness to her left cheek".</li>
 <li><strong>Anything filled in later without marking it.</strong> If something is added, it is dated and initialled
 as an addendum. A silently edited report is worse than no report.</li>
@@ -503,7 +503,7 @@ could have written down.</li>
 
 <h2 id="refusals">The refusal log is the quiet hero</h2>
 <p>If a human rights complaint is ever made about your door, the question will be whether there is a pattern. A
-consistent log — time, stated reason, no protected grounds — is the strongest answer available, and it is built
+consistent log (time, stated reason, no protected grounds) is the strongest answer available, and it is built
 one line at a time on nights when nothing is happening.</p>
 <p>It also tells you things. Three refusals a night for the same reason means your door policy is unclear or your
 signage is wrong, and that is a cheap fix you would otherwise never have noticed.</p>
@@ -512,10 +512,10 @@ signage is wrong, and that is a cheap fix you would otherwise never have noticed
 <table>
 <thead><tr><th>Field</th><th>Example entry</th></tr></thead>
 <tbody>
-<tr><td>Date / venue / shift</td><td>Sat 14 Sep 2026 · [Venue] · 20:45–03:10</td></tr>
+<tr><td>Date / venue / shift</td><td>Sat 14 Sep 2026 · [Venue] · 20:45-03:10</td></tr>
 <tr><td>Officers on duty</td><td>Name, licence no., post</td></tr>
 <tr><td>Peak count / capacity</td><td>268 / 300 at 23:50</td></tr>
-<tr><td>Refusals</td><td>21:40 — intoxication, entry refused, left without incident</td></tr>
+<tr><td>Refusals</td><td>21:40: intoxication, entry refused, left without incident</td></tr>
 <tr><td>Incident time</td><td>01:14</td></tr>
 <tr><td>What was observed</td><td>Factual, first person, in order</td></tr>
 <tr><td>Action taken</td><td>Who did what, in what order, ending with the outcome</td></tr>
@@ -540,6 +540,23 @@ def _fmt_date(iso):
     return d.strftime("%d %B %Y").lstrip("0")
 
 
+
+# one photograph per article, matched to its subject; no two the same on a page
+ART = {
+    "event-security-cost-toronto": ("svc-event-security", (800,), "A security officer at the barrier in front of a concert crowd."),
+    "how-many-security-guards-event": ("own-escort-suits", (600,), "Swarm officers in black suits moving through a gala."),
+    "ontario-security-guard-powers": ("svc-venue-security", (800,), "The brass doors of a venue at night."),
+    "hiring-door-staff-questions": ("lot-cine", (900,), "Three Swarm officers standing in front of a car at night."),
+    "armed-bodyguards-canada-legal": ("svc-close-protection", (800,), "Two close protection officers beside a client's car."),
+    "incident-report-that-saves-a-licence": ("svc-monitoring", (800,), "A lit property at night."),
+}
+
+
+def _pic(slug):
+    name, widths, alt = ART[slug]
+    return '<figure class="post__pic">%s</figure>' % img(name, widths, "(max-width:759px) 100vw, 33vw", alt, depth=1)
+
+
 def post_page(p):
     toc = ""
     if p["toc"]:
@@ -548,12 +565,13 @@ def post_page(p):
 
     others = [q for q in POSTS if q["slug"] != p["slug"]][:3]
     more = "".join(
-        '<article class="post"><span class="post__meta">%s</span>'
+        '<article class="post">%s<span class="post__meta">%s</span>'
         '<h3><a href="/journal/%s.html">%s</a></h3><p>%s</p>'
         '<span class="post__read">%s read</span></article>'
-        % (q["cat"], q["slug"], q["h1"].replace("<br>", " "), q["desc"], q["read"]) for q in others)
+        % (_pic(q["slug"]), q["cat"], q["slug"], q["h1"].replace("<br>", " "), q["desc"], q["read"]) for q in others)
 
     body = """<section class="phero">
+<div class="phero__media">{im}</div>
 <div class="wrap">
 {cr}
 <p class="hero__kicker">{cat} · {date} · {read} read</p>
@@ -564,7 +582,7 @@ def post_page(p):
 <section>
 <div class="wrap">
 <div class="rail rail--wide">
-<div class="rail__label">Field notes
+<div class="rail__label">The Swarm journal
 <span>Written for venue owners, event managers and anyone who has to make a staffing decision this week.</span>
 <span style="margin-top:18px"><a class="tlink" href="../quote.html"><span>Get a quote</span></a></span></div>
 <article class="article__body">
@@ -588,6 +606,8 @@ Toronto Area. Dispatch is answered 24 hours on <a href="tel:{tel}">{phone}</a>.<
 
 {cta}""".format(cr=crumb_html([("Home", "../index.html"), ("Journal", "index.html"),
                                (p["h1"].replace("<br>", " "), "/journal/%s.html" % p["slug"])]),
+                im=img(ART[p["slug"]][0], ART[p["slug"]][1], "100vw", ART[p["slug"]][2], loading="eager",
+                       priority=True, depth=1),
                 cat=p["cat"], date=_fmt_date(p["date"]), read=p["read"], h1=p["h1"],
                 lead=p["lead"], toc=toc, body=p["body"], more=more,
                 tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
@@ -614,19 +634,18 @@ Toronto Area. Dispatch is answered 24 hours on <a href="tel:{tel}">{phone}</a>.<
 
 def index_page():
     cards = "".join(
-        '<article class="post"><span class="post__meta">%s · %s</span>'
+        '<article class="post">%s<span class="post__meta">%s · %s</span>'
         '<h3><a href="/journal/%s.html">%s</a></h3><p>%s</p>'
         '<span class="post__read">%s read</span></article>'
-        % (p["cat"], _fmt_date(p["date"]), p["slug"], p["h1"].replace("<br>", " "), p["desc"], p["read"])
+        % (_pic(p["slug"]), p["cat"], _fmt_date(p["date"]), p["slug"], p["h1"].replace("<br>", " "), p["desc"], p["read"])
         for p in POSTS)
 
     body = """<section class="phero">
 <div class="phero__media">{im}</div>
 <div class="wrap">
 {cr}
-<p class="hero__kicker">Journal</p>
-<h1>Field notes.</h1>
-<p class="lede">What we have learned running doors, events and protection details in this city — written for the
+<h1>Journal</h1>
+<p class="lede">What we have learned running doors, events and protection details in this city, written for the
 people who have to make the staffing decision, not for search engines.</p>
 </div>
 </section>
@@ -645,9 +664,9 @@ people who have to make the staffing decision, not for search engines.</p>
                               "Tell us the date, the venue and the headcount. Most quotes go out the same day."))
 
     return page(path="/journal/", depth=1,
-                title="Journal — Security Field Notes for Toronto Venues | Swarm",
+                title="Journal | Security Notes for Toronto Venues | Swarm",
                 desc="Practical writing on event security costs, guard ratios, Ontario security law, incident "
-                     "reporting and hiring door staff — from a working GTA security agency.",
+                     "reporting and hiring door staff, from a working GTA security agency.",
                 og="/assets/og/og-default.jpg",
                 body=body,
                 schema=breadcrumbs([("Home", "/"), ("Journal", "/journal/")]))
