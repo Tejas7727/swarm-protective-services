@@ -97,7 +97,7 @@ def main():
     idx = os.path.join(SITE, "index.html")
     if os.path.exists(idx):
         page_html = open(idx, encoding="utf-8").read()
-        hooks = ['id="contact"', "data-quote", 'id="services"', 'id="faq"', 'id="coverage"', 'id="people"',
+        hooks = ['id="contact"', "data-quote", 'id="services"', 'id="faq"', 'id="more"',
                  'class="gm"', 'id="gm-hq"', 'gm__land', 'gm__shore', 'class="abar"']
         for hook in hooks:
             if hook not in page_html:
@@ -112,7 +112,7 @@ def main():
                 errs.append("coverage.html: hook %s missing" % hook)
         if len(re.findall(r'<h1[ >]', page_html)) != 1:
             errs.append("index.html: expected exactly one h1")
-        cards = re.findall(r'<a class="scard" href="([^"]+)"', page_html)
+        cards = re.findall(r'<a class="tile" href="([^"]+)"', page_html)
         if len(cards) != 6:
             errs.append("index.html: %d service cards, expected 6" % len(cards))
         for href in cards:

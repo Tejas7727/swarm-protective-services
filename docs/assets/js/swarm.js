@@ -115,14 +115,12 @@
        [data-words]  a sentence lit word by word as its screen arrives
        [data-draw]   routes that draw as their screen arrives
        .phero        journal and plain pages: the title steps back
-     Guidance: a rail of the page's screens (desktop) and, at the foot of each
-     screen, a quiet cue naming the next one. */
+     Guidance: a rail of the page's screens (desktop). */
   var all = function (s) { return [].slice.call(document.querySelectorAll(s)); };
   var screens = all('.scr');
   var film = document.querySelector('[data-film]'), cov = document.querySelector('[data-cov]');
   var words = all('[data-words]'), draws = all('[data-draw]'), pheros = all('.phero');
   var html = document.documentElement;
-  var DOWN = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
 
   var rail = null, railLinks = [];
   var named = screens.filter(function (s) { return s.id && s.getAttribute('data-label'); });
@@ -135,15 +133,6 @@
     }).join('');
     document.body.appendChild(rail);
     railLinks = [].slice.call(rail.querySelectorAll('a'));
-    named.forEach(function (s, i) {
-      var nx = named[i + 1];
-      if (!nx || s.classList.contains('hx')) { return; }     // the welcome screen has its own three ways in
-      var a = document.createElement('a');
-      a.className = 'next7';
-      a.href = '#' + nx.id;
-      a.innerHTML = 'Next <b>' + nx.getAttribute('data-label') + '</b>' + DOWN;
-      s.appendChild(a);
-    });
   }
 
   if (!reduced && screens.length) { html.classList.add('snap'); }
@@ -233,8 +222,6 @@
         var on = named.indexOf(screens[active]);
         if (on < 0) { for (var j = active; j >= 0 && on < 0; j--) { on = named.indexOf(screens[j]); } }
         railLinks.forEach(function (a, k) { a.classList.toggle('is-on', k === on); });
-        var cur = screens[active];
-        rail.classList.toggle('on-light', !!cur && (cur.classList.contains('px') || cur.classList.contains('std7')));
       }
     };
 

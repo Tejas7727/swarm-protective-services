@@ -566,7 +566,7 @@ def post_page(p):
 <div class="rail rail--wide">
 <div class="rail__label">Field notes
 <span>Written for venue owners, event managers and anyone who has to make a staffing decision this week.</span>
-<span style="margin-top:18px"><a class="tlink" href="../index.html#contact"><span>Get a quote</span></a></span></div>
+<span style="margin-top:18px"><a class="tlink" href="../quote.html"><span>Get a quote</span></a></span></div>
 <article class="article__body">
 <p class="article__lead">{lead}</p>
 {toc}

@@ -10,7 +10,7 @@ Edit the copy here. `build/service_art.py` exports the photographs.
 from common import BIZ, cta_final, crumb_html, faq_html, faq_schema, ihero, img, page, plain
 
 # the quote form on the home page, with this service already picked
-QUOTE = "index.html?service=%s#contact"
+QUOTE = "quote.html?service=%s"
 
 # slug, name, art, title, h1, lede, includes, steps, for_whom, faq
 SERVICES = [
@@ -19,19 +19,19 @@ SERVICES = [
         "name": "Close protection",
         "art": "svc-close-protection",
         "alt": "Two Swarm close protection officers in black beside a client's car at a hotel entrance.",
-        "title": "Close Protection & Bodyguards — Toronto &amp; GTA",
+        "title": "Close Protection & Bodyguards | Toronto &amp; GTA",
         "desc": "Licensed close protection in Toronto and the GTA: executives, artists, visiting "
                 "clients and families. Advance work, discreet officers, secure transport, same-day quotes.",
         "h1": "Close protection",
         "lede": "A licensed officer at your side, or a team around you. Suited, briefed, and boring "
-                "to look at — which is the point.",
+                "to look at. That is the point.",
         "includes": [
             ("A named lead", "One person owns your detail and is reachable for the whole booking."),
             ("Advance on the location", "We walk the venue, the route and the exits before you arrive."),
             ("Arrivals and departures", "The two minutes that matter are planned, not improvised."),
             ("Secure transport", "Chauffeured vehicle with an officer, or we work with your driver."),
             ("Discretion in writing", "A confidentiality agreement covers the detail, the address and the names."),
-            ("A written report", "What happened, when, and what we did — before the detail ends."),
+            ("A written report", "What happened, when, and what we did, written before the detail ends."),
         ],
         "steps": [
             ("Tell us the shape of it", "Dates, cities, who is being covered and how visible you want us."),
@@ -44,7 +44,7 @@ SERVICES = [
         "faq": [
             ("Are your bodyguards armed?",
              "No. Private security in Ontario is not permitted to carry firearms. Our work is advance "
-             "planning, presence and de-escalation — and that is what the licence covers."),
+             "planning, presence and de-escalation. That is what the licence covers."),
             ("Can you travel with us?",
              "Yes. We travel with clients anywhere in Canada. Outside Ontario we work with licensed "
              "partners where the province requires it."),
@@ -58,7 +58,7 @@ SERVICES = [
         "name": "Event security",
         "art": "svc-event-security",
         "alt": "A security officer at the barrier in front of a concert crowd.",
-        "title": "Event Security Toronto — Concerts, Weddings, Galas",
+        "title": "Event Security Toronto | Concerts, Weddings, Galas",
         "desc": "Licensed event security across Toronto and the GTA: concerts, weddings, galas, "
                 "festivals and private parties. Door, barrier, floor and close-out, quoted per event.",
         "h1": "Event security",
@@ -66,7 +66,7 @@ SERVICES = [
                 "officers, in the right places, from load-in to lock-up.",
         "includes": [
             ("A plan before the day", "Headcount, entry points, bar positions, close-out and the what-if list."),
-            ("Door and ID checks", "Guest lists, wristbands, ID — handled politely and quickly."),
+            ("Door and ID checks", "Guest lists, wristbands and ID, handled politely and quickly."),
             ("Barrier and floor", "Front-of-stage, aisles, VIP and back-of-house, as the room needs."),
             ("Close-out", "The last hour is the one that goes wrong; we staff it properly."),
             ("One lead on site", "Your point of contact all night, not a rotating cast."),
@@ -94,7 +94,7 @@ SERVICES = [
         "name": "Venue security",
         "art": "svc-venue-security",
         "alt": "Five Swarm officers in black at a venue entrance at night.",
-        "title": "Bar &amp; Nightclub Security Toronto — Door Staff",
+        "title": "Bar &amp; Nightclub Security Toronto | Door Staff",
         "desc": "Licensed door staff and floor security for Toronto bars, clubs and lounges. The same "
                 "crew every week, trained to de-escalate, with a written incident report every night.",
         "h1": "Venue security",
@@ -106,7 +106,7 @@ SERVICES = [
             ("Floor coverage", "Walkthroughs, bar watch, washroom checks, and eyes on the smoking area."),
             ("Close and sweep", "Last call, clear-out and a walk of the perimeter before lock-up."),
             ("Licence-safe practice", "Everything done the way the AGCO and your insurer expect it."),
-            ("Nightly report", "Refusals, ejections, injuries and timings — filed before the shift ends."),
+            ("Nightly report", "Refusals, ejections, injuries and timings, filed before the shift ends."),
         ],
         "steps": [
             ("Walk the room with us", "We see the door, the bar, the blind corners and the exits."),
@@ -119,7 +119,7 @@ SERVICES = [
             ("Can you cover one busy night a week?",
              "Yes. Most venue clients start with Friday and Saturday and add nights when it works."),
             ("What happens when someone has to go?",
-             "Position, distance, tone — in that order. Hands are the last resort, and the report says why."),
+             "Position, distance, tone, in that order. Hands are the last resort, and the report says why."),
             ("Do you handle capacity counts?",
              "Yes, with a clicker and a number the venue can show an inspector."),
         ],
@@ -129,7 +129,7 @@ SERVICES = [
         "name": "Party bus security",
         "art": "svc-party-bus-security",
         "alt": "A black party bus at the curb outside a venue at night.",
-        "title": "Party Bus Security Toronto — Officers On Board",
+        "title": "Party Bus Security Toronto | Officers On Board",
         "desc": "Licensed security on party buses and group transport in Toronto and the GTA: on board, "
                 "at each stop, and at the door of every venue on the route. Quoted per night.",
         "h1": "Party bus security",
@@ -164,7 +164,7 @@ SERVICES = [
         "name": "Limousine service",
         "art": "svc-limousine-service",
         "alt": "A black stretch limousine waiting under a hotel canopy at night.",
-        "title": "Limousine Service with Security — Toronto &amp; GTA",
+        "title": "Limousine Service with Security | Toronto &amp; GTA",
         "desc": "Chauffeured limousine and executive transport in Toronto and the GTA with a licensed "
                 "security officer on the detail: airport runs, events, nights out and client visits.",
         "h1": "Limousine service",
@@ -173,7 +173,7 @@ SERVICES = [
         "includes": [
             ("Chauffeured vehicle", "Sedan, SUV or stretch depending on the party and the occasion."),
             ("A licensed officer", "Optional on every trip, standard on close protection details."),
-            ("Door to door", "Collected at the door, walked to the door — not dropped at a curb."),
+            ("Door to door", "Collected at the door, walked to the door, not dropped at a curb."),
             ("Airport runs", "Pearson and Billy Bishop, with the flight watched so the car is there when you land."),
             ("Route planning", "Traffic, construction and the quiet way out of a venue, worked out in advance."),
             ("Discretion", "Unmarked vehicles, no branding, and a confidentiality agreement on request."),
@@ -190,7 +190,7 @@ SERVICES = [
             ("Is the driver also the security officer?",
              "No. The driver drives. When you book security, a separate licensed officer travels with the car."),
             ("Can you do multi-city trips?",
-             "Yes — we travel with clients anywhere in Canada, and the same crew stays with you for the trip."),
+             "Yes. We travel with clients anywhere in Canada, and the same crew stays with you for the trip."),
             ("Are the cars marked?",
              "No. Unmarked and unbranded, because most clients would rather not be announced."),
         ],
@@ -200,13 +200,13 @@ SERVICES = [
         "name": "Monitoring",
         "art": "svc-monitoring",
         "alt": "A house at night with the driveway lit and a camera under the eaves.",
-        "title": "Home &amp; Business Monitoring — Toronto &amp; GTA",
+        "title": "Home &amp; Business Monitoring | Toronto &amp; GTA",
         "desc": "Monitoring and patrols for homes, businesses, sites and vacant property across Toronto "
                 "and the GTA: scheduled checks, alarm response support and a written log every visit.",
         "h1": "Monitoring",
         "lede": "Somebody checks. On a schedule you set, with a record you can show an insurer.",
         "includes": [
-            ("Scheduled checks", "Nightly, weekly or to a pattern you choose — doors, windows, gates, lights."),
+            ("Scheduled checks", "Nightly, weekly or to a pattern you choose: doors, windows, gates, lights."),
             ("Vacant and renovation property", "The cases insurers ask about, covered properly."),
             ("Business after hours", "Offices, warehouses and retail once the staff have gone home."),
             ("A standing order", "Written instructions for what we check and who we call, agreed with you."),
@@ -226,7 +226,7 @@ SERVICES = [
              "It is physical checks by a licensed officer, and support alongside whatever alarm system you "
              "already have. We attend; we do not replace your alarm provider's central station."),
             ("How often do you attend?",
-             "As often as you want it — from one check a night to a pattern across a week."),
+             "As often as you want it, from one check a night to a pattern across a week."),
             ("What do we get after each visit?",
              "A log entry with times and findings, and photographs when something has changed."),
         ],
@@ -234,10 +234,6 @@ SERVICES = [
 ]
 
 BY_SLUG = {s["slug"]: s for s in SERVICES}
-
-
-ARROW = ('<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">'
-         '<path d="M5 12h14M13 6l6 6-6 6"/></svg>')
 
 
 def gets(items):
@@ -254,8 +250,8 @@ def steps(items):
 def _others(slug):
     return "".join(
         '<li><a class="olink" href="{slug}.html"><img src="assets/img/{art}-800.webp" alt="" width="800" height="547" '
-        'loading="lazy" decoding="async"><b>{name}</b>{arrow}</a></li>'
-        .format(slug=o["slug"], art=o["art"], name=o["name"], arrow=ARROW)
+        'loading="lazy" decoding="async"><b>{name}</b></a></li>'
+        .format(slug=o["slug"], art=o["art"], name=o["name"])
         for o in SERVICES if o["slug"] != slug)
 
 
@@ -282,9 +278,9 @@ def _body(s):
 <div class="wrap scr__in">
 <p class="eyebrow">What you get</p><h2 id="h-gets">In every booking</h2>
 <ol class="gx__list">{gets}</ol>
-<a class="go" href="{q}">Get a quote for {name_l} {arrow}</a>
+<a class="go" href="{q}">Get a quote for {name_l}</a>
 </div>
-</section>""".format(gets=gets(s["includes"]), q=quote, name_l=s["name"].lower(), arrow=ARROW),
+</section>""".format(gets=gets(s["includes"]), q=quote, name_l=s["name"].lower()),
         """<section class="scr hw" id="runs" data-label="How it runs" aria-labelledby="h-runs">
 <div class="wrap scr__in">
 <h2 id="h-runs">Three steps, one lead</h2>
@@ -295,11 +291,11 @@ def _body(s):
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
 <div><h2 id="h-q">Asked about {name_l}</h2>
-<p class="qx__more"><a class="go" href="answers.html">More answers {arrow}</a></p></div>
+<p class="qx__more"><a class="go" href="answers.html">All answers</a></p></div>
 <div>{faq}
 <div class="others"><p class="eyebrow">The rest of what we do</p><ul>{others}</ul></div></div>
 </div>
-</section>""".format(name_l=s["name"].lower(), arrow=ARROW, faq=faq_html(s["faq"]), others=_others(s["slug"])),
+</section>""".format(name_l=s["name"].lower(), faq=faq_html(s["faq"]), others=_others(s["slug"])),
         cta_final(0, quote=quote),
     ])
 

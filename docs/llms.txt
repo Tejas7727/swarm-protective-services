@@ -38,12 +38,13 @@ Motto: Life is unpredictable, Let us Protect you.
 
 - Phone: (416) 938-4766 (answered 24/7)
 - Email: quote@swarmprotectiveservices.ca
-- Quote form: https://swarmprotectiveservices.ca/#contact
+- Quote form: https://swarmprotectiveservices.ca/quote
 - Prices are quoted per job; nothing is published.
 
 ## More
 
-- [Meet us](https://swarmprotectiveservices.ca/about.html): who we are and the standard our people are held to.
+- [Meet us](https://swarmprotectiveservices.ca/about.html): who we are.
+- [Process](https://swarmprotectiveservices.ca/process.html): how a booking runs, from the first call to the written report.
 - [Coverage](https://swarmprotectiveservices.ca/coverage.html): the 18 GTA cities we cover, and travel across Canada.
 - [Answers](https://swarmprotectiveservices.ca/answers.html): the longer answers to these questions.
 - [Journal](https://swarmprotectiveservices.ca/journal/): field notes for venue owners and event organisers.

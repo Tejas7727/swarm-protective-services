@@ -345,7 +345,7 @@ FAQS = [
      "name of the lead who would run it.</p>"),
     ("Are your officers actually licensed?",
      "<p>Yes. Every officer holds a current licence under Ontario's <em>Private Security and "
-     "Investigative Services Act</em> — a 40-hour ministry-approved program, a provincial exam, "
+     "Investigative Services Act</em>: a 40-hour ministry-approved program, a provincial exam, "
      "a Criminal Record and Judicial Matters Check, and emergency first aid. Licences are "
      "digital and carried on shift. Ask any officer and they will show you theirs.</p>"
      "<p>We also hold an Ontario security agency licence, which is the one that lets a company "
@@ -357,11 +357,11 @@ FAQS = [
      "not for personal protection.</p>"
      "<p>Any company advertising armed bodyguards for your event is misinformed or misleading "
      "you. Tell us what is actually happening and we will tell you what is lawfully available "
-     "— and if the honest answer is police rather than a guard, we will say that.</p>"),
+     "and if the honest answer is police rather than a guard, we will say that.</p>"),
     ("How many officers does my event need?",
      "<p>Count positions before ratios. Every open entrance, every ID point, back of house, the "
      "bar or cash area, each area you cannot see from another, and one lead holding no post at "
-     "all. Then sanity-check the total — roughly one officer per 75–100 guests where alcohol is "
+     "all. Then sanity-check the total: roughly one officer per 75 to 100 guests where alcohol is "
      "served late, nearer one per 150 for a controlled corporate event.</p>"
      "<p>Send the floor plan and we will size it properly and put it in writing.</p>"),
     ("How fast can you staff a shift?",
@@ -370,14 +370,14 @@ FAQS = [
      "the staffing plan is built rather than guessed.</p>"),
     ("What happens if something does go wrong?",
      "<p>The officer on scene manages it, the lead takes command, and emergency services are "
-     "called when the situation crosses that line — not after a debate about how it looks. You "
+     "called when the situation crosses that line, not after a debate about how it looks. You "
      "get a verbal from the lead the same day and a written incident report before the crew "
      "leaves your building.</p>"
      "<p>We carry $5M commercial general liability and full WSIB coverage, and our officers are "
      "trained on the limits of a guard's lawful authority. Knowing what you may not do is most "
      "of this job.</p>"),
     ("Do you work outside Toronto?",
-     "<p>Across the GTA and the Golden Horseshoe as standard — Mississauga, Brampton, Vaughan, "
+     "<p>Across the GTA and the Golden Horseshoe as standard: Mississauga, Brampton, Vaughan, "
      "Markham, Oakville, Burlington, Hamilton and the Durham municipalities. Further for "
      "multi-day events and protection details, with travel agreed up front.</p>"),
     ("Do you subcontract?",

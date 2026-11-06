@@ -76,9 +76,9 @@ def body():
 
 PAGES = {"coverage.html": page(
     path="/coverage.html", depth=0,
-    title="Where We Work — Security in Toronto, the GTA &amp; Across Canada | Swarm",
-    desc="Swarm Protective Services covers Toronto and 17 GTA cities — Mississauga, Brampton, Vaughan, "
-         "Markham, Oakville, Hamilton and more — and travels with clients anywhere in Canada.",
+    title="Where We Work | Security in Toronto, the GTA &amp; Across Canada | Swarm",
+    desc="Swarm Protective Services covers Toronto and 17 GTA cities (Mississauga, Brampton, Vaughan, "
+         "Markham, Oakville, Hamilton and more) and travels with clients anywhere in Canada.",
     og="/assets/og/og-default.jpg",
     bodyattr=' class="screens"',
     body=body())}

@@ -19,7 +19,7 @@ if "--preview" in sys.argv:
     common.MODE["preview"] = True
     common.MODE["preview_base"] = sys.argv[i + 1] if len(sys.argv) > i + 1 else ""
 
-import about, coverage, front, journal, pages, services, service_art   # noqa: E402
+import about, coverage, front, journal, pages, process, services, service_art   # noqa: E402
 sys.path.insert(0, os.path.join(HERE, "cinema"))
 import assets as scene_assets        # noqa: E402
 
@@ -83,10 +83,11 @@ def llms_txt(base):
     out += ["", "## Contact", "",
             "- Phone: %s (answered 24/7)" % B["phone_ui"],
             "- Email: %s" % B["email"],
-            "- Quote form: %s/#contact" % base,
+            "- Quote form: %s/quote" % base,
             "- Prices are quoted per job; nothing is published.", "",
             "## More", "",
-            "- [Meet us](%s/about.html): who we are and the standard our people are held to." % base,
+            "- [Meet us](%s/about.html): who we are." % base,
+            "- [Process](%s/process.html): how a booking runs, from the first call to the written report." % base,
             "- [Coverage](%s/coverage.html): the 18 GTA cities we cover, and travel across Canada." % base,
             "- [Answers](%s/answers.html): the longer answers to these questions." % base,
             "- [Journal](%s/journal/): field notes for venue owners and event organisers." % base,
@@ -97,10 +98,11 @@ def llms_txt(base):
 def main():
     scene_assets.build()             # plates + camera manifest, before the page reads it
     service_art.build()              # one photograph per service page
-    files = {"index.html": front.render()}
+    files = {"index.html": front.render(), "quote.html": front.quote_page()}
     files.update(pages.PAGES)
     files.update(services.pages())
     files.update(about.PAGES)
+    files.update(process.PAGES)
     files.update(coverage.PAGES)
     files.update(journal.pages())
 

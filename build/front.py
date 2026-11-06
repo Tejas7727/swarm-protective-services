@@ -1,26 +1,19 @@
 # -*- coding: utf-8 -*-
-"""The home page — seven screens, one scroll each, every one complete on its own.
+"""The home page: five screens, one scroll each, every one complete on its own.
 
-    1  welcome       the motto on the Toronto night, and three quiet ways in:
-                     get a quote / meet the crew / see the services
-    2  services      one scroll pushes the camera into his jacket and a gold
-                     ring opens from it onto a night event; the six services
-                     arrive over it (each card opens its page)
-    3  who we are    "Canadian Owned. Canadian Operated. Trusted to Protect." on
-                     warm stone, an on-the-job photograph, three standards;
-                     "Meet the crew" for the visitor who came for the people
-    4  how it works  three steps, the trust facts, "start with step one"
-    5  coverage      the map and one line; every city lives on coverage.html
-    6  questions     the six asked before every booking
-    7  the quote     a three-step form beside the phone and the email
+    1  welcome     the motto on the Toronto night; get a quote / meet the crew /
+                   our services
+    2  services    one scroll pushes the camera into his jacket and a gold ring
+                   opens from it onto a night event; six photographs arrive over
+                   it, two by three, each one opening its page
+    3  know us     three ways deeper: who we are, how we work, where we work
+    4  questions   the six asked before every booking
+    5  the quote   a three-step form beside the phone and the email
 
-Who it serves: someone who wants a price now (Call and Get a quote are one tap
-away on every screen; door one), someone from Instagram or TikTok who wants to
-see who these people are (door two, screen 3), someone weighing the services
-(door three, screen 2). Every screen ends on a quiet cue to the next one
-(swarm.js), and the desktop rail names where you are.
+Every "Get a quote" on the site opens quote.html directly; this last screen is
+the same form, for whoever scrolls all the way down.
 
-The first screen's plates come from build/cinema/assets.py, the maps from
+The first screen's plates come from build/cinema/assets.py, the map from
 build/cinema/render.py. Every word is in build/cinema/content.py or services.py.
 """
 import io
@@ -28,34 +21,12 @@ import json
 import os
 
 import common
-from common import AREAS, BIZ, ICONS, faq_html, faq_schema, page
+from common import AREAS, BIZ, ICONS, faq_html, faq_schema, img, page
 import content as C
 import render as cinema
 from services import SERVICES
 
-ARROW = ('<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">'
-         '<path d="M5 12h14M13 6l6 6-6 6"/></svg>')
-DOWN = ('<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">'
-        '<path d="M12 5v14M6 13l6 6 6-6"/></svg>')
-
-# (icon path, label) — the trust facts; every one of these is in the brand guide
-BAND = [
-    ('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/>'
-     '<path d="M5.8 16c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14 10h4M14 13h3"/>', "PSISA licensed"),
-    ('<path d="M12 3 4 6v6c0 4.6 3.4 8.4 8 9 4.6-.6 8-4.4 8-9V6z"/><path d="m8.5 12 2.4 2.4 4.6-4.8"/>',
-     "$5M insured"),
-    ('<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.5L16 9.5"/>', "WSIB covered"),
-    ('<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M12 8v8M8 12h8"/>', "First aid on every shift"),
-    ('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>', "Answered 24/7"),
-]
-
-
 SIZES = ["Just me or my family", "Under 50", "50 to 150", "150 to 500", "Over 500", "Not sure yet"]
-
-
-def svg(paths, cls="ico"):
-    return ('<svg class="%s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" '
-            'aria-hidden="true">%s</svg>' % (cls, paths))
 
 
 def srcset(sizes):
@@ -93,87 +64,56 @@ def welcome(scene):
 <h1 id="h-home">{first},<br> <span class="hx__nw">{rest}</span></h1>
 <p class="hx__lede">{lede}</p>
 <nav class="doors" aria-label="Where to start">
-<a class="doors__a doors__a--go" href="#contact"><b>Get a quote</b>{arrow}</a>
-<a class="doors__a" href="about.html"><b>Meet the crew</b>{arrow}</a>
-<a class="doors__a" href="#services"><b>Our services</b>{down}</a>
+<a class="btn doors__q" href="quote.html"><span>Get a quote</span></a>
+<a class="btn btn--glass" href="about.html"><span>Meet the crew</span></a>
+<a class="btn btn--glass" href="#services"><span>Our services</span></a>
 </nav>
 </div>
 </section>""".format(up=cinema.UPRIGHT, mid=cinema.MIDDLE, mset=srcset(P["crew-m"]["sizes"]),
                      tset=srcset(P["crew-t"]["sizes"]), src=wide["sizes"][1]["src"], wset=srcset(wide["sizes"]),
                      w=wide["w"], h=wide["h"], plates=plates, line=C.HOME["line"],
-                     where=C.HOME["where"].replace("&", "&amp;"), first=first, rest=rest, lede=C.HOME["lede"],
-                     arrow=ARROW, down=DOWN)
+                     where=C.HOME["where"].replace("&", "&amp;"), first=first, rest=rest, lede=C.HOME["lede"])
 
 
 def services():
     lines = {slug: line for slug, _, line in C.SERVICES["items"]}
-    cards = "".join(
-        '<li style="--k:{k}"><a class="scard" href="{slug}.html">'
-        '<span class="scard__pic"><img src="assets/img/{art}-800.webp" alt="" width="800" height="547" '
-        'loading="lazy" decoding="async"></span>'
-        '<span class="scard__t"><b>{name}</b><span>{line}</span></span>{arrow}</a></li>'.format(
-            k=i % 3 + i // 3, slug=s["slug"], art=s["art"], name=s["name"], line=lines.get(s["slug"], ""),
-            arrow=ARROW)
+    tiles = "".join(
+        '<li style="--k:{k}"><a class="tile" href="{slug}.html">'
+        '<img src="assets/img/{art}-800.webp" srcset="assets/img/{art}-800.webp 800w, '
+        'assets/img/{art}-1600.webp 1600w" sizes="(max-width:899px) 50vw, 34vw" alt="" width="800" height="547" '
+        'loading="lazy" decoding="async">'
+        '<span class="tile__t"><b>{name}</b><span>{line}</span></span></a></li>'.format(
+            k=i // 2, slug=s["slug"], art=s["art"], name=s["name"], line=lines.get(s["slug"], ""))
         for i, s in enumerate(SERVICES))
     return """<section class="scr sx" id="services" data-label="Services" aria-labelledby="h-services">
-<div class="wrap scr__in">
-<div class="sx__head"><h2 id="h-services">{h}</h2>
-<p class="sx__lede">Pick one: what you get, how it runs, who it is for.</p></div>
-<ul class="scards">{cards}</ul>
+<div class="wrap scr__in sx__in">
+<h2 id="h-services">Services</h2>
+<ul class="tiles">{tiles}</ul>
 </div>
-</section>""".format(k=C.SERVICES["kicker"], h=C.SERVICES["h"], cards=cards)
+</section>""".format(tiles=tiles)
 
 
-def people():
-    P = C.PEOPLE
-    items = "".join('<li style="--k:%d"><h3>%s</h3><p>%s</p></li>' % (i, t, d)
-                    for i, (t, d) in enumerate(P["items"]))
-    return """<section class="scr px" id="people" data-label="Who we are" aria-labelledby="h-people">
-<div class="wrap scr__in px__in">
-<figure class="px__pic px__pic--photo"><img src="assets/img/own-escort-caps-1000.webp"
- srcset="assets/img/own-escort-caps-600.webp 600w, assets/img/own-escort-caps-1000.webp 1000w"
- sizes="(max-width:899px) 100vw, 34vw" width="1000" height="1333" loading="lazy" decoding="async"
- alt="Two Swarm close protection officers escorting a client through a crowded event hall."></figure>
-<div class="px__txt">
-<p class="eyebrow">{k}</p>
-<h2 id="h-people">{h}</h2>
-<p class="px__lede">{line}</p>
-<ul class="px__std px__std--3">{items}</ul>
-<a class="go" href="about.html">Meet the crew {arrow}</a>
+def more():
+    """Three ways deeper, each a whole panel: the people, the process, the map."""
+    panel = ('<li style="--k:{k}"><a class="mx__p" href="{href}">{art}'
+             '<span class="mx__t"><b>{t}</b><span>{d}</span></span></a></li>')
+    panels = "".join([
+        panel.format(k=0, href="about.html", t="Who we are", d="The people and the standard they keep",
+                     art=img("stock-guard", (800, 1600), "(max-width:899px) 100vw, 40vw",
+                             "A close protection officer in a black suit and dark glasses.", cls="at-face", ratio=1.5)),
+        panel.format(k=1, href="process.html", t="How we work", d="From the first call to the written report",
+                     art=img("stock-suv", (800, 1600), "(max-width:899px) 100vw, 40vw",
+                             "A black SUV waiting in a parking lot at night.", ratio=2 / 3.0)),
+        panel.format(k=2, href="coverage.html", t="Where we work", d="Toronto, the GTA and anywhere in Canada",
+                     art='<span class="mx__map" aria-hidden="true">%s</span>' % cinema.map_svg(narrow_aspect=0.8).replace(
+                         '<svg class="gm"', '<svg class="gm" preserveAspectRatio="xMidYMid slice"', 1)),
+    ])
+    return """<section class="scr mx" id="more" data-label="Know us" aria-labelledby="h-more" data-draw>
+<div class="wrap scr__in mx__in">
+<h2 id="h-more">Know who you hire</h2>
+<ul class="mx__list">{panels}</ul>
 </div>
-</div>
-</section>""".format(k=P["kicker"], h=P["h"], line=P["line"], items=items, arrow=ARROW)
-
-
-def how():
-    steps = "".join('<li class="hw__step" style="--k:%d"><span class="hw__n">%02d</span><h3>%s</h3><p>%s</p></li>'
-                    % (i, i + 1, t, d) for i, (t, d) in enumerate(C.STEPS["items"]))
-    facts = "".join("<li>%s%s</li>" % (svg(p), t) for p, t in BAND)
-    return """<section class="scr hw" id="how" data-label="How it works" aria-labelledby="h-how">
-<div class="wrap scr__in">
-<h2 id="h-how">{h}</h2>
-<ol class="hw__steps">{steps}</ol>
-<a class="go" href="#contact">Start with step one {arrow}</a>
-</div>
-<ul class="facts" aria-label="Licences and insurance">{facts}</ul>
-</section>""".format(h=C.STEPS["h"], steps=steps, facts=facts, arrow=ARROW)
-
-
-def coverage():
-    # the home page shows the map and one line; every city and the travel
-    # detail live on coverage.html
-    V = C.COVERAGE
-    return """<section class="scr cx" id="coverage" data-label="Coverage" aria-labelledby="h-coverage" data-draw>
-<div class="wrap scr__in cx__in">
-<div class="cx__txt">
-<h2 id="h-coverage">{h}</h2>
-<p class="lede">{line} {national}</p>
-<a class="go" href="coverage.html">See every city we cover {arrow}</a>
-</div>
-<div class="cx__map">{map}</div>
-</div>
-</section>""".format(k=V["kicker"], h=V["h"], line=V["line"], national=V["national"], arrow=ARROW,
-                     map=cinema.map_svg(narrow_aspect=0.95))
+</section>""".format(panels=panels)
 
 
 def faq():
@@ -181,13 +121,15 @@ def faq():
     return """<section class="scr qx" id="faq" data-label="Questions" aria-labelledby="h-faq">
 <div class="wrap scr__in qx__in">
 <div><h2 id="h-faq">{h}</h2>
-<p class="qx__more"><a class="go" href="answers.html">{more} {arrow}</a></p></div>
+<p class="qx__more"><a class="go" href="answers.html">All answers</a></p></div>
 {faq}
 </div>
-</section>""".format(k=Q["kicker"], h=Q["h"], more=Q["more"], arrow=ARROW, faq=faq_html(Q["items"]))
+</section>""".format(h=Q["h"], faq=faq_html(Q["items"]))
 
 
-def quote():
+def quote(tag="h2"):
+    """The quote form. The home page ends on it; quote.html is nothing else (and
+    there it carries the page's h1)."""
     opts = "".join(
         '<label class="qf__opt"><input type="radio" name="service" value="{n}" data-slug="{s}"{req}>'
         '<span>{n}</span></label>'.format(n=s["name"], s=s["slug"], req=" required" if i == 0 else "")
@@ -199,11 +141,10 @@ def quote():
     return """<section class="scr kx" id="contact" data-label="Get a quote" aria-labelledby="h-contact">
 <div class="wrap scr__in kx__in">
 <div class="kx__side">
-<h2 id="h-contact">Tell us what you need</h2>
-<p class="kx__lede">Three short steps. You get a written number and a named lead, usually the same day.</p>
+<{tag} id="h-contact">Tell us what you need</{tag}>
+<p class="kx__lede">Three short steps. You get a written plan and one point of contact, usually the same day.</p>
 <a class="kx__tel" href="tel:{tel}">{i_phone}<span>{phone}</span></a>
-<p class="kx__note"><span class="dot" aria-hidden="true"></span>Answered 24/7 &middot; or email
-<a href="mailto:{email}">{email}</a></p>
+<p class="kx__note">Answered 24/7, or email <a href="mailto:{email}">{email}</a></p>
 </div>
 <form class="qf" data-quote data-to="{email}" aria-labelledby="h-contact">
 <p class="qf__prog" aria-live="polite"><span data-prog>Three short steps</span><i aria-hidden="true"><b></b></i></p>
@@ -224,7 +165,7 @@ def quote():
 </div>
 </fieldset>
 <fieldset class="qf__step" data-step="3">
-<legend>Where do we send the number?</legend>
+<legend>Where do we send the plan?</legend>
 <div class="qf__grid">
 <div class="f f--full"><label for="q-name">Your name</label>
 <input id="q-name" name="name" autocomplete="name" required><span class="err">We need a name to reply to.</span></div>
@@ -243,13 +184,13 @@ def quote():
 <p class="qf__err" data-senderr hidden>That did not go through. Call {phone} or email {email}.</p>
 <div class="form__ok" role="status">
 <h3>Your email is ready to send</h3>
-<p>Your email app opened with the request filled in &mdash; press Send. Nothing opened?
+<p>Your email app opened with the request filled in. Press Send. Nothing opened?
 Call <a href="tel:{tel}">{phone}</a> or email <a href="mailto:{email}">{email}</a>.</p>
 </div>
 </form>
 </div>
 </section>""".format(tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], email=BIZ["email"], i_phone=ICONS["phone"],
-                     opts=opts, cities=cities, sizes=sizes)
+                     opts=opts, cities=cities, sizes=sizes, tag=tag)
 
 
 def render():
@@ -268,8 +209,15 @@ def render():
         '"areaServed":[{"@type":"State","name":"Ontario"},{"@type":"Country","name":"Canada"}]}</script>'
         % (s["name"], s["name"], BIZ["base"], s["slug"], BIZ["base"]) for s in SERVICES)
     film = '<div class="film" data-film>%s\n%s\n</div>' % (welcome(scene), services())
-    body = "\n".join([film, people(), how(), coverage(), faq(), quote()])
-    return page("/", "Swarm Protective Services — Security Company, Toronto &amp; GTA",
+    body = "\n".join([film, more(), faq(), quote()])
+    return page("/", "Swarm Protective Services | Security Company, Toronto &amp; GTA",
                 "Licensed security in Toronto and the GTA: close protection, event and venue security, "
                 "party bus and limousine details, and monitoring. PSISA licensed, $5M insured. Get a quote.",
                 body, head=head, schema=svc + faq_schema(C.FAQ["items"]), bodyattr=' class="is-home screens"')
+
+
+def quote_page():
+    return page("/quote.html", "Get a Quote | Swarm Protective Services, Toronto",
+                "Request a security quote from Swarm Protective Services: tell us the date, the place and "
+                "the headcount, and get a written plan with one point of contact, usually the same day.",
+                quote("h1"), bodyattr=' class="screens is-quote"')

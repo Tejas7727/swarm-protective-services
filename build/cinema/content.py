@@ -67,31 +67,9 @@ ELITE = {
     ],
 }
 
-# Home: who we are (deck slide 3)
-PEOPLE = {
-    "kicker": "Who we are",
-    "h": "Canadian Owned. Canadian Operated. Trusted to Protect.",
-    "line": "Swarm Protective Services combines extensive security experience with professional "
-            "protection strategies to safeguard people, property, and operations.",
-    "items": [
-        ("Trained, Certified, Accountable",
-         "Annual training and performance development ensure our personnel remain prepared to "
-         "deliver professional security services in accordance with industry standards and "
-         "client expectations."),
-        ("Prevent, Defuse, and Control",
-         "Control the environment. Communicate professionally. Maintain reactionary distance. "
-         "Physical intervention is a last resort."),
-        ("Observe &rarr; Respond &rarr; Report",
-         "Every incident is documented accurately and promptly, ensuring operational "
-         "accountability, investigative integrity, and a defensible record of events."),
-    ],
-}
-
 # Meet us: the statement (deck slide 2), lit word by word
 STATEMENT = ("Peace of mind is our product. We deliver it through proactive planning, skilled "
              "communication, and unyielding professionalism.")
-STATEMENT_2 = ("After all, true security isn&rsquo;t measured by how a crisis is handled, "
-               "it&rsquo;s measured by the total absence of one.")
 
 # Home: how it works (deck slide 6)
 STEPS = {

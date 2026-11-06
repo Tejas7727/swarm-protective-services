@@ -43,10 +43,10 @@ MODE = {"preview": False, "preview_base": ""}
 # The menu: the funnel's five doors. Paths are from the site root.
 NAV = [
     ("index.html#services", "Services", "Close protection, events, venues, buses, limos, monitoring"),
-    ("about.html",          "Meet us",  "Who we are and how we work"),
+    ("about.html",          "Meet us",  "Who we are"),
+    ("process.html",        "Process",  "From the first call to the written report"),
     ("coverage.html",       "Coverage", "Toronto, the GTA, and anywhere in Canada"),
     ("answers.html",        "Answers",  "What people ask before they book"),
-    ("index.html#contact",  "Contact",  "Get a quote"),
 ]
 
 AREAS = [
@@ -78,6 +78,11 @@ def home(depth, anchor=""):
     document, so a bare "#services" would point at itself (the audit's anchor
     check caught privacy.html doing exactly that)."""
     return pfx(depth) + "index.html" + anchor
+
+
+def quote_url(depth):
+    """Every Get a quote on the site: the form on a page of its own."""
+    return pfx(depth) + "quote.html"
 
 
 def _j(s):
@@ -118,7 +123,7 @@ def drawer_html(depth):
     out.append('<a href="%sjournal/index.html">Journal<small>Field notes for venue owners</small></a>'
                % pfx(depth))
     out.append('<a class="btn btn--full" href="%s"><span>Request a quote</span></a>'
-               % home(depth, "#contact"))
+               % quote_url(depth))
     out.append('<a class="btn btn--ghost btn--full" style="margin-top:10px" href="tel:%s">'
                '<span>Call dispatch %s</span></a>' % (BIZ["phone_tel"], BIZ["phone_ui"]))
     return "".join(out)
@@ -127,7 +132,7 @@ def drawer_html(depth):
 def mast_html(depth):
     p = pfx(depth)
     return """<header class="mast">
-<a class="mast__logo" href="{home}" aria-label="{name} — home">
+<a class="mast__logo" href="{home}" aria-label="{name}, home">
 <img src="{p}assets/logo/swarm-horizontal-gold.svg" alt="{name}" width="200" height="52" fetchpriority="high">
 </a>
 <nav class="mast__nav" aria-label="Primary">{nav}</nav>
@@ -143,7 +148,7 @@ def mast_html(depth):
 </header>
 <div class="scrollbar" aria-hidden="true"><i></i></div>""".format(
         p=p, home=home(depth), name=BIZ["name"], nav=nav_html(depth),
-        quote=home(depth, "#contact"), tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
+        quote=quote_url(depth), tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
         i_phone=ICONS["phone"])
 
 
@@ -166,13 +171,13 @@ def foot_html(depth):
         (p + "answers.html", "Answers"),
         (p + "about.html", "Meet us"),
         (p + "journal/index.html", "Journal"),
-        (home(depth, "#contact"), "Request a quote"),
+        (quote_url(depth), "Request a quote"),
     ])
     return """<footer class="foot">
 <div class="wrap">
 <div class="foot__grid">
 <div>
-<a class="foot__logo" href="{home}" aria-label="{name} — home"><img src="{p}assets/logo/swarm-horizontal-gold.svg" alt="{name}" width="188" height="49" loading="lazy"></a>
+<a class="foot__logo" href="{home}" aria-label="{name}, home"><img src="{p}assets/logo/swarm-horizontal-gold.svg" alt="{name}" width="188" height="49" loading="lazy"></a>
 <p class="foot__blurb">Canadian owned. Canadian operated. Licensed protection for people, property and operations across Toronto, the GTA and Canada.</p>
 {social}
 </div>
@@ -310,7 +315,7 @@ def page(path, title, desc, body, depth=0, og="/assets/og/og-default.jpg",
         cssv=asset_version("assets/css/swarm.css"), jsv=asset_version("assets/js/swarm.js"),
         mast=mast_html(depth), drawer=drawer_wrap(depth),
         body=body, foot=foot_html(depth), tel=BIZ["phone_tel"], i_phone=ICONS["phone"],
-        quote=home(depth, "#contact"))
+        quote=quote_url(depth))
 
 
 # ---------------------------------------------------------------------------
@@ -406,5 +411,5 @@ def cta_final(depth=0, heading="Tell us what you need",
 <a class="btn btn--ghost" href="tel:{tel}"><span>Call dispatch</span></a>
 </div>
 </div>
-</section>""".format(p=pfx(depth), h=heading, l=lede, quote=quote or home(depth, "#contact"),
+</section>""".format(p=pfx(depth), h=heading, l=lede, quote=quote or quote_url(depth),
                      tel=BIZ["phone_tel"])

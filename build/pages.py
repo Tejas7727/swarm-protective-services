@@ -5,7 +5,7 @@ from home import FAQS
 
 PRIVACY = page(
     path="/privacy.html", depth=0,
-    title="Privacy — Swarm Protective Services",
+    title="Privacy | Swarm Protective Services",
     desc="How Swarm Protective Services handles enquiry data, incident reports and site "
          "records under Canadian privacy law, what we keep and for how long.",
     og="/assets/og/og-default.jpg",
@@ -26,7 +26,7 @@ incident records because the law and your insurer require it, and we sell nothin
 <p>From the quote form: your name, phone number, email address, the service you asked about, the
 date, the location and anything you typed into the notes field. From a booking: billing details,
 venue contact details and the operational information needed to write post orders.</p>
-<p>On shift, our officers record incident information — times, descriptions, actions taken and
+<p>On shift, our officers record incident information: times, descriptions, actions taken and
 who attended. Where a venue operates CCTV, that footage belongs to the venue, not to us.</p>
 
 <h2>Why we collect it</h2>
@@ -67,18 +67,18 @@ have your own counsel review it before launch.</p>
 
 NOT_FOUND = page(
     path="/404.html", depth=0, noindex=True,
-    title="Not found — Swarm Protective Services",
+    title="Not found | Swarm Protective Services",
     desc="That page does not exist. Licensed door staff, event security and close protection "
-         "across the Greater Toronto Area — dispatch answered 24 hours.",
+         "across the Greater Toronto Area. Dispatch answered 24 hours.",
     og="/assets/og/og-default.jpg",
     body="""<section class="phero" style="min-height:62svh;display:flex;align-items:center;border:0">
 <div class="wrap">
 <p class="eyebrow">404</p>
 <h1>Nothing here.</h1>
-<p class="lede">Usually a good sign. Not this time — the page you asked for does not exist.</p>
+<p class="lede">Usually a good sign. Not this time. The page you asked for does not exist.</p>
 <div class="hero__cta">
 <a class="btn" href="index.html"><span>Back to the front</span></a>
-<a class="btn btn--ghost" href="index.html#contact"><span>Request a quote</span></a>
+<a class="btn btn--ghost" href="quote.html"><span>Request a quote</span></a>
 </div>
 </div>
 </section>""",
@@ -86,7 +86,7 @@ NOT_FOUND = page(
 
 ANSWERS = page(
     path="/answers.html", depth=0,
-    title="Security Questions Answered — Swarm Protective Services",
+    title="Security Questions Answered | Swarm Protective Services",
     desc="Straight answers about hiring security in Toronto and the GTA: licensing, armed "
          "guards, how many officers an event needs, response times and what happens on the day.",
     og="/assets/og/og-default.jpg",
@@ -97,7 +97,7 @@ ANSWERS = page(
 <div class="wrap scr__in qx__in">
 <div class="qx__side"><p class="eyebrow">Still unsure?</p><h2>Ask us directly</h2>
 <p class="lede">Call <a href="tel:{tel}">{phone}</a>, answered 24/7, or
-<a href="index.html#contact">send the date and the place</a>.</p></div>
+<a href="quote.html">send the date and the place</a>.</p></div>
 {faq}
 </div>
 </section>

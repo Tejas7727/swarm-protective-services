@@ -148,8 +148,8 @@ def map_svg(narrow_aspect=0.46):
                           % (cls, x + dx, y + dy, anchor, name))
     return ('<svg class="gm" viewBox="%d %d %d %d" data-full="%d %d %d %d" data-narrow="%d %d %d %d" '
             'preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="gm-title">'
-            '<title id="gm-title">Map of the Greater Toronto Area — Lake Ontario, the built-up '
-            'areas and the 400-series highways — with the 18 cities Swarm covers marked: %s.</title>'
+            '<title id="gm-title">Map of the Greater Toronto Area: Lake Ontario, the built-up '
+            'areas and the 400-series highways, with the 18 cities Swarm covers marked: %s.</title>'
             '<g aria-hidden="true">%s%s%s%s%s'
             '<circle class="gm__ring" cx="%.0f" cy="%.0f" r="%.0f"/>'
             '<image class="gm__hq" id="gm-hq" href="assets/logo/emblem-108.webp" x="%.0f" y="%.0f" '
