@@ -7,9 +7,9 @@ that service specifically. No prices: every job is quoted.
 
 Edit the copy here. `build/service_art.py` exports the photographs.
 """
-from common import BIZ, cta_final, crumb_html, faq_html, faq_schema, ihero, img, page, plain
+from common import BIZ, crumb_html, faq_html, faq_schema, ihero, img, page, plain
 
-# the quote form on the home page, with this service already picked
+# the quote page, with this service already picked
 QUOTE = "quote.html?service=%s"
 
 # slug, name, art, title, h1, lede, includes, steps, for_whom, faq
@@ -290,13 +290,11 @@ def _body(s):
 </section>""".format(steps=steps(s["steps"]), who=who),
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
-<div><h2 id="h-q">Asked about {name_l}</h2>
-<p class="qx__more"><a class="go" href="answers.html">All answers</a></p></div>
+<div><h2 id="h-q">Asked about {name_l}</h2></div>
 <div>{faq}
 <div class="others"><p class="eyebrow">The rest of what we do</p><ul>{others}</ul></div></div>
 </div>
 </section>""".format(name_l=s["name"].lower(), faq=faq_html(s["faq"]), others=_others(s["slug"])),
-        cta_final(0, quote=quote),
     ])
 
 

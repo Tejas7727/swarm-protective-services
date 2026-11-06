@@ -81,17 +81,6 @@ STEPS = {
     ],
 }
 
-# Coverage: outside the GTA (deck slide 5)
-TRAVEL = {
-    "kicker": "Wherever protection is required, we deliver",
-    "h": "Protection without boundaries.",
-    "items": [
-        ("Nationwide coverage", "Professional protection services across Canada."),
-        ("Operational excellence", "Trained personnel. Proven performance."),
-        ("One lead, one report", "One point of contact. One standard of protection."),
-    ],
-}
-
 COVERAGE = {
     "kicker": "Coverage",
     "h": "Across the GTA",

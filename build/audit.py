@@ -107,7 +107,7 @@ def main():
         # the coverage page carries both maps
         cov = os.path.join(SITE, "coverage.html")
         cov_html = open(cov, encoding="utf-8").read() if os.path.exists(cov) else ""
-        for hook in ('data-cov', 'class="gm"', 'class="ca"', 'gm__route'):
+        for hook in ('data-cov', 'class="cov__film"', 'data-wide=', 'data-tall=', 'cov__credit'):
             if hook not in cov_html:
                 errs.append("coverage.html: hook %s missing" % hook)
         if len(re.findall(r'<h1[ >]', page_html)) != 1:

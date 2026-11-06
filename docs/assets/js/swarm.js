@@ -111,7 +111,7 @@
      motion, every screen still and complete.
        per screen    --d screens away (signed), --ad unsigned, --up leaving
        [data-film]   home: the push into the jacket, the portal (one scroll)
-       [data-cov]    coverage: Toronto, out to the GTA, out to Canada
+       [data-cov]    coverage: the map film, one frame per step of the scroll
        [data-words]  a sentence lit word by word as its screen arrives
        [data-draw]   routes that draw as their screen arrives
        .phero        journal and plain pages: the title steps back
@@ -156,15 +156,58 @@
       set(film, '--ox', ((VW - dw) * p[4] + p[2] * dw).toFixed(1) + 'px');
       set(film, '--oy', ((VH - dh) * p[5] + p[3] * dh).toFixed(1) + 'px');
     };
-    // coverage: Toronto at the centre of the zoom
-    var hq = cov && cov.querySelector('#gm-hq'), gta = cov && cov.querySelector('.cov__gta');
-    var hqOrigin = function () {
-      gta.style.transform = 'none';
-      var g = gta.getBoundingClientRect(), h = hq.getBoundingClientRect();
-      gta.style.transform = '';
-      set(cov, '--hqx', (h.left + h.width / 2 - g.left).toFixed(1) + 'px');
-      set(cov, '--hqy', (h.top + h.height / 2 - g.top).toFixed(1) + 'px');
-    };
+    // coverage: the map film (Remotion + MapLibre), the wide or the tall set by the
+    // window's shape. First and last frames load first, then coarse to fine, so
+    // the whole move scrubs early; until a frame is in, the nearest one stands in.
+    var reel = null, cv = cov && cov.querySelector('.cov__film');
+    if (cv) {
+      reel = (function () {
+        var n = +cv.getAttribute('data-n'), ctx = cv.getContext('2d'), base = '', imgs = [], want = 0, drawn = -1;
+        var ready = function (k) { return imgs[k] && imgs[k].complete && imgs[k].naturalWidth; };
+        var nearest = function (i) {
+          for (var d = 0; d < n; d++) {
+            if (ready(i - d)) { return i - d; }
+            if (ready(i + d)) { return i + d; }
+          }
+          return -1;
+        };
+        var draw = function (i) {
+          want = i;
+          var k = nearest(i);
+          if (k < 0 || k === drawn) { return; }
+          drawn = k;
+          var im = imgs[k], W = cv.width, H = cv.height;
+          var s = Math.max(W / im.naturalWidth, H / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
+          ctx.drawImage(im, (W - w) / 2, (H - h) / 2, w, h);
+          cv.classList.add('is-live');
+        };
+        var load = function () {
+          var b = cv.getAttribute(innerWidth <= innerHeight ? 'data-tall' : 'data-wide');
+          if (b === base) { return; }
+          base = b; imgs = []; drawn = -1;
+          var order = [0, n - 1], seen = {};
+          seen[0] = seen[n - 1] = 1;
+          [16, 8, 4, 2, 1].forEach(function (st) {
+            for (var i = 0; i < n; i += st) { if (!seen[i]) { seen[i] = 1; order.push(i); } }
+          });
+          order.forEach(function (i) {
+            var im = new Image();
+            im.decoding = 'async';
+            im.onload = function () { if (drawn !== want) { drawn = -1; draw(want); } };
+            im.src = base + 'f' + (i < 10 ? '0' : '') + i + '.webp';
+            imgs[i] = im;
+          });
+        };
+        return {
+          draw: function (c) { draw(Math.round(c * (n - 1))); },
+          size: function () {
+            var r = Math.min(1.5, window.devicePixelRatio || 1);
+            cv.width = Math.round(innerWidth * r); cv.height = Math.round(innerHeight * r);
+            load(); drawn = -1; draw(want);
+          }
+        };
+      })();
+    }
     // a sentence lit word by word: split once into spans that know their place
     words.forEach(function (el) {
       var list = el.textContent.trim().split(/\s+/);
@@ -200,11 +243,7 @@
       }
       if (cov) {
         var c = Math.min(1, Math.max(0, (y - covTop) / (2 * VH)));   // 0 Toronto, .5 the GTA, 1 Canada
-        set(cov, '--z', (3 - 2 * smooth(0.04, 0.48, c)).toFixed(4));
-        set(cov, '--draw', smooth(0.18, 0.5, c).toFixed(4));
-        set(cov, '--gout', smooth(0.55, 0.88, c).toFixed(4));
-        set(cov, '--can', smooth(0.6, 0.92, c).toFixed(4));
-        set(cov, '--arc', smooth(0.72, 1, c).toFixed(4));
+        if (reel) { reel.draw(c); }
       }
       words.forEach(function (el, k) {
         var d = dist[wordsAt[k]] || 0;
@@ -243,7 +282,7 @@
       tops = screens.map(function (s) { return s.getBoundingClientRect().top + y; });
       hts = screens.map(function (s) { return s.offsetHeight; });
       if (film) { filmTop = film.getBoundingClientRect().top + y; origin(); }
-      if (cov) { covTop = cov.getBoundingClientRect().top + y; if (hq) { hqOrigin(); } }
+      if (cov) { covTop = cov.getBoundingClientRect().top + y; if (reel) { reel.size(); } }
       cur = y; vel = 0;
       paint(cur);
     };
@@ -405,6 +444,77 @@
       abar.classList.toggle('is-away', es[0].isIntersecting);
     }, { rootMargin: '0px 0px -30% 0px' }).observe(kx);
   }
+
+  /* --- Meet us: the crew film plays as its screen arrives ------------------ */
+  var vids = [].slice.call(document.querySelectorAll('video[data-play]'));
+  if (vids.length && !reduced && 'IntersectionObserver' in window) {
+    var vo = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = e.target;
+        if (!e.isIntersecting) { v.pause(); return; }
+        v.preload = 'auto';
+        try { v.currentTime = 0; } catch (x) { /* not loaded yet: it starts at 0 anyway */ }
+        var p = v.play();
+        if (p && p.catch) { p.catch(function () {}); }
+      });
+    }, { threshold: 0.55 });
+    vids.forEach(function (v) { vo.observe(v); });
+  }
+
+  /* --- Know us, on phones: the three doors take turns at full size --------- */
+  var mxl = document.querySelector('.mx__list');
+  if (mxl && !reduced && 'IntersectionObserver' in window) {
+    var mxi = [].slice.call(mxl.children), mxk = 0, mxt = 0, narrow = matchMedia('(max-width:899px)');
+    var mxOn = function (k) { mxk = k; mxi.forEach(function (li, j) { li.classList.toggle('is-on', j === k); }); };
+    new IntersectionObserver(function (es) {
+      clearInterval(mxt);
+      if (es[0].isIntersecting && narrow.matches) {
+        mxOn(0);
+        mxt = setInterval(function () { mxOn((mxk + 1) % mxi.length); }, 2600);
+      } else {
+        mxi.forEach(function (li) { li.classList.remove('is-on'); });
+      }
+    }, { threshold: 0.5 }).observe(mxl);
+  }
+
+  /* --- Meet us: the feed. Swipe on touch; with a mouse, drag it or click the
+     photograph that is peeking in. It leans toward the next one, once. ------- */
+  [].slice.call(document.querySelectorAll('.feed')).forEach(function (feed) {
+    var down = null, moved = 0;
+    feed.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse') { return; }
+      down = { x: e.clientX, s: feed.scrollLeft }; moved = 0;
+      feed.classList.add('is-drag');
+    });
+    addEventListener('pointermove', function (e) {
+      if (!down) { return; }
+      moved = Math.max(moved, Math.abs(e.clientX - down.x));
+      feed.scrollLeft = down.s - (e.clientX - down.x);
+    });
+    addEventListener('pointerup', function () {
+      if (!down) { return; }
+      down = null;
+      feed.classList.remove('is-drag');
+    });
+    feed.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    feed.addEventListener('click', function (e) {
+      var post = e.target.closest('.gram');
+      if (!post || moved > 6) { return; }
+      var r = post.getBoundingClientRect(), f = feed.getBoundingClientRect();
+      if (r.right > f.right + 2 || r.left < f.left - 2) {
+        feed.scrollTo({ left: feed.scrollLeft + r.left - f.left, behavior: reduced ? 'auto' : 'smooth' });
+      }
+    });
+    if (!reduced && 'IntersectionObserver' in window) {
+      var hinted = false;
+      new IntersectionObserver(function (es) {
+        if (hinted || !es[0].isIntersecting) { return; }
+        hinted = true;
+        feed.classList.add('is-hint');
+        setTimeout(function () { feed.classList.remove('is-hint'); }, 1400);
+      }, { threshold: 0.6 }).observe(feed);
+    }
+  });
 
   /* --- year ---------------------------------------------------------------- */
   var yr = document.getElementById('yr');

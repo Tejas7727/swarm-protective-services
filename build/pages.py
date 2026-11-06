@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """The two pages that cannot live on the single page: privacy and 404."""
-from common import BIZ, cta_final, faq_html, faq_schema, ihero, img, page, plain
+from common import BIZ, faq_html, faq_schema, ihero, img, page, plain
 from home import FAQS
 
 PRIVACY = page(
@@ -100,14 +100,13 @@ ANSWERS = page(
 <a href="quote.html">send the date and the place</a>.</p></div>
 {faq}
 </div>
-</section>
-{cta}""".format(hero=ihero('<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Answers</span></div>',
+</section>""".format(hero=ihero('<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Answers</span></div>',
                            "What people ask before they book",
                            "Licences, armed guards, headcounts, timing and what happens on the day.",
                            img("svc-venue-security", (800, 1600), "100vw",
                                "The brass doors of a venue at night.", loading="eager", priority=True,
                                ratio=1216 / 832.0), label="Answers"),
-                tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], faq=faq_html(FAQS), cta=cta_final(0)),
+                tel=BIZ["phone_tel"], phone=BIZ["phone_ui"], faq=faq_html(FAQS)),
 )
 
 PAGES = {

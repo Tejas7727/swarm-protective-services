@@ -1,26 +1,25 @@
 # -*- coding: utf-8 -*-
-"""Coverage — where we work, as one camera move in three screens, then a list.
+"""Coverage: where we work, as one camera move in three screens, then the list.
 
-    1-3  the map      one scroll per beat, the map pinned behind:
-                      close on Toronto ("Based in Toronto"), out to the GTA as
-                      routes run to 17 cities ("Across the GTA"), out to Canada
-                      as the travel arcs draw ("Anywhere in Canada")
-    4    every city   the 18, grouped by direction from downtown
-    5    travel       how it works outside the GTA
-    6    the ask
+    1-3  the map film  one scroll per beat, the film pinned behind and scrubbed
+                       by the scroll: close on Toronto ("Based in Toronto"), out
+                       to the GTA as routes run to 17 cities ("Across the GTA"),
+                       out to Canada as arcs draw coast to coast ("Anywhere in Canada")
+    4    every city    the 18, grouped by direction from downtown
 
-Both maps are drawings from Natural Earth (build/cinema/geo_extract.py).
-Without the script, or with reduced motion, the map and all three sentences
-show in reading order.
+The film is rendered in Remotion with MapLibre on OpenFreeMap tiles
+(ai-studio/remotion/src/projects/SwarmCoverage.tsx): 72 frames for wide screens
+(assets/cine/cov-w) and 72 for tall ones (assets/cine/cov-t). Without the
+script, or with reduced motion, the last frame stands as a poster and all three
+sentences show in reading order.
 """
 import os
 import sys
 
-from common import cta_final, page
+from common import page
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "cinema"))
 import content as C                                              # noqa: E402
-import render as cinema                                          # noqa: E402
 
 REGIONS = [
     ("Toronto", ["Toronto", "Etobicoke", "North York", "Scarborough"]),
@@ -28,19 +27,22 @@ REGIONS = [
     ("North", ["Vaughan", "Richmond Hill", "Markham", "Newmarket"]),
     ("East", ["Pickering", "Ajax", "Whitby", "Oshawa"]),
 ]
-
+FRAMES = 72
 
 
 def body():
     regions = "".join(
         '<div class="reg" style="--k:%d"><h3>%s</h3><ul>%s</ul></div>'
         % (i, r, "".join("<li>%s</li>" % c for c in cities)) for i, (r, cities) in enumerate(REGIONS))
-    travel = "".join('<li class="hw__step" style="--k:%d"><span class="hw__n">%02d</span><h3>%s</h3><p>%s</p></li>'
-                     % (i, i + 1, t, d) for i, (t, d) in enumerate(C.TRAVEL["items"]))
     return """<div class="cov" data-cov>
 <div class="cov__stage" aria-hidden="true">
-<div class="cov__gta">{gta}</div>
-<div class="cov__can">{can}</div>
+<picture class="cov__poster">
+<source media="(max-aspect-ratio:1/1)" srcset="assets/cine/cov-t/f{last:02d}.webp">
+<img src="assets/cine/cov-w/f{last:02d}.webp" alt="" width="1440" height="810" decoding="async">
+</picture>
+<canvas class="cov__film" data-n="{n}" data-wide="assets/cine/cov-w/" data-tall="assets/cine/cov-t/"></canvas>
+<p class="cov__credit">Map &copy; <a href="https://openfreemap.org" rel="noopener">OpenFreeMap</a>,
+<a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> contributors</p>
 </div>
 <section class="scr cov__beat" id="top" data-label="Toronto" aria-labelledby="h-cov">
 <div class="wrap scr__in"><p class="eyebrow">Coverage</p>
@@ -59,19 +61,8 @@ def body():
 <h2 id="h-reg">Eighteen cities, one dispatch</h2>
 <div class="regions__grid">{regions}</div>
 </div>
-</section>
-
-<section class="scr hw travel" id="travel" data-label="Travel" aria-labelledby="h-travel">
-<div class="wrap scr__in">
-<p class="eyebrow">{travel_k}</p><h2 id="h-travel">{travel_h}</h2>
-<ol class="hw__steps">{travel}</ol>
-</div>
-</section>
-{cta}""".format(gta=cinema.map_svg(narrow_aspect=0.6), can=cinema.canada_svg(),
-                line=C.COVERAGE["line"], national=C.COVERAGE["national"],
-                regions=regions, travel=travel, travel_k=C.TRAVEL["kicker"], travel_h=C.TRAVEL["h"],
-                cta=cta_final(0, heading="Tell us where",
-                              lede="City, date and headcount is enough to start. We reply the same day."))
+</section>""".format(n=FRAMES, last=FRAMES - 1, line=C.COVERAGE["line"], national=C.COVERAGE["national"],
+                     regions=regions)
 
 
 PAGES = {"coverage.html": page(

@@ -1093,29 +1093,21 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
 .std7__grid h3{color:var(--stone-ink)} .std7__grid p{color:var(--stone-2)}
 @media (max-width:699px){ .std7__grid{grid-template-columns:1fr} .std7__grid li{padding:10px 12px} .std7__grid p{font-size:.8rem;margin-top:1px} }
 /* on the job: their real photographs */
-.job__pics{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,1.4vw,18px)}
-.job__pics li{margin:0}
-.job__pics figure{margin:0}
-.job__pics img{width:100%;max-height:52svh;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--rule)}
-.job__pics figcaption{margin-top:8px;font-size:var(--t-sm);color:var(--mute)}
-.job__note{margin:clamp(12px,2vh,20px) 0 0;color:var(--mute);font-size:.84rem}
-@media (max-width:699px){ .job__pics figcaption{display:none} .job__pics img{max-height:40svh} }
 
 /* coverage: the map pinned behind three screens — Toronto, the GTA, Canada */
 .cov{position:relative;background:radial-gradient(90% 80% at 55% 55%,#0D1216,var(--ink-0) 70%)}
 .cov__stage{position:relative;height:70svh;padding-top:var(--topbar);overflow:hidden}
-.cov__gta{position:absolute;inset:var(--topbar) 0 0 0}
-.cov__can{display:none}
+.cov__poster,.cov__film{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cov__poster img{width:100%;height:100%;object-fit:cover}
+.cov__film{opacity:0;transition:opacity .4s var(--xo)}
+.cov__film.is-live{opacity:1}
+.cov__credit{position:absolute;right:12px;bottom:8px;z-index:3;margin:0;font-size:.62rem;color:var(--mute)}
+.cov__credit a{color:inherit}
 .cov__beat{min-height:auto;padding-block:20px}
 .cov__beat h1,.cov__beat h2{font-size:clamp(2.2rem,6vw,4.6rem);margin:6px 0 12px}
 .fx7 .cov__stage{position:sticky;top:0;height:100svh;margin-bottom:-100svh;padding:0;z-index:0}
 .fx7 .cov__stage::after{content:"";position:absolute;inset:auto 0 0 0;height:48%;z-index:2;pointer-events:none;
   background:linear-gradient(0deg,rgba(8,9,10,.94),rgba(8,9,10,0))}
-.fx7 .cov__gta{transform-origin:var(--hqx,50%) var(--hqy,50%);transform:scale(var(--z,1));
-  opacity:calc(1 - var(--gout,0) * .88);will-change:transform}
-.fx7 .cov__can{display:block;position:absolute;left:50%;top:46%;width:min(86vw,880px);translate:-50% -50%;
-  opacity:var(--can,0);transform:scale(calc(.82 + .18 * var(--can,0)))}
-.fx7 .cov__can .ca__arc{stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--arc,0))}
 .fx7 .cov__beat{min-height:100svh;z-index:3;padding-block:0}
 .fx7 .cov__beat .scr__in{justify-content:flex-end;padding-bottom:var(--cue)}
 /* every city, by direction from downtown */
@@ -1179,7 +1171,6 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
 .px__std--3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .own__photo{margin:0;height:min(70svh,620px);overflow:hidden;border:1px solid var(--rule)}
 .own__photo img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
-.say__by{margin:clamp(18px,3vh,30px) 0 0;color:var(--bone-2);font-size:clamp(.95rem,1.4vw,1.12rem)}
 @media (max-width:1100px){ .px__std--3{grid-template-columns:1fr} .px__std--3 li{padding-top:8px} }
 @media (max-width:899px){
   .px__pic--photo{height:clamp(140px,24svh,240px);aspect-ratio:auto;width:100%}
@@ -1285,3 +1276,86 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
 /* stock headers: keep the face in frame (the guard stands left of centre, the earpiece shot is tall) */
 .ih__media img.at-face,.mx__p img.at-face{object-position:32% 22%}
 .is-quote .kx h1{font-size:clamp(1.7rem,4.2vw,3.1rem);margin-bottom:clamp(14px,2.4vh,26px)}
+
+/* ---------- round 3 (2026-11): quieter buttons, the FAQ, films, the feed ---------- */
+/* welcome: no outline; a tinted, grainy pane that reads as a button without shouting */
+.btn--glass{box-shadow:none;background-color:rgba(231,228,211,.045);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .13 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:160px;-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1)}
+.btn--glass::before{background:rgba(231,228,211,.1)}
+
+/* know us, on phones: the doors take turns at full size (swarm.js) */
+@media (max-width:899px){
+  .mx__list:has(.is-on) li{flex-grow:.7}
+  .mx__list li.is-on{flex-grow:1.9}
+  .mx__list li.is-on .mx__t span{display:block}
+  .mx__list li.is-on .mx__p img{filter:brightness(.9) saturate(1)}
+  .mx__list li.is-on .mx__p::before{transform:scaleX(1)}
+}
+
+/* questions: separate rows on a soft tint, no rules; the open one carries a gold edge */
+.faq{border-top:0;display:grid;gap:8px}
+.faq details{border-bottom:0;background:rgba(231,228,211,.04);box-shadow:inset 2px 0 0 transparent;
+  transition:background .3s var(--xo),box-shadow .3s var(--xo)}
+.faq details[open]{background:rgba(231,228,211,.07);box-shadow:inset 2px 0 0 var(--gold)}
+@media (hover:hover) and (pointer:fine){ .faq details:hover{background:rgba(231,228,211,.065)} }
+.faq summary,.qx .faq summary{font-family:var(--body);font-variation-settings:normal;font-weight:600;
+  font-size:clamp(.94rem,1.15vw,1.05rem);padding:18px 52px 18px 20px}
+.faq summary::after{right:20px}
+.faq__a{padding:0 20px 20px}
+@media (max-width:699px){
+  .faq{gap:6px}
+  .qx .faq summary{padding:13px 44px 13px 16px;font-size:.92rem}
+  .faq summary::after{right:16px}
+  .faq__a{padding:0 16px 16px}
+}
+
+/* Meet us: the statement beside the crew, drawn as a graphic (a Remotion film) */
+.say__in{display:grid !important;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,5vw,80px);align-items:center}
+.say__art{margin:0;height:min(68svh,640px);aspect-ratio:3/4;justify-self:center;overflow:hidden;background:#0A0C0E}
+.say__vid{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:899px){
+  .say__in{grid-template-columns:1fr;gap:18px;align-content:center}
+  .say__art{width:100%;height:clamp(170px,30svh,300px);aspect-ratio:auto}
+  .say__vid{object-position:50% 62%}
+}
+
+/* Meet us: the feed, one photograph at a time with the next one showing */
+.job__in{justify-content:center}
+.feed{overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;
+  margin-right:calc(50% - 50vw);padding-right:var(--gut);cursor:grab;outline-offset:6px}
+.feed::-webkit-scrollbar{display:none}
+.feed__track{list-style:none;margin:0;padding:0;display:flex;gap:clamp(12px,1.6vw,22px);width:max-content}
+.gram{margin:0;scroll-snap-align:start;width:min(78vw,calc((100svh - 330px) * .8),560px);display:flex;flex-direction:column;gap:10px}
+.gram__by{display:flex;align-items:center;gap:10px;margin:0;font-size:.86rem}
+.gram__by img{width:26px;height:auto}
+.gram__by b{color:var(--bone);font-weight:600}
+.gram__by span{color:var(--mute)}
+.gram__pic{margin:0;aspect-ratio:4/5;overflow:hidden;background:var(--ink-2)}
+.gram__pic img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--xo);pointer-events:none}
+.gram__cap{margin:0;font-size:.92rem;color:var(--bone-2);line-height:1.45}
+.gram__cap b{color:var(--bone);font-weight:600;margin-right:4px}
+.feed.is-drag{scroll-snap-type:none;cursor:grabbing}
+.feed.is-hint .feed__track{animation:lean 1.3s var(--xo)}
+@keyframes lean{0%,100%{transform:none}40%{transform:translateX(-56px)}}
+@media (hover:hover) and (pointer:fine){ .gram:hover .gram__pic img{transform:scale(1.03)} }
+@media (max-width:699px){ .gram__cap{font-size:.86rem} .job h2{margin-bottom:12px} }
+
+/* Process: the steps on a gold line that draws itself; each step lights as it is reached */
+.tl__run{position:relative}
+.tl__line{position:absolute;left:0;top:8px;width:100%;height:2px;overflow:visible;pointer-events:none}
+.tl__line line{vector-effect:non-scaling-stroke;stroke-width:1.5}
+.tl__base{stroke:var(--rule)}
+.tl__gold{stroke:var(--gold);stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--draw,1))}
+.tl .hw__step{position:relative;padding-top:38px}
+.tl .hw__step::before,.tl .hw__step::after{content:"";position:absolute;left:0;top:3px;width:11px;height:11px;rotate:45deg}
+.tl .hw__step::before{background:var(--ink-0);border:1.5px solid var(--rule)}
+.tl .hw__step::after{background:var(--gold);opacity:clamp(0,calc((var(--draw,1) - var(--at)) * 8),1)}
+.tl .hw__step > *{opacity:clamp(.2,calc((var(--draw,1) - var(--at)) * 5 + .2),1)}
+.tl .hw__step h3{font-size:clamp(1.1rem,1.9vw,1.6rem)}
+.tl .hw__step p{font-size:clamp(.95rem,1.15vw,1.08rem);max-width:30ch}
+@media (max-width:899px){
+  .tl__line{left:5px;top:0;width:2px;height:100%}
+  .tl .hw__step{padding:0 0 0 30px}
+  .tl .hw__step::before,.tl .hw__step::after{top:5px}
+}

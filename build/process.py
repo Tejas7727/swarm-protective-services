@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 """How we work: the client's three steps (deck slide 6) and the licences behind
-them. Three screens: the opening, the steps, the ask."""
+them. Two screens: the opening, then the steps on a gold line that draws itself
+as the screen arrives (swarm.js writes --draw), each step lighting as the line
+reaches it."""
 import os
 import sys
 
-from common import cta_final, crumb_html, ihero, img, page
+from common import crumb_html, ihero, img, page
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "cinema"))
 import content as C                                              # noqa: E402
@@ -27,20 +29,23 @@ def _facts():
 
 
 def _steps():
-    return "".join('<li class="hw__step" style="--k:%d"><span class="hw__n">%02d</span><h3>%s</h3><p>%s</p></li>'
-                   % (i, i + 1, t, d) for i, (t, d) in enumerate(C.STEPS["items"]))
+    return "".join('<li class="hw__step" style="--k:%d;--at:%.2f"><span class="hw__n">%02d</span><h3>%s</h3><p>%s</p></li>'
+                   % (i, i / 3.0, i + 1, t, d) for i, (t, d) in enumerate(C.STEPS["items"]))
 
 
 BODY = """{hero}
 
-<section class="scr hw" id="steps" data-label="Three steps" aria-labelledby="h-how">
+<section class="scr hw tl" id="steps" data-label="Three steps" aria-labelledby="h-how" data-draw>
 <div class="wrap scr__in">
 <h2 id="h-how">{h}</h2>
-<ol class="hw__steps">{steps}</ol>
+<div class="tl__run">
+<svg class="tl__line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+<line class="tl__base" x1="0" y1="0" x2="100" y2="100"/><line class="tl__gold" x1="0" y1="0" x2="100" y2="100" pathLength="1"/></svg>
+<ol class="hw__steps tl__steps">{steps}</ol>
+</div>
 <ul class="facts" aria-label="Licences and insurance">{facts}</ul>
 </div>
-</section>
-{cta}"""
+</section>"""
 
 PROCESS = page(
     path="/process.html", depth=0,
@@ -54,7 +59,7 @@ PROCESS = page(
                    img("stock-earpiece", (800, 1600), "100vw",
                        "A close protection officer in a black suit speaking into an earpiece.", cls="at-face", loading="eager",
                        priority=True, ratio=2 / 3.0), label="How we work"),
-        h=C.STEPS["h"], steps=_steps(), facts=_facts(), cta=cta_final(0)),
+        h=C.STEPS["h"], steps=_steps(), facts=_facts()),
 )
 
 PAGES = {"process.html": PROCESS}

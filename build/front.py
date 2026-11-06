@@ -120,8 +120,7 @@ def faq():
     Q = C.FAQ
     return """<section class="scr qx" id="faq" data-label="Questions" aria-labelledby="h-faq">
 <div class="wrap scr__in qx__in">
-<div><h2 id="h-faq">{h}</h2>
-<p class="qx__more"><a class="go" href="answers.html">All answers</a></p></div>
+<h2 id="h-faq">{h}</h2>
 {faq}
 </div>
 </section>""".format(h=Q["h"], faq=faq_html(Q["items"]))
