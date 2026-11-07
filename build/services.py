@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """The six service pages — what the home page's one-liners actually mean.
 
-The home page sells; these pages answer. Each one says what you get (beside a
-plan of that kind of job) and the two or three questions people ask about
+The home page sells; these pages answer. Each one shows what you get (an annotated plan of that kind of
+job that plays out as the screen arrives, build/stories.py) and the two or three questions people ask about
 that service specifically. No prices: every job is quoted.
 
 Edit the copy here. `build/service_art.py` exports the photographs.
 """
 from common import BIZ, crumb_html, faq_html, faq_schema, ihero, img, page, plain
-import plans
+import stories
 
 # the quote page, with this service already picked
 QUOTE = "quote.html?service=%s"
@@ -235,11 +235,6 @@ SERVICES = [
 BY_SLUG = {s["slug"]: s for s in SERVICES}
 
 
-def gets(items):
-    """What you get: every item on one screen, arriving in a gentle stagger."""
-    return "".join('<li style="--k:%d"><h3>%s</h3></li>'
-                   % (i % 3 + i // 3, t) for i, (t, d) in enumerate(items))
-
 
 
 
@@ -269,17 +264,12 @@ def _body(s):
               s["h1"], s["lede"],
               img(s["art"], (800, 1600), "100vw", s["alt"], loading="eager", priority=True, ratio=1216 / 832.0),
               ctas, label=s["name"]),
-        """<section class="scr gx gx--plan" id="includes" data-label="What you get" aria-labelledby="h-gets" data-draw>
+        """<section class="scr gx gx--story" id="includes" data-label="What you get" aria-labelledby="h-gets">
 <div class="wrap scr__in gx__in">
-<div class="gx__text">
-<p class="eyebrow">What you get</p><h2 id="h-gets">In every booking</h2>
-<ol class="gx__list">{gets}</ol>
-<a class="go" href="{q}">Get a quote for {name_l}</a>
+<h2 id="h-gets">In every booking</h2>
+{story}
 </div>
-<figure class="plan">{plan}</figure>
-</div>
-</section>""".format(gets=gets(s["includes"]), q=quote, name_l=s["name"].lower(),
-                    plan=plans.SERVICE[s["slug"]]()),
+</section>""".format(story=stories.figure(s["slug"], [t for t, _ in s["includes"]])),
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
 <div class="qx__side"><h2 id="h-q">Asked about {name_l}</h2>

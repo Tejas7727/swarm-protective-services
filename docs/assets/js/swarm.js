@@ -464,6 +464,58 @@
     }, true);
   });
 
+  /* --- what you get: each service plan plays out once as its screen arrives --
+     One clock per figure: --t runs 0 to 1 (the styles turn it into drawing,
+     posts, callouts); things that travel (.s-mv) follow the path drawn just
+     before them, on the times in data-keys ("time:fraction,..."). Leaving the
+     screen entirely resets it, so coming back plays it again. Without this, or
+     with reduced motion, --t is never set and the finished plan shows. */
+  [].slice.call(document.querySelectorAll('[data-story]')).forEach(function (fig) {
+    if (reduced || !('IntersectionObserver' in window)) { return; }
+    var dur = +fig.getAttribute('data-dur') || 7000, raf = 0, state = 0;   // 0 waiting, 1 playing, 2 done
+    var io3 = function (x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+    var movers = [].slice.call(fig.querySelectorAll('.s-mv')).map(function (g) {
+      return { g: g, p: g.previousElementSibling, rot: g.hasAttribute('data-rotate'),
+        keys: g.getAttribute('data-keys').split(',').map(function (kv) { var a = kv.split(':'); return [+a[0], +a[1]]; }) };
+    });
+    var frac = function (k, t) {
+      if (t <= k[0][0]) { return k[0][1]; }
+      for (var i = 0; i < k.length - 1; i++) {
+        if (t <= k[i + 1][0]) { return k[i][1] + (k[i + 1][1] - k[i][1]) * io3((t - k[i][0]) / (k[i + 1][0] - k[i][0])); }
+      }
+      return k[k.length - 1][1];
+    };
+    var set = function (t) {
+      fig.style.setProperty('--t', t.toFixed(4));
+      movers.forEach(function (m) {
+        if (!m.p.getBoundingClientRect().width && !m.p.getBoundingClientRect().height) { return; }   // the other layout
+        var L = m.L || (m.L = m.p.getTotalLength()), d = frac(m.keys, t) * L;
+        var at = m.p.getPointAtLength(d), deg = 0;
+        if (m.rot) {
+          var a = m.p.getPointAtLength(Math.max(0, d - 1)), b = m.p.getPointAtLength(Math.min(L, d + 1));
+          deg = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+        }
+        m.g.setAttribute('transform', 'translate(' + at.x.toFixed(1) + ' ' + at.y.toFixed(1) + ') rotate(' + deg.toFixed(1) + ')');
+      });
+    };
+    var play = function () {
+      state = 1;
+      var t0 = performance.now();
+      var step = function (now) {
+        var t = Math.min(1, (now - t0) / dur);
+        set(t);
+        if (t < 1) { raf = requestAnimationFrame(step); } else { state = 2; }
+      };
+      raf = requestAnimationFrame(step);
+    };
+    set(0);
+    new IntersectionObserver(function (es) {
+      var e = es[0];
+      if (e.intersectionRatio >= 0.45 && state === 0) { play(); }
+      else if (!e.isIntersecting) { cancelAnimationFrame(raf); state = 0; set(0); }
+    }, { threshold: [0, 0.45] }).observe(fig);
+  });
+
   /* --- the crew films play as their screen arrives ---------------------------
      The crew films are transparent (WebM, VP9 with alpha): where that cannot
      play (Safari), the film is removed and its last frame, a transparent still,

@@ -1561,3 +1561,53 @@ h3,h4{font-variation-settings:"wdth" 98,"wght" 600 !important;letter-spacing:-.0
   .mx__map{-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent),linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent);
     mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent),linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent)}
 }
+
+/* ---------- what you get, shown not listed (build/stories.py) ----------
+   One clock, --t (swarm.js), from 0 to 1: structure draws, posts land, things move,
+   each callout arrives where and when it happens. Default --t is 1: the finished plan. */
+.sr-only{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.gx--story .gx__in{display:flex !important;flex-direction:column;justify-content:flex-start}
+.gx--story h2{margin-bottom:0;position:relative;z-index:1}
+.story{margin:0;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;color:var(--gold)}
+.story__svg{display:block;width:100%;height:100%;overflow:visible}
+.story__svg--tall{display:none}
+@media (max-aspect-ratio:4/5){ .story__svg--wide{display:none} .story__svg--tall{display:block} }
+.story .s-w,.story .s-w2,.story .s-r,.story .s-lead{fill:none;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1}
+.story .s-w{stroke:rgba(231,228,211,.72);stroke-width:2.6;stroke-dashoffset:calc(1 - clamp(0,var(--t,1) * 6,1))}
+.story .s-w2{stroke:rgba(231,228,211,.18);stroke-width:1.2;stroke-dashoffset:calc(1 - clamp(0,var(--t,1) * 6,1))}
+.story .s-r{stroke:var(--gold);stroke-width:4.4;stroke-dashoffset:calc(1 - clamp(0,(var(--t,1) - var(--a)) / (var(--b) - var(--a)),1))}
+.story .s-r2{fill:none;stroke:var(--gold);stroke-width:2;stroke-dasharray:6 9;vector-effect:non-scaling-stroke;
+  opacity:clamp(0,(var(--t,1) - var(--a)) * 8,.9)}
+.story .s-mp{fill:none;stroke:none}
+.story .s-pop{opacity:clamp(0,(var(--t,1) - var(--a)) * 16,1);transform-box:fill-box;transform-origin:center;
+  scale:calc(.4 + .6 * clamp(0,(var(--t,1) - var(--a)) * 12,1))}
+.story .s-p{fill:var(--gold-hi);stroke:var(--ink-0);stroke-width:3;paint-order:stroke}
+.story .s-ring{fill:none;stroke:var(--gold);stroke-width:1.6;opacity:.7}
+.story .s-mv{opacity:clamp(0,(var(--t,1) - var(--a)) * 20,1)}
+.story .s-car,.story .s-bus{fill:var(--ink-2);stroke:var(--bone);stroke-width:3}
+.story .s-client{fill:var(--bone)}
+.story .s-guest{fill:var(--bone-2)}
+.story .s-doc{fill:none;stroke:var(--gold-hi);stroke-width:2.4;stroke-linejoin:round;
+  opacity:clamp(0,(var(--t,1) - var(--a)) * 16,1);translate:0 calc((1 - clamp(0,(var(--t,1) - var(--a)) * 16,1)) * 18px)}
+.story .s-tag{opacity:clamp(0,(var(--t,1) - var(--a)) * 14,1)}
+.story .s-tag rect{fill:var(--ink-0);stroke:var(--gold);stroke-width:1.6}
+.story .s-tag text{fill:var(--gold-hi);font-family:var(--body);font-size:17px;font-weight:600}
+.story .s-dot{fill:var(--bone-2);opacity:clamp(0,(var(--t,1) - var(--a)) * 14,.75)}
+.story .s-crowd{opacity:calc(1 - clamp(0,(var(--t,1) - var(--o,2)) * 10,1))}
+.story .s-z{fill:var(--hatch);opacity:calc(clamp(0,(var(--t,1) - .58) * 8,1) * .55)}
+.story .s-win rect{fill:var(--gold);opacity:calc(.6 * clamp(0,var(--t,1) * 6,1) * (1 - clamp(0,(var(--t,1) - .46) * 8,1)))}
+.story .s-sweep{fill:var(--gold-hi);translate:calc(clamp(0,(var(--t,1) - .76) / .12,1) * 448px) 0;
+  opacity:calc(clamp(0,(var(--t,1) - .76) * 20,1) * (1 - clamp(0,(var(--t,1) - .9) * 20,1)))}
+.story .s-alert circle{fill:none;stroke:var(--gold-hi);stroke-width:3}
+.story .s-alert{opacity:clamp(0,(var(--t,1) - var(--a)) * 10,1)}
+.story .s-call{opacity:clamp(0,(var(--t,1) - var(--a)) * 18,1)}
+.story .s-lead{stroke:var(--gold);stroke-width:1.6;opacity:.85;stroke-dashoffset:calc(1 - clamp(0,(var(--t,1) - var(--a)) * 16,1))}
+.story .s-pin{fill:var(--gold)}
+.story .s-ct{fill:var(--bone);font-family:var(--body);font-size:var(--fs);font-weight:600;letter-spacing:-.01em;
+  translate:0 calc((1 - clamp(0,(var(--t,1) - var(--a)) * 18,1)) * 12px)}
+/* the plan is sized by width and capped by the room the screen leaves (the screen has no fixed height) */
+.story{flex:0 0 auto}
+.story__svg{width:100%;height:auto;max-height:calc(100svh - var(--topbar) - clamp(96px,14vh,140px))}
+@media (max-width:699px){ .story__svg{max-height:calc(100svh - var(--topbar) - 150px)} }
+.story{width:100%;align-self:stretch}
+.story__svg{flex:1 1 100%;min-width:0}
