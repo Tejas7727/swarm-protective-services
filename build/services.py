@@ -244,7 +244,7 @@ def _body(s):
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
 <div class="qx__side"><h2 id="h-q">Questions about {name_l}</h2>
-<div class="others"><p class="others__h">More services</p><ul>{others}</ul><a class="others__all" href="index.html#services"><img src="assets/img/svc-event-security-800.webp" alt="" width="800" height="547" loading="lazy" decoding="async"><span>See all six services</span></a></div></div>
+<div class="others"><p class="others__h">More services</p><ul>{others}</ul><a class="others__all" href="index.html#services"><img src="assets/img/svc-event-security-800.webp" alt="" width="800" height="547" loading="lazy" decoding="async"><span>Explore our services</span></a></div></div>
 <div>{faq}</div>
 </div>
 </section>""".format(name_l=s["name"].lower(), faq=faq_html(s["faq"]), others=_others(s["slug"])),

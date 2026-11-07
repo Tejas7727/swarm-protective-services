@@ -1743,10 +1743,10 @@ a.btn[href*="quote"]:not(.btn--ghost)>span::before{content:"";display:inline-blo
   background:var(--signal);margin-right:10px;vertical-align:.14em}
 @media (prefers-reduced-transparency:reduce){ .btn:not(.btn--ghost):not(.btn--glass){background-color:rgba(184,145,78,.22);backdrop-filter:none} }
 
-/* orange, subtle, where the eye should go: reading progress, the door you point at, steps reached */
-.scrollbar i{background:var(--signal)}
-.tile::before,.mx__p::before{background:var(--signal)}
-.tl .hw__step::after{background:var(--signal)}
+/* moving lines stay gold (orange there was too much); the header sits on the page:
+   no rule under it and no progress line */
+.scrollbar{display:none}
+.topbar,.topbar.is-stuck{border-bottom-color:transparent}
 
 /* service pages, phones: one link to all services instead of a pile of chips */
 .others__all{display:none}
