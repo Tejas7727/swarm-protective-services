@@ -709,7 +709,8 @@ body:has(.drawer.is-open) .topbar{background:var(--ink-0);border-bottom-color:va
   --cue:clamp(52px,8vh,84px)}
 @media (max-width:699px){ :root{--cue:calc(100px + env(safe-area-inset-bottom,0px))} }   /* the Call bar + the cue */
 html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
-.snap .foot{scroll-snap-align:end}
+.snap .foot{scroll-snap-align:start}   /* arrive at its top, never halfway down */
+html.snap.snap-free{scroll-snap-type:none}   /* the footer scrolls like a plain page (swarm.js) */
 
 .scr{position:relative;min-height:100svh;display:flex;flex-direction:column;scroll-snap-align:start;
   scroll-snap-stop:always;padding:calc(var(--topbar) + clamp(12px,3.4vh,40px)) 0 var(--cue)}

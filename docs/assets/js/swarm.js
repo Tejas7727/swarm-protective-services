@@ -140,6 +140,7 @@
   if (!reduced && (screens.length || pheros.length)) {
     html.classList.add('fx7');
     var VW = 1, VH = 1, diag = 1, filmTop = 0, covTop = 0, tops = [], hts = [];
+    var foot = document.querySelector('.foot'), footTop = Infinity;
     var smooth = function (a, b, x) {
       var t = Math.min(1, Math.max(0, (x - a) / (b - a)));
       return t * t * (3 - 2 * t);
@@ -224,6 +225,7 @@
         // arriving: screens below the top edge; leaving: only once its bottom has
         // passed the bottom of the window, so a tall screen never fades while read
         var d = tops[i] > y ? (tops[i] - y) / VH : Math.min(0, (tops[i] + hts[i] - y - VH) / VH);
+        if (i === screens.length - 1 && d < 0) { d = 0; }        // the last screen stays put as the footer comes up
         d = Math.max(-1.5, Math.min(1.5, d));
         dist[i] = d;
         if (tops[i] <= y + VH * 0.45) { active = i; }
@@ -284,10 +286,15 @@
       hts = screens.map(function (s) { return s.offsetHeight; });
       if (film) { filmTop = film.getBoundingClientRect().top + y; origin(); }
       if (cov) { covTop = cov.getBoundingClientRect().top + y; if (reel) { reel.size(); } }
+      footTop = foot ? foot.getBoundingClientRect().top + y : Infinity;
       cur = y; vel = 0;
       paint(cur);
+      free();
     };
-    addEventListener('scroll', kick, { passive: true });
+    // the footer is plain page: once it shows, no snapping and no glide, so it is
+    // reached and read from its top like any page
+    var free = function () { html.classList.toggle('snap-free', window.scrollY + VH > footTop + 1); };
+    addEventListener('scroll', function () { free(); kick(); }, { passive: true });
 
     // wheel and trackpad: one gesture moves one screen, in one eased glide.
     // Touch keeps the browser's own snapping; keyboard and links snap natively.
@@ -313,13 +320,15 @@
         var y = window.scrollY, i = 0;
         for (var k = 0; k < tops.length; k++) { if (tops[k] <= y + 2) { i = k; } }
         if (e.deltaY > 0 && tops[i] + hts[i] > y + VH + 2) { return; }      // still inside a tall screen
+        if (y + VH > footTop + 1) { return; }                              // in the footer: plain scrolling
         if (e.deltaY < 0 && tops[i] < y - 2) { return; }
         e.preventDefault();
         if (now - accAt > 220) { acc = 0; }
         acc += e.deltaY; accAt = now;
         if (Math.abs(acc) < 24) { return; }                                // a touch, not a gesture yet
         var j = i + (acc > 0 ? 1 : -1);
-        var to = j < 0 ? 0 : j >= tops.length ? html.scrollHeight - VH : tops[j];
+        // past the last screen: to the footer's top (or the page end, if the footer is short)
+        var to = j < 0 ? 0 : j >= tops.length ? Math.min(footTop, html.scrollHeight - VH) : tops[j];
         acc = 0;
         if (Math.abs(to - y) < 2) { return; }
         // the camera moves (the jacket, the map) take a little longer than a plain step
