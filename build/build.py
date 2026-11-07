@@ -66,18 +66,18 @@ def llms_txt(base):
     out = ["# %s" % B["name"], "",
            "> Licensed security company in Toronto and the Greater Toronto Area: event security, "
            "bar and nightclub door staff, close protection, and monitoring for homes and "
-           "businesses. PSISA-licensed officers, $5M insured, WSIB covered. Based in Toronto; "
-           "we travel with clients anywhere in Canada.", "",
+           "businesses, with discreet, trained officers. Based in Toronto, and we travel with "
+           "clients anywhere in Canada.", "",
            "Motto: %s." % C.HOME["motto"], "",
            "## Services", ""]
-    out += ["- **%s** — %s. [Details](%s/%s)" % (name, line, base, slug)
+    out += ["- **%s**: %s. [Details](%s/%s)" % (name, line, base, slug)
             for slug, name, line in C.SERVICES["items"]]
     out += ["", "## Coverage", "",
             "- %s %s" % (C.COVERAGE["line"], C.COVERAGE["national"]),
             "- Cities: %s." % ", ".join(common.AREAS), "",
-            "## Licences and insurance", ""]
-    out += ["- %s" % c for c in C.SERVICES["creds"]]
-    out += ["- Officers are not armed: Ontario does not permit private security to carry firearms.",
+            "## Officers", ""]
+    out += ["- Officers are licensed to work in security in Ontario and trained to calm tense situations.",
+            "- Officers are not armed: Ontario does not permit private security to carry firearms.",
             "", "## Answers", ""]
     out += ["- **%s** %s" % qa for qa in C.FAQ["items"]]
     out += ["", "## Contact", "",
@@ -87,10 +87,10 @@ def llms_txt(base):
             "- Prices are quoted per job; nothing is published.", "",
             "## More", "",
             "- [Meet us](%s/about.html): who we are." % base,
-            "- [Process](%s/process.html): how a booking runs, from the first call to the written report." % base,
+            "- [Process](%s/process.html): how a booking works, from your first call to the end of the job." % base,
             "- [Coverage](%s/coverage.html): the 18 GTA cities we cover, and travel across Canada." % base,
             "- [Answers](%s/answers.html): the longer answers to these questions." % base,
-            "- [Journal](%s/journal/): field notes for venue owners and event organisers." % base,
+            "- [Journal](%s/journal/): advice for venue owners and event organisers." % base,
             "- [Privacy](%s/privacy.html): what we keep and for how long." % base, ""]
     return "\n".join(out)
 

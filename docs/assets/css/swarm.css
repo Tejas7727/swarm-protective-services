@@ -1777,3 +1777,6 @@ a.btn[href*="quote"]:not(.btn--ghost)>span::before{content:"";display:inline-blo
   .tl--split .hw__step p{display:block;-webkit-line-clamp:unset;overflow:visible}
   .tl__in .plan{max-height:33svh}
 }
+/* page openings: no rule and no growing line under them either */
+.phero{border-bottom:0}
+.fx7 .phero::after{display:none}

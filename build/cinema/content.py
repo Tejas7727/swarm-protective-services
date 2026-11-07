@@ -37,7 +37,6 @@ SERVICES = {
         ("limousine-service", "Limousine service", "Chauffeured, secured"),
         ("monitoring", "Monitoring", "Homes and businesses"),
     ],
-    "creds": ["PSISA licensed", "$5M insured", "WSIB covered"],
     "more": "See what it includes",
 }
 

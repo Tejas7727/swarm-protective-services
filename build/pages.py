@@ -13,8 +13,8 @@ PRIVACY = page(
     body="""<section class="phero">
 <div class="wrap">
 <h1>Privacy.</h1>
-<p class="lede">Short version: we collect what we need to quote and staff your job, we keep
-incident records because the law and your insurer require it, and we sell nothing to anyone.</p>
+<p class="lede">We collect only what we need to answer you and staff your job, and we never sell your
+information to anyone.</p>
 </div>
 </section>
 

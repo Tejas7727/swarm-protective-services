@@ -120,7 +120,7 @@ def nav_html(depth):
 def drawer_html(depth):
     out = ['<a href="%s%s">%s<small>%s</small></a>' % (pfx(depth), h, label, blurb)
            for h, label, blurb in NAV]
-    out.append('<a href="%sjournal/index.html">Journal<small>Field notes for venue owners</small></a>'
+    out.append('<a href="%sjournal/index.html">Journal<small>Advice for venue owners and event organisers</small></a>'
                % pfx(depth))
     out.append('<a class="btn btn--full" href="%s"><span>Get a quote</span></a>'
                % quote_url(depth))
@@ -227,7 +227,7 @@ def org_schema():
 "priceRange":"$$$",
 "slogan":"Life is unpredictable, Let us Protect you",
 "foundingDate":"{founded}",
-"description":"Licensed door staff, event security, close protection and monitoring for homes and businesses across the Greater Toronto Area, travelling with clients anywhere in Canada. PSISA-licensed officers, $5M commercial general liability, a written incident report before the shift ends, and dispatch answered 24 hours.",
+"description":"Licensed door staff, event security, close protection and monitoring for homes and businesses across the Greater Toronto Area, travelling with clients anywhere in Canada. Discreet, trained officers and a team you can reach 24 hours a day.",
 "knowsLanguage":"en-CA",
 "address":{{"@type":"PostalAddress","addressLocality":"Toronto","addressRegion":"ON","addressCountry":"CA"}},
 "geo":{{"@type":"GeoCoordinates","latitude":43.6532,"longitude":-79.3832}},
