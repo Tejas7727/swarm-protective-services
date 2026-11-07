@@ -473,22 +473,6 @@
     vids.forEach(function (v) { vo.observe(v); });
   }
 
-  /* --- Know us, on phones: the three doors take turns at full size --------- */
-  var mxl = document.querySelector('.mx__list');
-  if (mxl && !reduced && 'IntersectionObserver' in window) {
-    var mxi = [].slice.call(mxl.children), mxk = 0, mxt = 0, narrow = matchMedia('(max-width:899px)');
-    var mxOn = function (k) { mxk = k; mxi.forEach(function (li, j) { li.classList.toggle('is-on', j === k); }); };
-    new IntersectionObserver(function (es) {
-      clearInterval(mxt);
-      if (es[0].isIntersecting && narrow.matches) {
-        mxOn(0);
-        mxt = setInterval(function () { mxOn((mxk + 1) % mxi.length); }, 2600);
-      } else {
-        mxi.forEach(function (li) { li.classList.remove('is-on'); });
-      }
-    }, { threshold: 0.5 }).observe(mxl);
-  }
-
   /* --- Meet us: the feed. Swipe on touch; with a mouse, drag it or click the
      photograph that is peeking in. It leans toward the next one, once. ------- */
   [].slice.call(document.querySelectorAll('.feed')).forEach(function (feed) {

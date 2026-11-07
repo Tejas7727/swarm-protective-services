@@ -1261,9 +1261,10 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
   background:radial-gradient(90% 80% at 50% 45%,#10161B,#08090A 75%)}
 .mx__map .gm{width:100%;height:100%}
 .mx__map .gm__lbl{display:none}
-@media (hover:hover) and (pointer:fine) and (min-width:900px){
-  .mx__list:hover li{flex-grow:.82}
-  .mx__list li:hover{flex-grow:1.5}
+/* a door opens when you point at it (or reach it with the keyboard), never on its own */
+@media (hover:hover) and (pointer:fine){
+  .mx__list:hover li,.mx__list:focus-within li{flex-grow:.82}
+  .mx__list li:hover,.mx__list li:focus-within{flex-grow:1.5}
 }
 @media (max-width:899px){
   .mx__list{flex-direction:column}
@@ -1284,13 +1285,10 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
   background-size:160px;-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1)}
 .btn--glass::before{background:rgba(231,228,211,.1)}
 
-/* know us, on phones: the doors take turns at full size (swarm.js) */
-@media (max-width:899px){
-  .mx__list:has(.is-on) li{flex-grow:.7}
-  .mx__list li.is-on{flex-grow:1.9}
-  .mx__list li.is-on .mx__t span{display:block}
-  .mx__list li.is-on .mx__p img{filter:brightness(.9) saturate(1)}
-  .mx__list li.is-on .mx__p::before{transform:scaleX(1)}
+/* stacked (narrow windows), the pointed-at door takes more of the height */
+@media (hover:hover) and (pointer:fine) and (max-width:899px){
+  .mx__list:hover li,.mx__list:focus-within li{flex-grow:.7}
+  .mx__list li:hover,.mx__list li:focus-within{flex-grow:1.9}
 }
 
 /* questions: separate rows on a soft tint, no rules; the open one carries a gold edge */
@@ -1554,3 +1552,11 @@ h3,h4{font-variation-settings:"wdth" 98,"wght" 600 !important;letter-spacing:-.0
 @media (max-aspect-ratio:1/1){ .regions__map{inset:0} .regions__map img{opacity:.16} }   /* the map's own labels would fight the list */
 /* phones: the line-up stands larger along the bottom */
 @media (max-width:699px){ .crew--lineup{width:min(170vw,calc((100svh - 260px) * 1.64))} }
+/* the map door dissolves like the photographs beside it */
+.mx__map{-webkit-mask-image:linear-gradient(90deg,#000 78%,transparent),linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,#000 78%,transparent),linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent);mask-composite:intersect}
+@media (max-width:899px){
+  .mx__map{-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent),linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent),linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent)}
+}
