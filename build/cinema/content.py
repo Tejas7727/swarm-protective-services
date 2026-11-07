@@ -19,8 +19,8 @@ HOME = {
     "motto": "Life is unpredictable, let us protect you",   # the client's motto (schema slogan)
     # the hero turns the motto into a promise (brand-copy scorecard 10/12; runner-up
     # "Nothing happened. That's the job." 11/12, used as the Meet us statement)
-    "headline": ("Life is unpredictable.", "We aren't."),
-    "sub": "PSISA-licensed protection for Toronto's venues, events and executives. Quoted the same day.",
+    "headline": ("Life is unpredictable.", "We plan for it."),
+    "sub": "Discreet, trained security for venues, events and private clients across Toronto and the GTA.",
     "gold": "protect",                              # the one word of the motto set in gold
     "lede": "Close protection, event and venue security, party bus and limousine details, and monitoring.",
 }
@@ -75,18 +75,18 @@ ELITE = {
 # was "Peace of mind is our product. We deliver it through proactive planning, skilled
 # communication, and unyielding professionalism." (the client's; "peace of mind" is banned by
 # the brand voice). Same idea, said as the brand line.
-STATEMENT = "Nothing happened. That is the product."
-STATEMENT_LINE = "Every job is planned before the day and written up before the crew leaves."
+STATEMENT = "You look after your guests. We look after their safety."
+STATEMENT_LINE = "Every job starts with a plan, so your event runs the way you expect it to."
 
 # Home: how it works (deck slide 6)
 STEPS = {
-    "h": "How a booking runs",
+    "h": "How a booking works",
     # the client's deck said "Initial consultation / Customized service plan / Professional
     # execution"; same three steps, in plain words (2026-11 copy pass)
     "items": [
-        ("Tell us the job", "The date, the place, the headcount and what worries you."),
-        ("We write the plan", "Posts, routes, timings and who leads. In writing, before the day."),
-        ("We run it and report", "One lead on site. A written report before the crew leaves."),
+        ("Tell us what you need", "Share the date, the place, the number of guests and anything that worries you."),
+        ("We plan it with you", "We work out where our officers stand, how people arrive and leave, and who leads on the day."),
+        ("We look after it on the day", "One team lead stays on site the whole time and keeps in touch with you."),
     ],
 }
 
@@ -119,25 +119,28 @@ CREW = {
 # also what a search engine or an AI assistant quotes, so each answer stands on
 # its own and the longer versions live on answers.html.
 FAQ = {
-    "kicker": "Questions",
-    "h": "Asked before every booking",
-    "more": "More answers",
+    "h": "Common questions",
     "items": [
         ("Where do you work?",
-         "Toronto and 17 cities around it, and we travel with clients anywhere in Canada."),
+         "We work across Toronto and 17 nearby cities in the GTA. We can also travel with you anywhere in Canada."),
         ("Are your officers licensed?",
-         "Yes. PSISA-licensed officers, $5M insurance and WSIB coverage on every job."),
+         "Yes. Every officer we send is licensed to work in security in Ontario and trained to calm tense "
+         "situations rather than escalate them."),
         ("Are your bodyguards armed?",
-         "No. Ontario does not allow it. We work on presence, planning and de-escalation."),
+         "No. Private security officers in Ontario are not allowed to carry firearms. We keep people safe "
+         "through careful planning, a steady presence and calm communication."),
         ("What can you cover?",
-         "Close protection, events, venues, party buses, limousines, and monitoring for "
-         "homes and businesses."),
+         "Close protection, events, venues, party buses, limousine trips, and patrols for homes and businesses. "
+         "If you are not sure which fits, tell us what is happening and we will suggest the right option."),
         ("How soon can you start?",
-         "Same day for most jobs. Large events and travel need a few days."),
+         "For most jobs we can start the same day. Large events and travel need a few days so we can plan "
+         "them properly."),
         ("How do I book you?",
-         "Send the date, the place and the headcount. We reply the same day."),
+         "Send us the date, the place and roughly how many people will be there. We usually reply with a clear "
+         "quote the same day."),
     ],
 }
+
 
 CONTACT = {
     "h": "Get a quote",

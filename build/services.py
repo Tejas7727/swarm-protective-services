@@ -23,17 +23,16 @@ SERVICES = [
         "art": "svc-close-protection",
         "alt": "Two Swarm close protection officers in black beside a client's car at a hotel entrance.",
         "title": "Close Protection & Bodyguards | Toronto &amp; GTA",
-        "desc": "Licensed close protection in Toronto and the GTA: executives, artists, visiting "
-                "clients and families. Advance work, discreet officers, secure transport, same-day quotes.",
+        "desc": 'Discreet close protection in Toronto and the GTA for executives, artists, visiting clients and families. Advance planning, trained officers and secure transport.',
         "h1": "Close protection",
-        "lede": "Suited, briefed, and boring to look at. That is the point.",
+        "lede": 'Discreet, trained officers who stay close and plan every move ahead of you.',
         "includes": [
-            ("A named lead", "One person owns your detail and is reachable for the whole booking."),
-            ("Advance on the location", "We walk the venue, the route and the exits before you arrive."),
-            ("Arrivals and departures", "The two minutes that matter are planned, not improvised."),
-            ("Secure transport", "Chauffeured vehicle with an officer, or we work with your driver."),
-            ("Discretion in writing", "A confidentiality agreement covers the detail, the address and the names."),
-            ("A written report", "What happened, when, and what we did, written before the detail ends."),
+            ('A named lead', 'One person runs your detail and is easy to reach throughout.'),
+            ('Advance on the location', 'We visit the venue and the route before you arrive.'),
+            ('Arrivals and departures', 'The moments you step in and out of a car are planned carefully.'),
+            ('Secure transport', 'A chauffeured vehicle with an officer, or we work alongside your driver.'),
+            ('Discretion in writing', 'We sign a confidentiality agreement that covers your details and plans.'),
+            ('A second way out', 'Every venue we work has an exit plan ready in case it is needed.'),
         ],
         "steps": [
             ("Tell us the shape of it", "Dates, cities, who is being covered and how visible you want us."),
@@ -44,15 +43,9 @@ SERVICES = [
                      "Visiting clients and delegations", "Families and private residences",
                      "Anyone with a situation that changed this week"],
         "faq": [
-            ("Are your bodyguards armed?",
-             "No. Private security in Ontario is not permitted to carry firearms. Our work is advance "
-             "planning, presence and de-escalation. That is what the licence covers."),
-            ("Can you travel with us?",
-             "Yes. We travel with clients anywhere in Canada. Outside Ontario we work with licensed "
-             "partners where the province requires it."),
-            ("How discreet is it?",
-             "As discreet as you want. Officers can be in suits and read as staff, or be visible on "
-             "purpose when visibility is the deterrent."),
+            ('Are your bodyguards armed?', 'No. Private security officers in Ontario are not allowed to carry firearms. We protect you through careful planning, a steady presence and calm, clear communication.'),
+            ('Can you travel with us?', 'Yes. We can travel with you anywhere in Canada. Where another province has its own rules, we work with trusted local partners.'),
+            ('How discreet is it?', 'As discreet as you would like. Our officers can dress and act like part of your team, or stay clearly visible when that helps keep people at a distance.'),
         ],
     },
     {
@@ -61,17 +54,16 @@ SERVICES = [
         "art": "svc-event-security",
         "alt": "A security officer at the barrier in front of a concert crowd.",
         "title": "Event Security Toronto | Concerts, Weddings, Galas",
-        "desc": "Licensed event security across Toronto and the GTA: concerts, weddings, galas, "
-                "festivals and private parties. Door, barrier, floor and close-out, quoted per event.",
+        "desc": 'Event security across Toronto and the GTA for concerts, weddings, galas, festivals and private parties. Door, barrier and floor teams, quoted for each event.',
         "h1": "Event security",
-        "lede": "The right number of officers, in the right places.",
+        "lede": 'The right number of officers in the right places, from doors open until the last guest leaves.',
         "includes": [
-            ("A plan before the day", "Headcount, entry points, bar positions, close-out and the what-if list."),
-            ("Door and ID checks", "Guest lists, wristbands and ID, handled politely and quickly."),
-            ("Barrier and floor", "Front-of-stage, aisles, VIP and back-of-house, as the room needs."),
-            ("Close-out", "The last hour is the one that goes wrong; we staff it properly."),
-            ("One lead on site", "Your point of contact all night, not a rotating cast."),
-            ("Incident report", "Filed before the crew leaves, whether or not anything happened."),
+            ('A plan before the day', 'We map entrances, exits and key positions before the event.'),
+            ('Door and ID checks', 'Guest lists, wristbands and ID are handled politely and quickly.'),
+            ('Barrier and floor', 'Officers at the stage, the aisles and the VIP areas, as your event needs.'),
+            ('One lead on site', 'You have one person to talk to for the whole event.'),
+            ('Artist and VIP route', 'A clear, private path for performers and special guests.'),
+            ('Close-out', 'We stay until your guests have left and the venue is clear.'),
         ],
         "steps": [
             ("Send the date and the room", "Venue, headcount, hours, bar, and whether alcohol is served."),
@@ -81,13 +73,9 @@ SERVICES = [
         "for_whom": ["Concerts and club nights", "Weddings and receptions", "Galas and corporate evenings",
                      "Festivals and street events", "Private parties at home"],
         "faq": [
-            ("How many officers does my event need?",
-             "It depends on headcount, alcohol, the number of entrances and the hours. Send those four "
-             "things and we will put a number in writing the same day."),
-            ("Do you work with the venue's own staff?",
-             "Yes, often. We brief with the venue's team so the room has one plan rather than two."),
-            ("How late can you cover?",
-             "Any hours, including load-out and the drive home. Dispatch is answered 24/7."),
+            ('How many officers does my event need?', 'It depends on the number of guests, whether alcohol is served, how many entrances there are and how late the event runs. Send us those details and we will recommend a number, usually the same day.'),
+            ("Do you work with the venue's own staff?", 'Yes, we often do. We meet the venue team beforehand so everyone works from one shared plan.'),
+            ('How late can you stay?', 'As late as your event needs, including load-out and helping guests get home safely. You can reach us at any hour.'),
         ],
     },
     {
@@ -96,17 +84,16 @@ SERVICES = [
         "art": "svc-venue-security",
         "alt": "Five Swarm officers in black at a venue entrance at night.",
         "title": "Bar &amp; Nightclub Security Toronto | Door Staff",
-        "desc": "Licensed door staff and floor security for Toronto bars, clubs and lounges. The same "
-                "crew every week, trained to de-escalate, with a written incident report every night.",
+        "desc": 'Door and floor security for bars, clubs and lounges in Toronto. The same trained team every week, focused on keeping your guests safe and your nights calm.',
         "h1": "Venue security",
-        "lede": "Door, floor and close. The same faces every week.",
+        "lede": 'A steady door and floor team that gets to know your venue and your regulars.',
         "includes": [
-            ("The same crew weekly", "Continuity is the service. Your room gets learned, not re-learned."),
-            ("Door and ID", "Capacity counts, ID checks, dress and entry policy as you set it."),
-            ("Floor coverage", "Walkthroughs, bar watch, washroom checks, and eyes on the smoking area."),
-            ("Close and sweep", "Last call, clear-out and a walk of the perimeter before lock-up."),
-            ("Licence-safe practice", "Everything done the way the AGCO and your insurer expect it."),
-            ("Nightly report", "Refusals, ejections, injuries and timings, filed before the shift ends."),
+            ('The same crew weekly', 'The same faces every week, so your regulars know who we are.'),
+            ('Door and ID', 'Guests are checked in a friendly, consistent way.'),
+            ('Floor coverage', 'Officers keep an eye on the room, the washrooms and the patio.'),
+            ('Bar watch', 'We support your bar staff when a guest has had enough.'),
+            ('VIP room', 'Your private areas stay comfortable and under control.'),
+            ('Close and sweep', 'A calm last call, a clear room and a final walk of the venue.'),
         ],
         "steps": [
             ("Walk the room with us", "We see the door, the bar, the blind corners and the exits."),
@@ -116,12 +103,9 @@ SERVICES = [
         "for_whom": ["Bars and lounges", "Nightclubs", "Restaurants with a late licence",
                      "Venues under an AGCO condition", "Rooms that changed hands and need a reset"],
         "faq": [
-            ("Can you cover one busy night a week?",
-             "Yes. Most venue clients start with Friday and Saturday and add nights when it works."),
-            ("What happens when someone has to go?",
-             "Position, distance, tone, in that order. Hands are the last resort, and the report says why."),
-            ("Do you handle capacity counts?",
-             "Yes, with a clicker and a number the venue can show an inspector."),
+            ('Can you cover one busy night a week?', 'Yes. Many venues start with Friday and Saturday and add more nights when it suits them.'),
+            ('What happens when a guest has to leave?', 'We talk first and keep a respectful distance. Most situations calm down with the right words, and physical contact is always the very last option.'),
+            ('Do you handle capacity counts?', 'Yes. We keep a running count at the door, so you always know how many people are inside.'),
         ],
     },
     {
@@ -130,17 +114,16 @@ SERVICES = [
         "art": "svc-party-bus-security",
         "alt": "A black party bus at the curb outside a venue at night.",
         "title": "Party Bus Security Toronto | Officers On Board",
-        "desc": "Licensed security on party buses and group transport in Toronto and the GTA: on board, "
-                "at each stop, and at the door of every venue on the route. Quoted per night.",
+        "desc": 'Security for party buses and group nights out in Toronto and the GTA. An officer travels with your group and stays with them at every stop.',
         "h1": "Party bus security",
-        "lede": "A moving room with a bar in it. We ride with it.",
+        "lede": 'An officer rides with your group and stays with them at every stop.',
         "includes": [
-            ("An officer on board", "On the bus for the whole route, not meeting you at the venue."),
-            ("Every stop covered", "Off the bus first, on the bus last, at each door on the route."),
-            ("Headcount at each stop", "Nobody gets left on a curb at 2am. Everyone is counted back on."),
-            ("Driver liaison", "We work with your operator so pickups and parking are agreed in advance."),
-            ("Alcohol and conduct", "The group's own rules enforced calmly, before the venue has to."),
-            ("Report in the morning", "Stops, timings and anything worth knowing, written up."),
+            ('Driver liaison', 'We agree the route, the stops and the timings with your driver.'),
+            ('An officer on board', 'Your officer rides with the group for the whole night.'),
+            ('Every stop covered', 'The officer goes into each venue with your group.'),
+            ('Headcount at each stop', 'Everyone is counted back on before the bus moves.'),
+            ('Alcohol and conduct', "Your group's own rules are kept calmly and politely."),
+            ('Safe drop-off', 'Everyone gets home or to their next stop safely.'),
         ],
         "steps": [
             ("Send the route", "Pickup, stops, venues, the number of guests and the finish time."),
@@ -151,12 +134,9 @@ SERVICES = [
                      "Corporate outings and team events", "Prom and graduation nights",
                      "Any group whose night ends in a different city"],
         "faq": [
-            ("Do you provide the bus as well?",
-             "We can arrange it with our transport partners, or ride with the operator you have already booked."),
-            ("Will the venues let you in?",
-             "Our officers are licensed and we announce ourselves to each venue's own door team on arrival."),
-            ("What if a guest becomes a problem?",
-             "They are managed quietly, on the bus, before the next venue has to make it their problem."),
+            ('Do you provide the bus as well?', 'We can arrange one through our transport partners, or ride with the company you have already booked.'),
+            ('Will the venues let you in?', "Yes. Our officer introduces themselves to each venue's door team when your group arrives."),
+            ('What if a guest becomes a problem?', 'Our officer handles it quietly on the bus, before it affects the rest of the group or the next venue.'),
         ],
     },
     {
@@ -165,17 +145,16 @@ SERVICES = [
         "art": "svc-limousine-service",
         "alt": "A black stretch limousine waiting under a hotel canopy at night.",
         "title": "Limousine Service with Security | Toronto &amp; GTA",
-        "desc": "Chauffeured limousine and executive transport in Toronto and the GTA with a licensed "
-                "security officer on the detail: airport runs, events, nights out and client visits.",
+        "desc": 'Chauffeured limousine and executive transport in Toronto and the GTA with a security officer on board, for airport runs, events, nights out and client visits.',
         "h1": "Limousine service",
-        "lede": "The car, the driver, and an officer who travels with it.",
+        "lede": 'A chauffeured car with a trained officer, from your door to your destination.',
         "includes": [
-            ("Chauffeured vehicle", "Sedan, SUV or stretch depending on the party and the occasion."),
-            ("A licensed officer", "Optional on every trip, standard on close protection details."),
-            ("Door to door", "Collected at the door, walked to the door, not dropped at a curb."),
-            ("Airport runs", "Pearson and Billy Bishop, with the flight watched so the car is there when you land."),
-            ("Route planning", "Traffic, construction and the quiet way out of a venue, worked out in advance."),
-            ("Discretion", "Unmarked vehicles, no branding, and a confidentiality agreement on request."),
+            ('Chauffeured vehicle', 'A sedan, SUV or limousine, depending on the occasion.'),
+            ('A trained officer', 'Optional on any trip, and standard on close protection.'),
+            ('Door to door', 'We collect you at your door and walk you to the next one.'),
+            ('Airport runs', 'Pearson and Billy Bishop, with your flight tracked so the car is waiting.'),
+            ('Route planning', 'Traffic, construction and the quiet way into each venue, worked out ahead.'),
+            ('Discretion', 'Unmarked cars and a confidentiality agreement when you need one.'),
         ],
         "steps": [
             ("Tell us the trip", "Date, pickup, stops, party size and whether you want an officer along."),
@@ -186,12 +165,9 @@ SERVICES = [
                      "Nights out that should end quietly", "Airport transfers",
                      "Artists and touring crews between venues"],
         "faq": [
-            ("Is the driver also the security officer?",
-             "No. The driver drives. When you book security, a separate licensed officer travels with the car."),
-            ("Can you do multi-city trips?",
-             "Yes. We travel with clients anywhere in Canada, and the same crew stays with you for the trip."),
-            ("Are the cars marked?",
-             "No. Unmarked and unbranded, because most clients would rather not be announced."),
+            ('Is the driver also the security officer?', 'No. Your driver focuses on driving. When you book security, a separate officer travels with you.'),
+            ('Can you do multi-city trips?', 'Yes. We can travel with you anywhere in Canada, and the same team stays with you for the whole trip.'),
+            ('Are the cars marked?', 'No. Our cars are unmarked, because most clients prefer to arrive without drawing attention.'),
         ],
     },
     {
@@ -200,17 +176,16 @@ SERVICES = [
         "art": "svc-monitoring",
         "alt": "A house at night with the driveway lit and a camera under the eaves.",
         "title": "Home &amp; Business Monitoring | Toronto &amp; GTA",
-        "desc": "Monitoring and patrols for homes, businesses, sites and vacant property across Toronto "
-                "and the GTA: scheduled checks, alarm response support and a written log every visit.",
+        "desc": 'Mobile patrols and property checks for homes, businesses, sites and vacant property across Toronto and the GTA, on the schedule you choose.',
         "h1": "Monitoring",
-        "lede": "Somebody checks, on the schedule you set.",
+        "lede": 'Regular checks on your home, business or empty property, on the schedule you choose.',
         "includes": [
-            ("Scheduled checks", "Nightly, weekly or to a pattern you choose: doors, windows, gates, lights."),
-            ("Vacant and renovation property", "The cases insurers ask about, covered properly."),
-            ("Business after hours", "Offices, warehouses and retail once the staff have gone home."),
-            ("A standing order", "Written instructions for what we check and who we call, agreed with you."),
-            ("Escalation", "Your contact list, in order, and police when the situation calls for it."),
-            ("A log per visit", "Time on, time off, what was found. Monthly summary on request."),
+            ('Scheduled checks', 'Visits on the days and at the times you choose.'),
+            ('Vacant and renovation property', 'Empty homes and building sites are checked regularly.'),
+            ('Business after hours', 'Doors, windows and lights are checked once you have closed.'),
+            ('A standing order', 'Clear instructions on what we check and who we call.'),
+            ('Escalation', 'If something is wrong, we call you and the right services straight away.'),
+            ('Every corner checked', 'Each visit covers the whole property, not only the front door.'),
         ],
         "steps": [
             ("Walk the property", "We see what there is to protect and where the weak points are."),
@@ -221,13 +196,9 @@ SERVICES = [
                      "Construction and renovation sites", "Offices, warehouses and retail after hours",
                      "Condo boards and property managers"],
         "faq": [
-            ("Is this alarm monitoring?",
-             "It is physical checks by a licensed officer, and support alongside whatever alarm system you "
-             "already have. We attend; we do not replace your alarm provider's central station."),
-            ("How often do you attend?",
-             "As often as you want it, from one check a night to a pattern across a week."),
-            ("What do we get after each visit?",
-             "A log entry with times and findings, and photographs when something has changed."),
+            ('Is this the same as alarm monitoring?', 'No. Our officers visit your property in person. We work alongside your existing alarm system rather than replacing it.'),
+            ('How often do you visit?', 'As often as you need, from one check a night to a regular pattern across the week.'),
+            ('What happens if something is wrong?', 'We call you straight away and, if needed, the police or the fire service.'),
         ],
     },
 ]
@@ -266,13 +237,13 @@ def _body(s):
               ctas, label=s["name"]),
         """<section class="scr gx gx--story" id="includes" data-label="What you get" aria-labelledby="h-gets">
 <div class="wrap scr__in gx__in">
-<h2 id="h-gets">In every booking</h2>
+<h2 id="h-gets">What is included</h2>
 {story}
 </div>
 </section>""".format(story=stories.figure(s["slug"], [t for t, _ in s["includes"]])),
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
-<div class="qx__side"><h2 id="h-q">Asked about {name_l}</h2>
+<div class="qx__side"><h2 id="h-q">Questions about {name_l}</h2>
 <div class="others"><p class="others__h">More services</p><ul>{others}</ul></div></div>
 <div>{faq}</div>
 </div>

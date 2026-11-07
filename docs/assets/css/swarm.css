@@ -1711,3 +1711,14 @@ h2,.scr h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 }
 @media (max-width:699px){ .is-quote .kx h1{font-size:1.65rem} }
 @media (max-width:699px){ .is-quote .kx h1{font-size:1.5rem} }
+
+/* signal orange, subtle and with one meaning: what is active right now.
+   The open phone line, the question you opened, the step you are on, the
+   choice you made, the screen and the page you are on, the people we protect. */
+.faq details[open]{box-shadow:inset 2px 0 0 var(--signal)}
+.faq details[open] summary::after{background:linear-gradient(var(--signal),var(--signal)) center/13px 1.5px no-repeat,
+  linear-gradient(var(--signal),var(--signal)) center/1.5px 13px no-repeat}
+.qf__prog b{background:var(--signal)}
+.qf__opt input:checked+span{border-color:var(--signal);background:rgba(255,106,31,.08)}
+@media (min-width:1180px){ .rail7 a.is-on i{background:var(--signal);border-color:var(--signal)} .rail7 a.is-on{color:var(--bone)} }
+.mast__nav a.is-active::after{background:var(--signal)}

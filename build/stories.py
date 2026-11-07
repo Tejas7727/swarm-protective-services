@@ -4,7 +4,7 @@ one annotated plan that plays out like a short film when the screen arrives.
 
     the plan draws itself  ->  officers land on their posts  ->  vehicles and
     people move along their routes  ->  each thing you get appears as a callout
-    pinned to the place and the moment it happens  ->  the report arrives last
+    pinned to the place and the moment it happens
 
 One clock (--t, 0 to 1) drives everything; swarm.js runs it once per arrival.
 Without the script, or with reduced motion, --t stays at its default of 1 and
@@ -97,7 +97,7 @@ def grid_points(x0, y0, x1, y1, step, seed=7):
 STORIES = {
     "close-protection": dict(
         label="A hotel arrival, planned: the lobby walked before you come, the car to the kerb, two officers at the "
-              "door, the walk under the canopy to the lobby, a second way out, and a written report.",
+              "door, the walk under the canopy to the lobby, and a second way out.",
         parts=[
             W("M280 330H90V60h460v140M550 250v80H360"), W("M270 330v80h100v-80"),
             W("M40 450h560M40 600h560", True),
@@ -106,15 +106,15 @@ STORIES = {
             POST(272, 520, .46, lead=True), POST(368, 520, .48),
             R("M320 500V170", .52, .70),
             MOVER('<circle class="s-client" r="9"/>', "M320 500V170", [(.54, 0), (.72, 1)], (320, 170, 0)),
-            POST(320, 395, .30), DASH("M320 225H600", .74), DOC(560, 120, .90),
+            POST(320, 395, .30), DASH("M320 225H600", .74),
         ],
         callouts=[("Advance on the location", 320, 140, .20), ("Secure transport", 320, 520, .40),
                   ("A named lead", 272, 520, .50), ("Arrivals and departures", 320, 395, .62),
-                  ("Discretion in writing", 150, 120, .82), ("A written report", 560, 120, .92)],
+                  ("Discretion in writing", 150, 120, .82), ("A second way out", 585, 225, .80)],
     ),
     "event-security": dict(
         label="A concert floor, planned: the plan before the day, door and ID checks at the gates, officers on the "
-              "barrier, one lead on site, the crowd in and out, and an incident report.",
+              "barrier, one lead on site, a private route for the artist, and the crowd in and out.",
         parts=[
             W("M70 60h500v520H70z"), W("M170 60v90h300V60"), W("M150 190h340M150 198h340"),
             W("M70 580h120M250 580h140M450 580h120", True),
@@ -123,15 +123,14 @@ STORIES = {
             POST(200, 206, .50), POST(320, 206, .52), POST(440, 206, .54),
             POST(545, 330, .58, lead=True),
             R("M610 110H520q-20 0-20 20v20H470", .60, .70),
-            DOC(590, 40, .90),
         ],
         callouts=[("A plan before the day", 70, 60, .16), ("Door and ID checks", 220, 560, .32),
                   ("Barrier and floor", 440, 206, .56), ("One lead on site", 545, 330, .62),
-                  ("Close-out", 420, 560, .86), ("Incident report", 590, 40, .92)],
+                  ("Close-out", 420, 560, .86), ("Artist and VIP route", 600, 110, .70)],
     ),
     "venue-security": dict(
         label="A club night, planned: the same crew every week at the door, ID checks as the line comes in, the floor "
-              "and the bar covered, a sweep at close, and a nightly report.",
+              "and the bar and the VIP room covered, and a sweep at close.",
         parts=[
             W("M90 60h460v400H370M90 60v400h180"), W("M120 90h170v40H120z"), W("M330 160h190v170H330z"),
             W("M120 300h120v120H120z", True), W("M30 520h580", True),
@@ -142,31 +141,29 @@ STORIES = {
              for i, (qx, ex, ey) in enumerate([(250, 395, 300), (215, 440, 250), (180, 470, 300), (145, 420, 210)])] + [
             POST(425, 360, .48), POST(205, 150, .54), POST(180, 280, .58),
             '<rect class="s-sweep" x="96" y="66" width="3" height="388"/>',
-            DOC(590, 40, .92),
         ],
         callouts=[("The same crew weekly", 300, 470, .22), ("Door and ID", 340, 470, .30),
-                  ("Floor coverage", 425, 360, .50), ("Licence-safe practice", 205, 150, .58),
-                  ("Close and sweep", 540, 250, .86), ("Nightly report", 590, 40, .94)],
+                  ("Floor coverage", 425, 360, .50), ("Bar watch", 205, 150, .56), ("VIP room", 180, 280, .64),
+                  ("Close and sweep", 540, 250, .86)],
     ),
     "party-bus-security": dict(
         label="A party bus route: an officer on board, the driver briefed, a headcount at every stop, conduct kept on "
-              "the bus, every stop covered, and a report in the morning.",
+              "the bus, every stop covered, and a safe drop-off.",
         parts=[
             W("M40 140h560M40 320h560M40 500h560M140 40v560M320 40v560M500 40v560", True),
             R("M140 500H320V320H500V140", .10, .22),
             W("M156 500a16 16 0 1 0-32 0a16 16 0 1 0 32 0"), W("M336 320a16 16 0 1 0-32 0a16 16 0 1 0 32 0"),
             W("M516 140a16 16 0 1 0-32 0a16 16 0 1 0 32 0"),
-            TAG(140, 560, "14 / 14", .18), TAG(245, 320, "14 / 14", .40), TAG(590, 140, "14 / 14", .66),
+            TAG(140, 560, "14 / 14", .18), TAG(400, 372, "14 / 14", .40), TAG(590, 140, "14 / 14", .66),
             MOVER('<g class="s-bus">%s</g>' % BUS(), "M140 500H320V320H500V140",
                   [(.20, 0), (.34, .5), (.46, .5), (.62, 1)], (500, 140, -90), rotate=True),
-            DOC(590, 260, .90),
         ],
         callouts=[("Driver liaison", 140, 500, .12), ("An officer on board", 230, 500, .26),
-                  ("Every stop covered", 320, 320, .36), ("Headcount at each stop", 245, 320, .44),
-                  ("Alcohol and conduct", 500, 230, .56), ("Report in the morning", 590, 260, .92)],
+                  ("Every stop covered", 320, 320, .36), ("Headcount at each stop", 445, 372, .44),
+                  ("Alcohol and conduct", 500, 230, .56), ("Safe drop-off", 635, 140, .70)],
     ),
     "limousine-service": dict(
-        label="A chauffeured trip: a licensed officer at the door, the car and the route planned, a run to the "
+        label="A chauffeured trip: a trained officer at the door, the car and the route planned, a run to the "
               "airport when it is needed, door to door, and nothing said about it afterwards.",
         parts=[
             W("M40 205h560M40 420h560M200 40v560M440 40v560", True),
@@ -179,13 +176,13 @@ STORIES = {
                   [(.32, 0), (.72, 1)], (530, 445, 90), rotate=True),
             POST(560, 455, .74),
         ],
-        callouts=[("A licensed officer", 115, 186, .18), ("Chauffeured vehicle", 150, 205, .30),
+        callouts=[("A trained officer", 115, 186, .18), ("Chauffeured vehicle", 150, 205, .30),
                   ("Route planning", 440, 300, .36), ("Airport runs", 495, 109, .52),
                   ("Discretion", 320, 420, .62), ("Door to door", 560, 455, .78)],
     ),
     "monitoring": dict(
         label="A property on a schedule: a standing order, timed patrols with a check at every corner, the building "
-              "after hours, vacant or under renovation, escalation from the gate, and a log of every visit.",
+              "after hours, vacant or under renovation, and escalation from the gate.",
         parts=[
             W("M60 60h520v520H60z"), W("M190 190h260v220H190z"), W("M280 580v-40M360 580v-40", True),
             '<path class="s-z" d="M330 300h120v110H330z"/>',
@@ -197,11 +194,10 @@ STORIES = {
                   [(.28, 0), (.80, 1)], (110, 110, 0)),
             DOC(300, 330, .20),
             '<g class="s-alert" style="--a:.76"><circle cx="320" cy="560" r="26"/></g>',
-            DOC(600, 330, .92),
         ],
         callouts=[("A standing order", 300, 330, .22), ("Scheduled checks", 530, 110, .44),
                   ("Business after hours", 231, 225, .50), ("Vacant and renovation property", 450, 400, .62),
-                  ("Escalation", 320, 560, .80), ("A log per visit", 600, 330, .94)],
+                  ("Escalation", 320, 560, .80), ("Every corner checked", 110, 530, .72)],
     ),
 }
 

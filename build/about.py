@@ -59,7 +59,7 @@ BODY = """{hero}
 
 <section class="scr job" id="on-the-job" data-label="On the job" aria-labelledby="h-job">
 <div class="wrap scr__in job__in">
-<h2 id="h-job">Real work, real crew</h2>
+<h2 id="h-job">Our crew at work</h2>
 <div class="feed" tabindex="0" role="region" aria-label="Photographs from the job. Swipe for more.">
 <ol class="feed__track">{feed}</ol>
 </div>
@@ -76,11 +76,12 @@ ABOUT = page(
     bodyattr=' class="screens"',
     body=BODY.format(
         hero=ihero(crumb_html([("Home", "index.html"), ("Meet us", "")]), "Who we are",
-                   "Canadian owned. Canadian operated. Trusted to protect.",
+                   "We are a Canadian-owned team protecting people, venues and events across Toronto.",
                    img("stock-guard", (800, 1600), "100vw",
                        "A close protection officer in a black suit and dark glasses.", cls="at-face", loading="eager",
                        priority=True, ratio=1.5), label="Who we are"),
-        statement="".join('<span class="say__ln" data-words>%s</span>' % ln for ln in C.STATEMENT.split(". ", 1)).replace("happened</span>", "happened.</span>"),
+        statement="".join('<span class="say__ln" data-words>%s</span>' % ln
+                          for ln in C.STATEMENT.replace(". ", ".|", 1).split("|")),
         line=C.STATEMENT_LINE, feed=_feed()),
 )
 

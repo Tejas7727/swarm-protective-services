@@ -85,7 +85,7 @@ def services():
         for i, s in enumerate(SERVICES))
     return """<section class="scr sx" id="services" data-label="Services" aria-labelledby="h-services">
 <div class="wrap scr__in sx__in">
-<h2 id="h-services">Choose your cover</h2>
+<h2 id="h-services">How we can help</h2>
 <ul class="tiles">{tiles}</ul>
 </div>
 </section>""".format(tiles=tiles)
@@ -99,7 +99,7 @@ def more():
         panel.format(k=0, href="about.html", t="Who we are", d="The people and the standard they keep",
                      art=img("stock-guard", (800, 1600), "(max-width:899px) 100vw, 40vw",
                              "A close protection officer in a black suit and dark glasses.", cls="at-face", ratio=1.5)),
-        panel.format(k=1, href="process.html", t="How we work", d="From the first call to the written report",
+        panel.format(k=1, href="process.html", t="How we work", d="From your first call to the end of the job",
                      art=img("stock-suv", (800, 1600), "(max-width:899px) 100vw, 40vw",
                              "A black SUV waiting in a parking lot at night.", ratio=2 / 3.0)),
         panel.format(k=2, href="coverage.html", t="Where we work", d="Toronto, the GTA and anywhere in Canada",
@@ -141,8 +141,8 @@ def quote(tag="h2"):
     return """<section class="scr kx" id="contact" data-label="Get a quote" aria-labelledby="h-contact">
 <div class="wrap scr__in kx__in">
 <div class="kx__side">
-<{tag} id="h-contact">Tell us the date. We'll do the rest.</{tag}>
-<p class="kx__lede">Three short steps. A written quote, usually the same day.</p>
+<{tag} id="h-contact">Tell us what you need</{tag}>
+<p class="kx__lede">It takes three short steps, and we usually reply the same day.</p>
 <a class="kx__tel" href="tel:{tel}">{i_phone}<span>{phone}</span></a>
 <p class="kx__note"><span class="kx__live">Answered 24/7</span> or email <a href="mailto:{email}">{email}</a></p>
 <figure class="crew crew--pair" aria-hidden="true"><img class="crew__still" src="assets/cine/pair-poster.webp" alt="" width="720" height="880" loading="lazy" decoding="async"><video class="crew__vid" muted playsinline preload="none" width="720" height="880" data-play data-alpha><source src="assets/cine/pair.webm" type='video/webm; codecs="vp09.00.10.08"'></video></figure>
@@ -213,7 +213,7 @@ def render():
     body = "\n".join([film, more(), faq(), quote()])
     return page("/", "Swarm Protective Services | Security Company, Toronto &amp; GTA",
                 "Licensed security in Toronto and the GTA: close protection, event and venue security, "
-                "party bus and limousine details, and monitoring. PSISA licensed, $5M insured. Get a quote.",
+                "party bus and limousine security, and property patrols. Get a quote, usually the same day.",
                 body, head=head, schema=svc + faq_schema(C.FAQ["items"]), bodyattr=' class="is-home screens"')
 
 

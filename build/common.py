@@ -44,7 +44,7 @@ MODE = {"preview": False, "preview_base": ""}
 NAV = [
     ("index.html#services", "Services", "Close protection, events, venues, buses, limos, monitoring"),
     ("about.html",          "Meet us",  "Who we are"),
-    ("process.html",        "Process",  "From the first call to the written report"),
+    ("process.html",        "Process",  "From your first call to the end of the job"),
     ("coverage.html",       "Coverage", "Toronto, the GTA, and anywhere in Canada"),
     ("answers.html",        "Answers",  "What people ask before they book"),
 ]
@@ -195,7 +195,7 @@ def foot_html(depth):
 </div>
 <div class="foot__bar">
 <span>&copy; <span id="yr">2026</span> {name}</span>
-<span>PSISA-licensed · $5M commercial general liability · WSIB covered</span>
+<span>Canadian owned and operated</span>
 <a href="{p}privacy.html">Privacy</a>
 </div>
 </div>

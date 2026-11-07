@@ -338,52 +338,39 @@ agreed before the booking rather than added to the invoice.</p>
 # ---------------------------------------------------------------------------
 FAQS = [
     ("How much does security cost in Toronto?",
-     "<p>It depends on the room, the hours and the risk, so we price from a site plan rather "
-     "than a phone call. Recurring venue work goes on a flat weekly rate so you can budget; "
-     "events are quoted per floor plan; protection details are quoted per assignment.</p>"
-     "<p>Send us the date, the place and the headcount and you will have a written number, usually the same day, with the "
-     "name of the lead who would run it.</p>"),
-    ("Are your officers actually licensed?",
-     "<p>Yes. Every officer holds a current licence under Ontario's <em>Private Security and "
-     "Investigative Services Act</em>: a 40-hour ministry-approved program, a provincial exam, "
-     "a Criminal Record and Judicial Matters Check, and emergency first aid. Licences are "
-     "digital and carried on shift. Ask any officer and they will show you theirs.</p>"
-     "<p>We also hold an Ontario security agency licence, which is the one that lets a company "
-     "supply guards at all. {lic}</p>".format(
-         lic=("Ours is %s." % BIZ["licence"]) if BIZ["licence"] else "We send its number with every quote.")),
+     "<p>The price depends on the venue, the hours and the type of event, so we quote each job individually "
+     "rather than guessing over the phone. Regular venue work can be set at a weekly rate, which makes it "
+     "easier to budget.</p>"
+     "<p>Send us the date, the place and roughly how many guests you expect, and we will usually reply with a "
+     "clear quote the same day.</p>"),
+    ("Are your officers licensed?",
+     "<p>Yes. Every officer we send is licensed to work in security in Ontario and carries their licence on "
+     "shift. They are trained to calm tense situations rather than escalate them.</p>"),
     ("Do you provide armed guards or armed bodyguards?",
-     "<p>In Ontario, bodyguards cannot carry firearms. A federal Authorization to Carry is "
-     "issued almost exclusively for protecting cash and goods of substantial value in transit, "
-     "not for personal protection.</p>"
-     "<p>Any company advertising armed bodyguards for your event is misinformed or misleading "
-     "you. Tell us what is actually happening and we will tell you what is lawfully available "
-     "and if the honest answer is police rather than a guard, we will say that.</p>"),
+     "<p>No. In Ontario, private security officers and bodyguards are not allowed to carry firearms.</p>"
+     "<p>If a company offers armed bodyguards for a private event, please ask questions before you book. "
+     "Tell us what is happening and we will explain what we can do, and when it is better to involve the "
+     "police.</p>"),
     ("How many officers does my event need?",
-     "<p>Count positions before ratios. Every open entrance, every ID point, back of house, the "
-     "bar or cash area, each area you cannot see from another, and one lead holding no post at "
-     "all. Then sanity-check the total: roughly one officer per 75 to 100 guests where alcohol is "
-     "served late, nearer one per 150 for a controlled corporate event.</p>"
-     "<p>Send the floor plan and we will size it properly and put it in writing.</p>"),
+     "<p>It depends on the number of guests, whether alcohol is served, how many entrances there are and how "
+     "late the event runs. A busy evening event with a bar usually needs more officers than a quiet daytime "
+     "gathering of the same size.</p>"
+     "<p>Send us your details or a floor plan and we will recommend the right number.</p>"),
     ("How fast can you staff a shift?",
-     "<p>Dispatch is answered 24 hours. Same-day cover for an existing client. Next-day for a "
-     "new venue, after a twenty-minute walk-through. Large events want one to three weeks so "
-     "the staffing plan is built rather than guessed.</p>"),
-    ("What happens if something does go wrong?",
-     "<p>The officer on scene manages it, the lead takes command, and emergency services are "
-     "called when the situation crosses that line, not after a debate about how it looks. You "
-     "get a verbal from the lead the same day and a written incident report before the crew "
-     "leaves your building.</p>"
-     "<p>We carry $5M commercial general liability and full WSIB coverage, and our officers are "
-     "trained on the limits of a guard's lawful authority. Knowing what you may not do is most "
-     "of this job.</p>"),
+     "<p>You can reach us at any hour. For existing clients we can often provide cover the same day. For a "
+     "new venue we like to walk through it first, and large events are best booked one to three weeks ahead "
+     "so we can plan them properly.</p>"),
+    ("What happens if something goes wrong?",
+     "<p>Our officer on site deals with it calmly and the team lead takes charge. If the situation needs the "
+     "police, paramedics or the fire service, we call them straight away.</p>"
+     "<p>We will talk you through what happened as soon as it is safe to do so.</p>"),
     ("Do you work outside Toronto?",
-     "<p>Across the GTA and the Golden Horseshoe as standard: Mississauga, Brampton, Vaughan, "
-     "Markham, Oakville, Burlington, Hamilton and the Durham municipalities. Further for "
-     "multi-day events and protection details, with travel agreed up front.</p>"),
+     "<p>Yes. We regularly work across the GTA, including Mississauga, Brampton, Vaughan, Markham, Oakville, "
+     "Burlington, Hamilton and Durham Region. For longer events and travel we can go further, and we agree "
+     "any travel costs with you up front.</p>"),
     ("Do you subcontract?",
-     "<p>No. Every officer on your site is ours, on our payroll, briefed by our lead and "
-     "covered by our insurance. Subcontracting is how a client ends up with an unvetted stranger "
-     "at their door and an unanswerable question about liability afterwards.</p>"),
+     "<p>No. Every officer at your event works for us and is briefed by our own team lead, so you always know "
+     "who is looking after you.</p>"),
 ]
 
 FAQ_SECTION = """<section id="answers">
