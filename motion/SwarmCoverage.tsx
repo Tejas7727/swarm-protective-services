@@ -35,21 +35,23 @@ const GTA: Array<[string, LngLat]> = [
   ["Milton", [-79.8774, 43.5183]], ["Newmarket", [-79.4613, 44.0592]],
 ];
 // a route only to a city that is named; the other dots stay as the rest of the 17
-const GTA_LABELS = new Set(["Mississauga", "Brampton", "Vaughan", "Markham", "Oshawa", "Newmarket"]);
-const GTA_LABELS_TALL = new Set(["Mississauga", "Brampton", "Markham", "Oshawa", "Newmarket"]);
-const CAN_LABELS_TALL = new Set(["Vancouver", "Winnipeg", "Halifax"]);
-const CAN_LABELS = new Set(["Vancouver", "Calgary", "Edmonton", "Winnipeg", "Montréal", "Halifax"]);
-// Montréal and Ottawa sit inside the emblem's clearance at Canada's zoom: named, no route
-const CAN_ROUTES = new Set(["Vancouver", "Calgary", "Edmonton", "Winnipeg", "Halifax"]);
+const GTA_LABELS = new Set(["Mississauga", "Brampton", "Milton", "Vaughan", "Richmond Hill", "Markham", "Oshawa", "Newmarket"]);
+const GTA_LABELS_TALL = new Set(["Mississauga", "Brampton", "Oakville", "Vaughan", "Markham", "Oshawa", "Newmarket"]);
+const CAN_LABELS_TALL = new Set(["Vancouver", "Edmonton", "Yellowknife", "Winnipeg", "Halifax"]);
+const CAN_LABELS = new Set(["Vancouver", "Calgary", "Edmonton", "Yellowknife", "Winnipeg", "Montréal", "Halifax", "St. John's"]);
+// Ottawa sits inside the emblem's clearance at Canada's zoom (and Montréal on a tall screen)
+const CAN_ROUTES = new Set(["Vancouver", "Calgary", "Edmonton", "Yellowknife", "Winnipeg", "Montréal", "Halifax", "St. John's"]);
 // west of Toronto the name sits to the left of its dot, so it never runs into the routes
 // on a tall screen these names sit above their dots, clear of the edges
-const ABOVE_TALL = new Set(["Winnipeg", "Halifax", "Mississauga", "Brampton", "Oshawa"]);
-const BELOW_TALL = new Set(["Vancouver"]);
-const LEFT = new Set(["Mississauga", "Brampton", "Vaughan", "Milton", "Oakville", "Hamilton", "Vancouver", "Calgary", "Edmonton", "Winnipeg"]);
+const ABOVE_TALL = new Set(["Winnipeg", "Halifax", "Yellowknife", "Vaughan", "Oshawa"]);
+const BELOW_TALL = new Set(["Vancouver", "Oakville", "Brampton", "Mississauga"]);
+const ABOVE_WIDE = new Set(["Milton", "St. John's"]);
+const BELOW_WIDE = new Set(["Mississauga"]);
+const LEFT = new Set(["Mississauga", "Brampton", "Vaughan", "Yellowknife", "Milton", "Oakville", "Hamilton", "Vancouver", "Calgary", "Edmonton", "Winnipeg"]);
 const CANADA: Array<[string, LngLat]> = [
   ["Vancouver", [-123.1207, 49.2827]], ["Calgary", [-114.0719, 51.0447]], ["Edmonton", [-113.4938, 53.5461]],
   ["Winnipeg", [-97.1384, 49.8951]], ["Ottawa", [-75.6972, 45.4215]], ["Montréal", [-73.5673, 45.5017]],
-  ["Halifax", [-63.5752, 44.6488]],
+  ["Halifax", [-63.5752, 44.6488]], ["Yellowknife", [-114.3718, 62.454]], ["St. John's", [-52.7126, 47.5615]],
 ];
 
 const GOLD = "#C9A35E";
@@ -58,7 +60,8 @@ const BONE = "#E7E4D3";
 // a gentle bow from Toronto to each GTA city (a quadratic curve, bulging to one side)
 const bow = (a: LngLat, b: LngLat, k = 0.22, n = 48) => {
   const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, dx = b[0] - a[0], dy = b[1] - a[1];
-  const c: LngLat = [mx - dy * k * 1.35, my + dx * k * 0.74];      // perpendicular, scaled for latitude
+  const w = dx < 0 ? -1 : 1;                                         // westward routes bow north, clear of the type
+  const c: LngLat = [mx - w * dy * k * 1.35, my + w * dx * k * 0.74];  // perpendicular, scaled for latitude
   const pts: number[][] = [];
   for (let i = 0; i <= n; i++) {
     const u = i / n, v = 1 - u;
@@ -84,7 +87,7 @@ const ease = Easing.bezier(0.65, 0, 0.35, 1);
 // instead of along it (Mississauga comes level with Toronto). Mirrored in cov_toronto.py.
 const CAM = {
   wide: { zoom: [10.6, 10.6, 8.75, 8.75, 3.25, 3.25], lng: [TORONTO[0], -79.46, -79.46, -92], lat: [TORONTO[1], 43.7, 43.7, 50.5] },
-  tall: { zoom: [10.15, 10.15, 8.4, 8.4, 2.53, 2.53], lng: [TORONTO[0], -79.16, -79.16, -99], lat: [TORONTO[1], 43.6, 43.6, 50] },
+  tall: { zoom: [10.15, 10.15, 8.5, 8.5, 2.53, 2.53], lng: [TORONTO[0], -79.24, -79.24, -99], lat: [TORONTO[1], 43.62, 43.62, 50] },
 };
 const BEAR = { wide: [0, 0, -18, -18, 0], tall: [0, 0, -25, -25, 0] };
 const camera = (t: number, portrait: boolean) => {
@@ -144,8 +147,11 @@ export const SwarmCoverage: React.FC<{ hold?: Beat }> = ({ hold }) => {
       for (const l of m.getStyle().layers) {
         if (l.type === "symbol") m.removeLayer(l.id);
       }
-      m.setPaintProperty("background", "background-color", "#0A0C0E");
-      m.setPaintProperty("water", "fill-color", "#0F151B");
+      m.setPaintProperty("background", "background-color", ["interpolate", ["linear"], ["zoom"], 3, "#1E242B", 6.5, "#0A0C0E"]);
+      m.setPaintProperty("water", "fill-color", ["interpolate", ["linear"], ["zoom"], 3, "#06080B", 6.5, "#0F151B"]);
+      for (const id of ["boundary_state", "boundary_country_z0-4", "boundary_country_z5-"]) {
+        if (m.getLayer(id)) m.setPaintProperty(id, "line-color", ["interpolate", ["linear"], ["zoom"], 3, "#5A6068", 6.5, "#383838"]);
+      }
       m.addSource("gta", { type: "geojson", data: none });
       m.addLayer({ id: "gta", type: "line", source: "gta", layout: { "line-cap": "round" },
         paint: { "line-color": GOLD, "line-width": portrait ? 2.4 : 2, "line-opacity": 0.9 } });
@@ -173,8 +179,7 @@ export const SwarmCoverage: React.FC<{ hold?: Beat }> = ({ hold }) => {
     // the hold films draw them, slowly, from the beat's own frame
     const sc = portrait ? 1.75 : 1, gta = portrait ? gtaT : gtaW, can = portrait ? canT : canW;
     const gGap = kmAt(40 * sc, camera(BEAT_T.gta, portrait).zoom), cGap = kmAt(40 * sc, camera(1, portrait).zoom);
-    const gtaData = hold === "gta" ? drawn(gta, gGap, frame)
-      : !hold && t > BEAT_T.gta + 0.01 ? drawn(gta, gGap, 999) : none;
+    const gtaData = hold === "gta" ? drawn(gta, gGap, frame) : none;
     const canData = hold === "canada" ? drawn(can, cGap, frame) : none;
     (map.getSource("gta") as GeoJSONSource).setData(gtaData);
     (map.getSource("can") as GeoJSONSource).setData(canData);
@@ -203,7 +208,7 @@ export const SwarmCoverage: React.FC<{ hold?: Beat }> = ({ hold }) => {
     const p = pts[n];
     if (!p || o <= 0) return null;
     // on a tall screen the far cities' names sit above their dots, clear of the edges and of Toronto
-    const above = portrait && ABOVE_TALL.has(n), below = portrait && BELOW_TALL.has(n);
+    const above = (portrait ? ABOVE_TALL : ABOVE_WIDE).has(n), below = (portrait ? BELOW_TALL : BELOW_WIDE).has(n);
     const left = !above && !below && LEFT.has(n);
     const k = portrait && CAN_LABELS_TALL.has(n) && t > 0.6 ? 0.85 : 1;
     return (

@@ -164,6 +164,7 @@
     var reel = null, cv = cov && cov.querySelector('.cov__film');
     if (cv) {
       reel = (function () {
+        var ver = '?v=' + (cv.getAttribute('data-v') || '0');
         var n = +cv.getAttribute('data-n'), ctx = cv.getContext('2d'), base = '', imgs = [], want = 0, drawn = -1;
         var ready = function (k) { return imgs[k] && imgs[k].complete && imgs[k].naturalWidth; };
         var nearest = function (i) {
@@ -198,7 +199,7 @@
             var im = new Image();
             im.decoding = 'async';
             im.onload = function () { if (drawn !== want) { drawn = -1; draw(want); } };
-            im.src = base + 'f' + (i < 10 ? '0' : '') + i + '.webp';
+            im.src = base + 'f' + (i < 10 ? '0' : '') + i + '.webp' + ver;
             imgs[i] = im;
           });
         };
@@ -229,7 +230,7 @@
           setTimeout(function () { if (!hv.classList.contains('is-live')) { hv.pause(); } }, 450);
         };
         var show = function (b) {
-          var src = hv.getAttribute('data-pattern').replace('{beat}', b).replace('{shape}', innerWidth <= innerHeight ? 't' : 'w');
+          var src = hv.getAttribute('data-pattern').replace('{beat}', b).replace('{shape}', innerWidth <= innerHeight ? 't' : 'w') + ver;
           if (hv.getAttribute('src') !== src) { hv.preload = 'auto'; hv.src = src; hv.load(); wait = 0; }
           var go = function () {
             wait = 0;

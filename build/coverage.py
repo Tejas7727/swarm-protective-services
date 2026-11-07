@@ -13,10 +13,12 @@ The film is rendered in Remotion with MapLibre on OpenFreeMap tiles
 script, or with reduced motion, the last frame stands as a poster and all three
 sentences show in reading order.
 """
+import glob
+import hashlib
 import os
 import sys
 
-from common import page
+from common import OUTDIR, page
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "cinema"))
 import content as C                                              # noqa: E402
@@ -33,6 +35,17 @@ REGIONS = [
 FRAMES = 72
 
 
+def cine_version():
+    """One content hash over the film's frames and hold films. /assets/cine is cached as
+    immutable, so a re-render only reaches returning visitors under a new ?v=."""
+    h = hashlib.sha1()
+    for f in sorted(glob.glob(os.path.join(OUTDIR, "assets", "cine", "cov-*", "*.webp"))
+                    + glob.glob(os.path.join(OUTDIR, "assets", "cine", "cov-hold-*.mp4"))):
+        with open(f, "rb") as fh:
+            h.update(fh.read())
+    return h.hexdigest()[:8]
+
+
 def body():
     regions = "".join(
         '<div class="reg" style="--k:%d"><h3>%s</h3><ul>%s</ul></div>'
@@ -40,10 +53,10 @@ def body():
     return """<div class="cov cov--poster" data-cov>
 <div class="cov__stage" aria-hidden="true">
 <picture class="cov__poster">
-<source media="(max-aspect-ratio:1/1)" srcset="assets/cine/cov-t/f{last:02d}.webp">
-<img src="assets/cine/cov-w/f{last:02d}.webp" alt="" width="1440" height="810" decoding="async">
+<source media="(max-aspect-ratio:1/1)" srcset="assets/cine/cov-t/f{last:02d}.webp?v={cv}">
+<img src="assets/cine/cov-w/f{last:02d}.webp?v={cv}" alt="" width="1440" height="810" decoding="async">
 </picture>
-<canvas class="cov__film" data-n="{n}" data-wide="assets/cine/cov-w/" data-tall="assets/cine/cov-t/"
+<canvas class="cov__film" data-n="{n}" data-v="{cv}" data-wide="assets/cine/cov-w/" data-tall="assets/cine/cov-t/"
  data-hq-wide="{hqw}" data-hq-tall="{hqt}"></canvas>
 <video class="cov__hold" muted playsinline preload="none" data-pattern="assets/cine/cov-hold-{{beat}}-{{shape}}.mp4"></video>
 <div class="cov__ripple"><i></i><i></i><i></i></div>
@@ -71,7 +84,7 @@ def body():
 <h2 id="h-reg">Eighteen cities, one dispatch</h2>
 <div class="regions__grid">{regions}</div>
 </div>
-</section>""".format(n=FRAMES, last=FRAMES - 1,
+</section>""".format(n=FRAMES, last=FRAMES - 1, cv=cine_version(),
                     hqw=" ".join("%.4f,%.4f" % p for p in toronto("w", FRAMES)),
                     hqt=" ".join("%.4f,%.4f" % p for p in toronto("t", FRAMES)), line=C.COVERAGE["line"], national=C.COVERAGE["national"],
                      regions=regions)

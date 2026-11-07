@@ -23,6 +23,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return p + ".html"
         return p
 
+    def end_headers(self):
+        self.send_header("Cache-Control", "no-cache")      # the preview always shows the latest render
+        super().end_headers()
+
     def send_head(self):
         m = re.match(r"bytes=(\d+)-(\d*)$", self.headers.get("Range", ""))
         path = self.translate_path(self.path)
