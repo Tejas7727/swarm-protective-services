@@ -3,7 +3,7 @@
 
     1-3  the map film  one scroll per beat, the film pinned behind and scrubbed
                        by the scroll: close on Toronto ("Based in Toronto"), out
-                       to the GTA as routes run to 17 cities ("Across the GTA"),
+                       to the GTA as routes curve out to the named cities ("Across the GTA"),
                        out to Canada as arcs draw coast to coast ("Anywhere in Canada")
     4    every city    the 18, grouped by direction from downtown, over the film's GTA frame
 
@@ -20,6 +20,9 @@ from common import page
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "cinema"))
 import content as C                                              # noqa: E402
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "motion"))
+from cov_toronto import toronto                                  # noqa: E402
 
 REGIONS = [
     ("Toronto", ["Toronto", "Etobicoke", "North York", "Scarborough"]),
@@ -40,8 +43,10 @@ def body():
 <source media="(max-aspect-ratio:1/1)" srcset="assets/cine/cov-t/f{last:02d}.webp">
 <img src="assets/cine/cov-w/f{last:02d}.webp" alt="" width="1440" height="810" decoding="async">
 </picture>
-<canvas class="cov__film" data-n="{n}" data-wide="assets/cine/cov-w/" data-tall="assets/cine/cov-t/"></canvas>
+<canvas class="cov__film" data-n="{n}" data-wide="assets/cine/cov-w/" data-tall="assets/cine/cov-t/"
+ data-hq-wide="{hqw}" data-hq-tall="{hqt}"></canvas>
 <video class="cov__hold" muted playsinline preload="none" data-pattern="assets/cine/cov-hold-{{beat}}-{{shape}}.mp4"></video>
+<div class="cov__ripple"><i></i><i></i><i></i></div>
 <p class="cov__credit">Map &copy; <a href="https://openfreemap.org" rel="noopener">OpenFreeMap</a>,
 <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> contributors</p>
 </div>
@@ -66,7 +71,9 @@ def body():
 <h2 id="h-reg">Eighteen cities, one dispatch</h2>
 <div class="regions__grid">{regions}</div>
 </div>
-</section>""".format(n=FRAMES, last=FRAMES - 1, line=C.COVERAGE["line"], national=C.COVERAGE["national"],
+</section>""".format(n=FRAMES, last=FRAMES - 1,
+                    hqw=" ".join("%.4f,%.4f" % p for p in toronto("w", FRAMES)),
+                    hqt=" ".join("%.4f,%.4f" % p for p in toronto("t", FRAMES)), line=C.COVERAGE["line"], national=C.COVERAGE["national"],
                      regions=regions)
 
 

@@ -1833,6 +1833,19 @@ html.pf-shoulders .pz__big{font-family:'Big Shoulders Display',system-ui,sans-se
 /* coverage: the hold film over the frames once the scroll rests on a beat (swarm.js) */
 .cov__hold{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s var(--xo);pointer-events:none}
 .cov__hold.is-live{opacity:1}
-/* coverage poster: the map's labels sink under the poster line, the emblem above it stays clear */
-.fx7 .cov--poster .cov__stage::after{height:56%;
-  background:linear-gradient(0deg,rgba(8,9,10,.95) 0,rgba(8,9,10,.9) 68%,rgba(8,9,10,.55) 80%,rgba(8,9,10,0) 100%)}
+/* coverage: the ripple around the emblem, live over the film (placed per frame by swarm.js).
+   Three rings leave the emblem in turn and fade as they widen; negative delays so the
+   pulse is already running the moment the page arrives. */
+.cov__ripple{position:absolute;left:0;top:0;width:var(--rs,280px);height:var(--rs,280px);margin:calc(var(--rs,280px) / -2) 0 0 calc(var(--rs,280px) / -2);
+  pointer-events:none;opacity:0;transition:opacity .3s var(--xo)}
+.cov__ripple.is-live{opacity:1}
+.cov__ripple i{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(201,163,94,.95);
+  box-shadow:0 0 18px rgba(201,163,94,.35),inset 0 0 18px rgba(201,163,94,.12);
+  transform:scale(.2);opacity:0;animation:cov-ripple 2.4s cubic-bezier(.22,.6,.36,1) infinite}
+.cov__ripple i:nth-child(2){animation-delay:-.8s}
+.cov__ripple i:nth-child(3){animation-delay:-1.6s}
+@keyframes cov-ripple{0%{transform:scale(.2);opacity:0}8%{opacity:.95}100%{transform:scale(1);opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .cov__ripple i{animation:none;transform:scale(.45);opacity:.5}
+  .cov__ripple i+i{display:none}
+}

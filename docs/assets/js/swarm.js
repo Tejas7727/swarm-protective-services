@@ -182,11 +182,13 @@
           var s = Math.max(W / im.naturalWidth, H / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
           ctx.drawImage(im, (W - w) / 2, (H - h) / 2, w, h);
           cv.classList.add('is-live');
+          place(k, im);
         };
         var load = function () {
           var b = cv.getAttribute(innerWidth <= innerHeight ? 'data-tall' : 'data-wide');
           if (b === base) { return; }
           base = b; imgs = []; drawn = -1;
+          hq = (cv.getAttribute(innerWidth <= innerHeight ? 'data-hq-tall' : 'data-hq-wide') || '').split(' ').map(function (q) { return q.split(',').map(Number); });
           var order = [0, n - 1], seen = {};
           seen[0] = seen[n - 1] = 1;
           [16, 8, 4, 2, 1].forEach(function (st) {
@@ -200,11 +202,23 @@
             imgs[i] = im;
           });
         };
-        // the hold films (Remotion, same framing as the beat's frame): once the scroll rests on a
-        // beat, the beat's film takes over the canvas; the routes draw slowly the first time,
-        // then the ripple and the travelling lights loop (5s to 7s). Scrolling hands back to the frames.
+        // the ripple around the emblem: live rings (swarm.css) laid over whichever frame is drawn,
+        // so they pulse from the first moment at any scroll. data-hq-* holds the emblem's place
+        // in each frame (motion/cov_toronto.py), as fractions of the frame.
+        var rp = cov.querySelector('.cov__ripple'), hq = [];
+        var place = function (k, im) {
+          if (!rp || !hq[k]) { return; }
+          var W = cv.clientWidth, H = cv.clientHeight;
+          var s = Math.max(W / im.naturalWidth, H / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
+          rp.style.transform = 'translate(' + ((W - w) / 2 + hq[k][0] * w).toFixed(1) + 'px,' + ((H - h) / 2 + hq[k][1] * h).toFixed(1) + 'px)';
+          rp.style.setProperty('--rs', (280 * (im.naturalHeight > im.naturalWidth ? 1.75 : 1) * s).toFixed(1) + 'px');
+          rp.classList.add('is-live');
+        };
+        // the hold films (Remotion, the beat's own framing): once the scroll rests on the GTA or
+        // Canada, the routes curve out slowly over the frame, then hold. Coming back, they are
+        // already drawn. Scrolling hands back to the frames.
         var hv = cov.querySelector('.cov__hold'), lastC = -1, moved = 0, beat = '', seen = {}, wait = 0;
-        var BEATS = { toronto: 0, gta: 0.5, canada: 1 };
+        var BEATS = { gta: 0.5, canada: 1 };
         var beatOf = function (c) {
           for (var k in BEATS) { if (Math.abs(c - BEATS[k]) < 0.012) { return k; } }
           return '';
@@ -220,20 +234,18 @@
           var go = function () {
             wait = 0;
             if (beat !== b) { return; }
-            var start = seen[b] ? 5 : 0; seen[b] = 1;
-            try { hv.currentTime = start; } catch (e) { /* not seekable yet */ }
-            var p = hv.play(); if (p && p.catch) { p.catch(function () {}); }
+            if (seen[b]) {
+              try { hv.currentTime = Math.max(0, hv.duration - 0.05); } catch (e) { /* not seekable yet */ }
+            } else {
+              seen[b] = 1;
+              try { hv.currentTime = 0; } catch (e) { /* not seekable yet */ }
+              var p = hv.play(); if (p && p.catch) { p.catch(function () {}); }
+            }
             hv.classList.add('is-live');
           };
           if (hv.readyState >= 2) { go(); } else if (!wait) { wait = 1; hv.addEventListener('loadeddata', go, { once: true }); }
         };
         if (hv && !reduced) {
-          // 5s to 7s is one seamless loop, so stepping back exactly 2s keeps the phase
-          hv.addEventListener('timeupdate', function () { if (hv.currentTime > 6.7) { hv.currentTime -= 2; } });
-          hv.addEventListener('ended', function () {
-            hv.addEventListener('seeked', function () { hv.play(); }, { once: true });
-            hv.currentTime = 5;
-          });
           setInterval(function () {
             var b = beatOf(lastC);
             if (b && performance.now() - moved > 220) {
