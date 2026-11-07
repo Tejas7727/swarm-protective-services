@@ -1830,3 +1830,9 @@ html.pf-shoulders .pz__big{font-family:'Big Shoulders Display',system-ui,sans-se
 .nf h1{font-size:inherit;line-height:1}
 .nf h1 .pz__sub{margin-top:.3em}
 .hx .hx__sub{margin-top:auto}   /* the body copy and the actions sit together at the foot */
+/* coverage: the hold film over the frames once the scroll rests on a beat (swarm.js) */
+.cov__hold{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s var(--xo);pointer-events:none}
+.cov__hold.is-live{opacity:1}
+/* coverage poster: the map's labels sink under the poster line, the emblem above it stays clear */
+.fx7 .cov--poster .cov__stage::after{height:56%;
+  background:linear-gradient(0deg,rgba(8,9,10,.95) 0,rgba(8,9,10,.9) 68%,rgba(8,9,10,.55) 80%,rgba(8,9,10,0) 100%)}

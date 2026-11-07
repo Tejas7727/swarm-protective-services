@@ -58,7 +58,7 @@ def welcome(scene):
  data-plates='{plates}'
  alt="A Swarm officer seen from behind, SWARM on his jacket, looking out over the Toronto skyline and the CN Tower at night.">
 </picture>
-<div class="film__big" aria-hidden="true"><span class="pz__big" data-fit="1">{rest_br}</span></div>
+<div class="film__big" aria-hidden="true" data-overlap=".2" data-overlap-tall=".3"><span class="pz__big" data-fit="1" data-fit-wide=".62">{rest_br}</span></div>
 <picture class="film__fg" aria-hidden="true">
 <source media="{up}" srcset="{fmset}" sizes="75vh">
 <source media="{mid}" srcset="{ftset}" sizes="100vw">
@@ -80,7 +80,7 @@ def welcome(scene):
 </div>
 </section>""".format(up=cinema.UPRIGHT, mid=cinema.MIDDLE, mset=srcset(P["crew-m"]["sizes"]),
                      tset=srcset(P["crew-t"]["sizes"]), src=wide["sizes"][1]["src"], wset=srcset(wide["sizes"]),
-                     rest_br=common.pz_break(rest), fmset=fg(srcset(P["crew-m"]["sizes"])), ftset=fg(srcset(P["crew-t"]["sizes"])),
+                     rest_br=(lambda a, b, c: a + '<br> ' + b + '<br class="pz__br"> ' + c)(*rest.rsplit(" ", 2)), fmset=fg(srcset(P["crew-m"]["sizes"])), ftset=fg(srcset(P["crew-t"]["sizes"])),
                      fsrc=fg(wide["sizes"][1]["src"]), fwset=fg(srcset(wide["sizes"])),
                      w=wide["w"], h=wide["h"], plates=plates, line=C.HOME["line"], sub=C.HOME["sub"],
                      tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],

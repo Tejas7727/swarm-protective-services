@@ -41,6 +41,7 @@ def body():
 <img src="assets/cine/cov-w/f{last:02d}.webp" alt="" width="1440" height="810" decoding="async">
 </picture>
 <canvas class="cov__film" data-n="{n}" data-wide="assets/cine/cov-w/" data-tall="assets/cine/cov-t/"></canvas>
+<video class="cov__hold" muted playsinline preload="none" data-pattern="assets/cine/cov-hold-{{beat}}-{{shape}}.mp4"></video>
 <p class="cov__credit">Map &copy; <a href="https://openfreemap.org" rel="noopener">OpenFreeMap</a>,
 <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> contributors</p>
 </div>

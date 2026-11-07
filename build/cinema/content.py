@@ -19,7 +19,7 @@ HOME = {
     "motto": "Life is unpredictable, let us protect you",   # the client's motto (schema slogan)
     # the hero turns the motto into a promise (brand-copy scorecard 10/12; runner-up
     # "Nothing happened. That's the job." 11/12, used as the Meet us statement)
-    "headline": ("Life is unpredictable.", "We plan for it."),
+    "headline": ("Life is unpredictable,", "Let us protect you"),   # the client's motto, as the poster (2026-11-07)
     "sub": "Discreet, trained security for venues, events and private clients across Toronto and the GTA.",
     "gold": "protect",                              # the one word of the motto set in gold
     "lede": "Close protection, event and venue security, party bus and limousine details, and monitoring.",
