@@ -73,7 +73,7 @@ NOT_FOUND = page(
     body="""<section class="phero nf" data-draw style="border:0">
 <div class="wrap nf__in">
 <div>
-<h1>Nothing here.</h1>
+<h1><span class="pz__big" data-fit=".9">404</span> <span class="pz__sub">Nothing here.</span></h1>
 <p class="lede">Usually a good sign. Not this time. The page you asked for does not exist.</p>
 <div class="hero__cta">
 <a class="btn" href="index.html"><span>Back to the home page</span></a>

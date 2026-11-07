@@ -1780,3 +1780,53 @@ a.btn[href*="quote"]:not(.btn--ghost)>span::before{content:"";display:inline-blo
 /* page openings: no rule and no growing line under them either */
 .phero{border-bottom:0}
 .fx7 .phero::after{display:none}
+
+/* ==========================================================================
+   Poster type (experimental, local branch poster-type). On screens with little
+   text the title becomes a poster line: a bold condensed face fitted to the
+   width (swarm.js [data-fit]). Sizes step by the golden ratio:
+   body 1rem · subheading φ (phones) / φ² (wider) · the poster line the next
+   powers up, fitted. Bold face: Saira at its narrowest (the wordmark's family),
+   or Big Shoulders Display for comparison (?pf=shoulders).
+   ========================================================================== */
+:root{--phi:1.618}
+.pz__big{display:inline-block;white-space:nowrap;vertical-align:top;
+  font-family:'Saira','Saira Fallback',system-ui,sans-serif !important;font-variation-settings:"wdth" 55,"wght" 850 !important;
+  text-transform:uppercase !important;letter-spacing:-.004em !important;line-height:.84;color:#EDE3CB}
+html.pf-shoulders .pz__big{font-family:'Big Shoulders Display',system-ui,sans-serif !important;font-variation-settings:normal !important;
+  font-weight:900;letter-spacing:.004em !important}
+.pz__br{display:none}
+@media (max-aspect-ratio:4/5){ .pz__br{display:inline} }
+.pz__sub{display:block;font-family:var(--body) !important;font-variation-settings:"wdth" 125,"wght" 300 !important;
+  text-transform:none !important;letter-spacing:-.015em !important;line-height:1.08;font-size:calc(1rem * var(--phi));color:var(--bone)}
+@media (min-width:900px){ .pz__sub{font-size:calc(1rem * var(--phi) * var(--phi))} }
+
+/* home: the subheading on top, the poster line behind the officer, the body and actions at the foot */
+.film__big{position:absolute;left:var(--gut);right:var(--gut);top:calc(var(--topbar) + 3svh + 1rem * var(--phi) * var(--phi) * 1.25);z-index:1;pointer-events:none}
+.film__fg{position:absolute;inset:0;z-index:2;display:block}
+.fx7 .film__big{opacity:calc(1 - var(--copy,0) * 1.5)}
+.hx .hx__copy{position:absolute !important;inset:calc(var(--topbar) + 3svh) var(--gut) 7svh var(--gut) !important;width:auto !important;
+  display:flex;flex-direction:column;justify-content:space-between !important;padding:0 !important}
+.hx .hx__h{margin:0;font-size:inherit !important;white-space:normal !important;line-height:1}
+.hx .hx__sub{font-size:1rem;max-width:40ch;margin:0 0 4px}
+.hx::before{inset:auto 0 0 0 !important;width:auto !important;height:48% !important;
+  background:linear-gradient(0deg,rgba(8,9,10,.9),rgba(8,9,10,0)) !important}
+.hx .hx__act{margin-top:clamp(14px,2.4vh,22px)}
+@media (max-aspect-ratio:4/5){
+  .film__big{top:calc(var(--topbar) + 3svh + 1rem * var(--phi) * 2.2)}
+  .hx .hx__copy{bottom:calc(84px + 3svh) !important}
+}
+
+/* inner openings: the title as the poster line, the lede as the subheading */
+.ih--poster h1{max-width:none !important;margin:0 0 clamp(10px,2vh,20px)}
+.ih--poster .lede{font-size:calc(1rem * var(--phi));font-variation-settings:"wdth" 110,"wght" 350;max-width:34ch;line-height:1.3;color:var(--bone)}
+@media (max-width:699px){ .ih--poster .lede{font-size:1.05rem} }
+
+/* coverage: the lead-in, then the place */
+.cov--poster .cov__beat h1,.cov--poster .cov__beat h2{font-size:inherit;margin:0 0 clamp(8px,1.6vh,16px);line-height:1}
+.cov--poster .cov__beat .pz__sub{margin-bottom:.2em}
+
+/* 404 */
+.nf h1{font-size:inherit;line-height:1}
+.nf h1 .pz__sub{margin-top:.3em}
+.hx .hx__sub{margin-top:auto}   /* the body copy and the actions sit together at the foot */

@@ -60,7 +60,7 @@ PROCESS = page(
                    "From your first call to the end of the job, you deal with one team and one point of contact.",
                    img("stock-earpiece", (800, 1600), "100vw",
                        "A close protection officer in a black suit speaking into an earpiece.", cls="at-face", loading="eager",
-                       priority=True, ratio=2 / 3.0), label="How we work"),
+                       priority=True, ratio=2 / 3.0), label="How we work", poster=True),
         h=C.STEPS["h"], steps=_steps(), facts=_facts(), plan=plans.process()),
 )
 

@@ -18,6 +18,7 @@ build/cinema/render.py. Every word is in build/cinema/content.py or services.py.
 """
 import io
 import json
+import re
 import os
 
 import common
@@ -31,6 +32,11 @@ SIZES = ["Just me or my family", "Under 50", "50 to 150", "150 to 500", "Over 50
 
 def srcset(sizes):
     return ", ".join("%s %dw" % (s["src"], s["w"]) for s in sizes)
+
+
+def fg(s):
+    """The officer cut out of a plate (crew-m-1036 -> crew-m-fg-1036): the layer in front of the poster line."""
+    return re.sub(r"/crew(-[mt])?-(\d+)", lambda m: "/crew%s-fg-%s" % (m.group(1) or "", m.group(2)), s).replace("assets/scene/", "assets/poster/")
 
 
 def welcome(scene):
@@ -51,6 +57,12 @@ def welcome(scene):
 <img src="{src}" srcset="{wset}" sizes="100vw" width="{w}" height="{h}" fetchpriority="high" decoding="async"
  data-plates='{plates}'
  alt="A Swarm officer seen from behind, SWARM on his jacket, looking out over the Toronto skyline and the CN Tower at night.">
+</picture>
+<div class="film__big" aria-hidden="true"><span class="pz__big" data-fit="1">{rest_br}</span></div>
+<picture class="film__fg" aria-hidden="true">
+<source media="{up}" srcset="{fmset}" sizes="75vh">
+<source media="{mid}" srcset="{ftset}" sizes="100vw">
+<img src="{fsrc}" srcset="{fwset}" sizes="100vw" width="{w}" height="{h}" alt="" decoding="async">
 </picture></div>
 <div class="film__portal" aria-hidden="true"><img src="assets/img/svc-event-security-1600.webp"
  srcset="assets/img/svc-event-security-800.webp 800w, assets/img/svc-event-security-1600.webp 1600w" sizes="100vw"
@@ -59,7 +71,7 @@ def welcome(scene):
 </div>
 <section class="scr hx" id="top" data-label="Welcome" aria-labelledby="h-home">
 <div class="hx__copy">
-<h1 id="h-home">{first}<br> <span class="hx__nw">{rest}</span></h1>
+<h1 id="h-home" class="hx__h"><span class="pz__sub">{first}</span> <span class="sr-only">{rest}</span></h1>
 <p class="hx__sub">{sub}</p>
 <div class="hx__act">
 <a class="btn" href="quote.html"><span>Get a quote</span></a>
@@ -68,6 +80,8 @@ def welcome(scene):
 </div>
 </section>""".format(up=cinema.UPRIGHT, mid=cinema.MIDDLE, mset=srcset(P["crew-m"]["sizes"]),
                      tset=srcset(P["crew-t"]["sizes"]), src=wide["sizes"][1]["src"], wset=srcset(wide["sizes"]),
+                     rest_br=common.pz_break(rest), fmset=fg(srcset(P["crew-m"]["sizes"])), ftset=fg(srcset(P["crew-t"]["sizes"])),
+                     fsrc=fg(wide["sizes"][1]["src"]), fwset=fg(srcset(wide["sizes"])),
                      w=wide["w"], h=wide["h"], plates=plates, line=C.HOME["line"], sub=C.HOME["sub"],
                      tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
                      where=C.HOME["where"].replace("&", "&amp;"), first=first, rest=rest, lede=C.HOME["lede"])

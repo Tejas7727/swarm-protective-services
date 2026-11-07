@@ -234,7 +234,7 @@ def _body(s):
         ihero(crumb_html([("Home", "index.html"), ("Services", "index.html#services"), (s["name"], "")]),
               s["h1"], s["lede"],
               img(s["art"], (800, 1600), "100vw", s["alt"], loading="eager", priority=True, ratio=1216 / 832.0),
-              ctas, label=s["name"]),
+              ctas, label=s["name"], poster=True),
         """<section class="scr gx gx--story" id="includes" data-label="What you get" aria-labelledby="h-gets">
 <div class="wrap scr__in gx__in">
 <h2 id="h-gets">What is included</h2>

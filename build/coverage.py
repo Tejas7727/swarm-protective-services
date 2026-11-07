@@ -34,7 +34,7 @@ def body():
     regions = "".join(
         '<div class="reg" style="--k:%d"><h3>%s</h3><ul>%s</ul></div>'
         % (i, r, "".join("<li>%s</li>" % c for c in cities)) for i, (r, cities) in enumerate(REGIONS))
-    return """<div class="cov" data-cov>
+    return """<div class="cov cov--poster" data-cov>
 <div class="cov__stage" aria-hidden="true">
 <picture class="cov__poster">
 <source media="(max-aspect-ratio:1/1)" srcset="assets/cine/cov-t/f{last:02d}.webp">
@@ -46,13 +46,13 @@ def body():
 </div>
 <section class="scr cov__beat" id="top" data-label="Toronto" aria-labelledby="h-cov">
 <div class="wrap scr__in">
-<h1 id="h-cov">Based in Toronto</h1><p class="lede">Dispatch answers from here, 24 hours a day.</p></div>
+<h1 id="h-cov"><span class="pz__sub">Based in</span> <span class="pz__big" data-fit=".96" data-fit-wide=".6">Toronto</span></h1><p class="lede">Dispatch answers from here, 24 hours a day.</p></div>
 </section>
 <section class="scr cov__beat" id="gta" data-label="The GTA">
-<div class="wrap scr__in"><h2>Across the GTA</h2><p class="lede">{line}</p></div>
+<div class="wrap scr__in"><h2><span class="pz__sub">Across</span> <span class="pz__big" data-fit=".96" data-fit-wide=".6">the GTA</span></h2><p class="lede">{line}</p></div>
 </section>
 <section class="scr cov__beat" id="canada" data-label="Canada">
-<div class="wrap scr__in"><h2>Anywhere in Canada</h2><p class="lede">{national}</p></div>
+<div class="wrap scr__in"><h2><span class="pz__sub">Anywhere in</span> <span class="pz__big" data-fit=".96" data-fit-wide=".6">Canada</span></h2><p class="lede">{national}</p></div>
 </section>
 </div>
 

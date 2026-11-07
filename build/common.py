@@ -277,7 +277,7 @@ PAGE = """<!DOCTYPE html>
 <link rel="manifest" href="{p}site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@75..125,400..900&family=Archivo:wdth,wght@62..125,300..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@50..125,400..900&family=Archivo:wdth,wght@62..125,300..800&family=Big+Shoulders+Display:wght@800..900&display=swap">
 <link rel="stylesheet" href="{p}assets/css/swarm.css?v={cssv}">
 {head}
 <script type="application/ld+json">{org}</script>
@@ -378,11 +378,22 @@ def crumb_html(items):
     return ""
 
 
-def ihero(crumbs, h1, lede, pic, ctas="", label="Overview"):
+def pz_break(text):
+    """Poster lines break at the space nearest the middle, on upright screens only (.pz__br)."""
+    sp = [i for i, c in enumerate(text) if c == " "]
+    if not sp:
+        return text
+    i = min(sp, key=lambda k: abs(k - len(text) / 2))
+    return text[:i] + '<br class="pz__br">' + text[i:]
+
+
+def ihero(crumbs, h1, lede, pic, ctas="", label="Overview", poster=False):
     """The opening of every inner page: a full-bleed photograph that pulls back
     into a frame as you scroll (swarm.js writes --h), the title on its dark
     lower left. `pic` is an <img>; `ctas` optional buttons."""
-    return """<section class="scr ih" id="top" data-label="{label}">
+    if poster:
+        h1 = '<span class="pz__big" data-fit=".96">%s</span>' % pz_break(h1)
+    return """<section class="scr ih{pz}" id="top" data-label="{label}">
 <div class="ih__media">{pic}</div>
 <div class="wrap ih__in">
 {crumbs}
@@ -390,7 +401,8 @@ def ihero(crumbs, h1, lede, pic, ctas="", label="Overview"):
 <p class="lede">{lede}</p>
 {ctas}
 </div>
-</section>""".format(pic=pic, crumbs=crumbs, h1=h1, lede=lede, ctas=ctas, label=label)
+</section>""".format(pic=pic, crumbs=crumbs, h1=h1, lede=lede, ctas=ctas, label=label,
+                       pz=" ih--poster" if poster else "")
 
 
 def cta_final(depth=0, heading="Tell us what you need",

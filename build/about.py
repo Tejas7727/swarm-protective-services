@@ -79,7 +79,7 @@ ABOUT = page(
                    "We are a Canadian-owned team protecting people, venues and events across Toronto.",
                    img("stock-guard", (800, 1600), "100vw",
                        "A close protection officer in a black suit and dark glasses.", cls="at-face", loading="eager",
-                       priority=True, ratio=1.5), label="Who we are"),
+                       priority=True, ratio=1.5), label="Who we are", poster=True),
         statement="".join('<span class="say__ln" data-words>%s</span>' % ln
                           for ln in C.STATEMENT.replace(". ", ".|", 1).split("|")),
         line=C.STATEMENT_LINE, feed=_feed()),

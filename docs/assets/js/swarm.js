@@ -455,6 +455,56 @@
     }, { rootMargin: '0px 0px -30% 0px' }).observe(kx);
   }
 
+  /* --- poster type (experimental): the bold face, and lines fitted to the width.
+     ?pf=shoulders or ?pf=saira picks the bold face for review (remembered). */
+  (function () {
+    var m = location.search.match(/[?&]pf=(\w+)/), pf = m && m[1];
+    try { if (pf) { localStorage.setItem('pf', pf); } else { pf = localStorage.getItem('pf'); } } catch (e) { /* private mode */ }
+    document.documentElement.classList.toggle('pf-shoulders', pf === 'shoulders');
+    var bigs = [].slice.call(document.querySelectorAll('[data-fit]'));
+    if (!bigs.length) { return; }
+    var fit = function () {
+      bigs.forEach(function (el) {
+        var share = innerWidth > innerHeight && el.getAttribute('data-fit-wide') ? +el.getAttribute('data-fit-wide') : +el.getAttribute('data-fit') || 1;
+        var w = el.parentElement.clientWidth * share;
+        el.style.fontSize = '100px';
+        var lines = Math.max(1, Math.round(el.offsetHeight / 84));
+        var fs = 100 * w / el.offsetWidth;
+        var cap = innerHeight * (+el.getAttribute('data-fit-h') || 0.42) / (0.84 * lines);
+        el.style.fontSize = Math.min(fs, cap).toFixed(1) + 'px';
+      });
+    };
+    // home: the poster line sits so the officer's head (cut out in front) overlaps
+    // its lower half, in whichever crop the browser chose; the subheading sits just
+    // above it, and the line never reaches the body copy at the foot
+    var shot = document.querySelector('.film__hero img'), big = document.querySelector('.film__big');
+    var HEAD = { 'crew': 0.2295, 'crew-t': 0.4326, 'crew-m': 0.519 };   // top of his cap, as a share of each plate's height
+    var anchor = function () {
+      if (!shot || !big || !shot.getAttribute('data-plates')) { return; }
+      var P = JSON.parse(shot.getAttribute('data-plates')), src = shot.currentSrc || shot.src;
+      var k = /crew-m-/.test(src) ? 'crew-m' : /crew-t-/.test(src) ? 'crew-t' : 'crew', p = P[k];
+      var VW = innerWidth, VH = innerHeight, sc = Math.max(VW / p[0], VH / p[1]), dh = p[1] * sc;
+      var headY = (VH - dh) * p[5] + HEAD[k] * dh;
+      var line = big.firstElementChild, sub = document.querySelector('.hx__h'), copy = sub && sub.parentElement;
+      var foot = document.querySelector('.hx__sub');
+      if (!sub || !foot) { return; }
+      sub.style.marginTop = '0px';
+      var copyTop = copy.getBoundingClientRect().top + window.scrollY, subH = sub.offsetHeight;
+      var floor = foot.getBoundingClientRect().top + window.scrollY - 18;           // the line ends above the body copy
+      var ceil = copyTop + subH + 10;                                               // and starts under the subheading
+      var bh = line.offsetHeight;
+      if (bh > floor - ceil) { line.style.fontSize = (parseFloat(line.style.fontSize) * (floor - ceil) / bh).toFixed(1) + 'px'; bh = line.offsetHeight; }
+      var top = Math.min(Math.max(ceil, headY - bh * 0.6), floor - bh);
+      big.style.top = top.toFixed(0) + 'px';
+      sub.style.marginTop = Math.max(0, top - subH - 10 - copyTop).toFixed(0) + 'px';
+    };
+    var run = function () { fit(); anchor(); };
+    run();
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(run); }
+    if (shot && !shot.complete) { shot.addEventListener('load', run); }
+    addEventListener('resize', run);
+  })();
+
   /* --- questions: one answer open at a time (for browsers without <details name>) */
   [].slice.call(document.querySelectorAll('.faq')).forEach(function (list) {
     list.addEventListener('toggle', function (e) {
