@@ -1,0 +1,15 @@
+// Cloudflare Worker for swarmprotectiveservices.ca (Workers Builds deploys this from main).
+// Static assets only, served from docs/. Custom domains and redirects live in the dashboard,
+// so no routes here (wrangler leaves dashboard routes alone when none are given).
+{
+  "name": "swarm-protective-services",
+  "compatibility_date": "2026-10-16",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./docs",
+    // clean URLs (/about), as before
+    "html_handling": "auto-trailing-slash",
+    // a missing address gets the site's own 404.html (with a 404 status), not an empty body
+    "not_found_handling": "404-page"
+  }
+}
