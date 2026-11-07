@@ -1611,3 +1611,49 @@ h3,h4{font-variation-settings:"wdth" 98,"wght" 600 !important;letter-spacing:-.0
 @media (max-width:699px){ .story__svg{max-height:calc(100svh - var(--topbar) - 150px)} }
 .story{width:100%;align-self:stretch}
 .story__svg{flex:1 1 100%;min-width:0}
+
+/* ==========================================================================
+   Impeccable pass (2026-11): one type system, a fourth colour used three times,
+   themed browser surfaces.
+   Type roles   display + headings: Archivo (wdth 96, 520) sentence case
+                body: Archivo 400 · UI labels, buttons, nav: Saira caps, tracked
+   Colour roles canvas ink, text bone/mute, ours = gold (plan, officers, actions),
+                signal = orange: the people we protect and the open line, nothing else
+   ========================================================================== */
+:root{--signal:#FF6A1F;--signal-dim:rgba(255,106,31,.35)}
+h1{font-size:clamp(2.8rem,7.2vw,6rem)}
+.ih h1{font-size:clamp(2.7rem,6.8vw,5.8rem)}
+
+/* the leftovers of the old heavy caps: now the same voice as the headings */
+.qf__step legend{font-family:var(--body);text-transform:none;letter-spacing:-.01em;
+  font-variation-settings:"wdth" 96,"wght" 600;font-size:clamp(1.15rem,1.6vw,1.4rem)}
+.kx__tel{font-family:var(--body);font-variation-settings:"wdth" 96,"wght" 600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.reg li{font-family:var(--body);text-transform:none;font-variation-settings:"wdth" 96,"wght" 500;letter-spacing:-.01em;
+  font-size:clamp(1.05rem,1.5vw,1.3rem);color:var(--bone)}
+.reg h3{font-family:var(--display) !important;text-transform:uppercase !important;letter-spacing:.18em !important;
+  font-variation-settings:"wdth" 104,"wght" 600 !important;font-size:.74rem;color:var(--gold-hi)}
+/* coverage: the list keeps the left half, the map's own city names keep the right */
+.regions__grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:min(560px,46vw);gap:clamp(22px,3vh,36px) clamp(28px,4vw,56px)}
+.regions h2{max-width:13ch}
+.regions__map{inset:0 0 0 46%}
+.regions__map img{object-position:12% 50%}
+@media (max-aspect-ratio:1/1){ .regions__grid{max-width:none} .regions__map{inset:0} }
+.others__h{margin:0 0 10px;color:var(--mute);font-size:.86rem}
+
+/* signal: the open line on the quote screen, form errors, and the people in the service plans */
+.kx__live{color:var(--signal);font-weight:600}
+.kx__live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--signal);
+  margin-right:8px;vertical-align:.1em}
+.f .err,.qf__err{color:var(--signal)}
+.f:has(:user-invalid) input,.f:has(:user-invalid) select{border-color:var(--signal)}
+.story .s-client,.story .s-guest{fill:var(--signal)}
+.story .s-car,.story .s-bus{stroke:var(--signal)}
+.story .s-dot{fill:var(--signal)}
+.story .s-alert circle{stroke:var(--signal)}
+
+/* the browser's own surfaces, from the palette */
+html{scrollbar-color:var(--gold-dim) var(--ink-0);accent-color:var(--gold)}
+input,textarea,select{caret-color:var(--gold-hi)}
+::selection{background:var(--gold);color:var(--ink-0)}
+a{text-underline-offset:.22em}
+@media (max-aspect-ratio:1/1){ .regions__map{display:none} }   /* tall screens: the list needs the whole width; the map's own names would sit under it */

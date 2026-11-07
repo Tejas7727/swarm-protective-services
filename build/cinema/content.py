@@ -73,11 +73,13 @@ STATEMENT = ("Peace of mind is our product. We deliver it through proactive plan
 
 # Home: how it works (deck slide 6)
 STEPS = {
-    "h": "Protection delivered in three steps",
+    "h": "How a booking runs",
+    # the client's deck said "Initial consultation / Customized service plan / Professional
+    # execution"; same three steps, in plain words (2026-11 copy pass)
     "items": [
-        ("Initial consultation", "Discuss your security requirements and operational objectives."),
-        ("Customized service plan", "Receive a tailored protection strategy and deployment plan."),
-        ("Professional execution", "Trained personnel, dedicated oversight, and documented results."),
+        ("Tell us the job", "The date, the place, the headcount and what worries you."),
+        ("We write the plan", "Posts, routes, timings and who leads. In writing, before the day."),
+        ("We run it and report", "One lead on site. A written report before the crew leaves."),
     ],
 }
 

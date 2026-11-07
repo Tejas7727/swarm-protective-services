@@ -60,7 +60,6 @@ def welcome(scene):
 </div>
 <section class="scr hx" id="top" data-label="Welcome" aria-labelledby="h-home">
 <div class="hx__copy">
-<p class="hx__line">{line}<span class="hx__dot" aria-hidden="true"> &middot; </span> <span class="hx__where">{where}</span></p>
 <h1 id="h-home">{first},<br> <span class="hx__nw">{rest}</span></h1>
 <nav class="doors" aria-label="Where to start">
 <a class="btn doors__q" href="quote.html"><span>Get a quote</span></a>
@@ -145,7 +144,7 @@ def quote(tag="h2"):
 <{tag} id="h-contact">Tell us what you need</{tag}>
 <p class="kx__lede">Three short steps. Answered the same day.</p>
 <a class="kx__tel" href="tel:{tel}">{i_phone}<span>{phone}</span></a>
-<p class="kx__note">Answered 24/7, or email <a href="mailto:{email}">{email}</a></p>
+<p class="kx__note"><span class="kx__live">Answered 24/7</span> or email <a href="mailto:{email}">{email}</a></p>
 <figure class="crew crew--pair" aria-hidden="true"><img class="crew__still" src="assets/cine/pair-poster.webp" alt="" width="720" height="880" loading="lazy" decoding="async"><video class="crew__vid" muted playsinline preload="none" width="720" height="880" data-play data-alpha><source src="assets/cine/pair.webm" type='video/webm; codecs="vp09.00.10.08"'></video></figure>
 </div>
 <form class="qf" data-quote data-to="{email}" aria-labelledby="h-contact">

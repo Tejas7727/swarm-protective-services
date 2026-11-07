@@ -13,7 +13,6 @@ PRIVACY = page(
     body="""<section class="phero">
 <div class="wrap">
 <div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Privacy</span></div>
-<p class="eyebrow">Policy</p>
 <h1>Privacy.</h1>
 <p class="lede">Short version: we collect what we need to quote and staff your job, we keep
 incident records because the law and your insurer require it, and we sell nothing to anyone.</p>
@@ -75,12 +74,11 @@ NOT_FOUND = page(
     body="""<section class="phero nf" data-draw style="border:0">
 <div class="wrap nf__in">
 <div>
-<p class="eyebrow">404</p>
 <h1>Nothing here.</h1>
 <p class="lede">Usually a good sign. Not this time. The page you asked for does not exist.</p>
 <div class="hero__cta">
-<a class="btn" href="index.html"><span>Back to the front</span></a>
-<a class="btn btn--ghost" href="quote.html"><span>Request a quote</span></a>
+<a class="btn" href="index.html"><span>Back to the home page</span></a>
+<a class="btn btn--ghost" href="quote.html"><span>Get a quote</span></a>
 </div>
 </div>
 <figure class="plan">%s</figure>
@@ -100,7 +98,7 @@ ANSWERS = page(
 <section class="scr qx" id="answers" data-label="The answers" aria-label="The answers">
 <figure class="qx__bg">{pic}</figure>
 <div class="wrap scr__in qx__in">
-<div class="qx__side"><p class="eyebrow">Still unsure?</p><h2>Ask us directly</h2>
+<div class="qx__side"><h2>Ask us directly</h2>
 <p class="lede">Call <a href="tel:{tel}">{phone}</a>, answered 24/7, or
 <a href="quote.html">send the date and the place</a>.</p></div>
 {faq}

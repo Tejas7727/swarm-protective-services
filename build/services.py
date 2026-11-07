@@ -273,7 +273,7 @@ def _body(s):
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
 <div class="qx__side"><h2 id="h-q">Asked about {name_l}</h2>
-<div class="others"><p class="eyebrow">The rest of what we do</p><ul>{others}</ul></div></div>
+<div class="others"><p class="others__h">More services</p><ul>{others}</ul></div></div>
 <div>{faq}</div>
 </div>
 </section>""".format(name_l=s["name"].lower(), faq=faq_html(s["faq"]), others=_others(s["slug"])),

@@ -645,8 +645,7 @@ def index_page():
 <div class="wrap">
 {cr}
 <h1>Journal</h1>
-<p class="lede">What we have learned running doors, events and protection details in this city, written for the
-people who have to make the staffing decision, not for search engines.</p>
+<p class="lede">Notes from running doors, events and protection details in Toronto, for whoever makes the staffing call.</p>
 </div>
 </section>
 
@@ -656,11 +655,11 @@ people who have to make the staffing decision, not for search engines.</p>
 </div>
 </section>
 
-{cta}""".format(im=img("crew-hall", [640, 900, 1200, 1600], "100vw",
-                       "Swarm crew on shift in Toronto", ratio=16 / 10, depth=1),
+{cta}""".format(im=img("stock-suv", (800, 1600), "100vw",
+                       "A black SUV waiting in a parking lot at night.", ratio=2 / 3.0, depth=1),
                 cr=crumb_html([("Home", "../index.html"), ("Journal", "index.html")]),
                 cards=cards,
-                cta=cta_final(1, "Stop reading. Start covering.",
+                cta=cta_final(1, "Rather have it handled?",
                               "Tell us the date, the venue and the headcount. Most quotes go out the same day."))
 
     return page(path="/journal/", depth=1,

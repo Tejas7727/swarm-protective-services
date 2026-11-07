@@ -45,7 +45,7 @@ def body():
 <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> contributors</p>
 </div>
 <section class="scr cov__beat" id="top" data-label="Toronto" aria-labelledby="h-cov">
-<div class="wrap scr__in"><p class="eyebrow">Coverage</p>
+<div class="wrap scr__in">
 <h1 id="h-cov">Based in Toronto</h1><p class="lede">Dispatch answers from here, 24 hours a day.</p></div>
 </section>
 <section class="scr cov__beat" id="gta" data-label="The GTA">

@@ -122,7 +122,7 @@ def drawer_html(depth):
            for h, label, blurb in NAV]
     out.append('<a href="%sjournal/index.html">Journal<small>Field notes for venue owners</small></a>'
                % pfx(depth))
-    out.append('<a class="btn btn--full" href="%s"><span>Request a quote</span></a>'
+    out.append('<a class="btn btn--full" href="%s"><span>Get a quote</span></a>'
                % quote_url(depth))
     out.append('<a class="btn btn--ghost btn--full" style="margin-top:10px" href="tel:%s">'
                '<span>Call dispatch %s</span></a>' % (BIZ["phone_tel"], BIZ["phone_ui"]))
@@ -139,7 +139,7 @@ def mast_html(depth):
 <div class="mast__cta">
 <a class="btn btn--ghost btn--sm mast__tel" href="tel:{tel}">
 <span>{phone}</span></a>
-<a class="btn btn--sm mast__quote" href="{quote}"><span>Request a quote</span></a>
+<a class="btn btn--sm mast__quote" href="{quote}"><span>Get a quote</span></a>
 <a class="btn mast__call" href="tel:{tel}" aria-label="Call dispatch {phone}">
 <span aria-hidden="true">{i_phone}</span></a>
 <button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Open menu">
@@ -171,7 +171,7 @@ def foot_html(depth):
         (p + "answers.html", "Answers"),
         (p + "about.html", "Meet us"),
         (p + "journal/index.html", "Journal"),
-        (quote_url(depth), "Request a quote"),
+        (quote_url(depth), "Get a quote"),
     ])
     return """<footer class="foot">
 <div class="wrap">
@@ -409,7 +409,7 @@ def cta_final(depth=0, heading="Tell us what you need",
 <h2>{h}</h2>
 <p class="lede">{l}</p>
 <div class="hero__cta">
-<a class="btn" href="{quote}"><span>Request a quote</span></a>
+<a class="btn" href="{quote}"><span>Get a quote</span></a>
 <a class="btn btn--ghost" href="tel:{tel}"><span>Call dispatch</span></a>
 </div>
 </div>
