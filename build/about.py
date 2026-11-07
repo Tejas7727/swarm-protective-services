@@ -51,7 +51,8 @@ BODY = """{hero}
 
 <section class="scr say say--crew" id="why" data-label="Our product">
 <div class="wrap scr__in say__in">
-<p class="say__t" data-words>{statement}</p>
+<p class="say__t">{statement}</p>
+<p class="say__l">{line}</p>
 </div>
 <figure class="crew crew--lineup" aria-hidden="true"><img class="crew__still" src="assets/cine/lineup-poster.webp" alt="" width="1312" height="800" loading="lazy" decoding="async"><video class="crew__vid" muted playsinline preload="none" width="1312" height="800" data-play data-alpha><source src="assets/cine/lineup.webm" type='video/webm; codecs="vp09.00.10.08"'></video></figure>
 </section>
@@ -79,7 +80,8 @@ ABOUT = page(
                    img("stock-guard", (800, 1600), "100vw",
                        "A close protection officer in a black suit and dark glasses.", cls="at-face", loading="eager",
                        priority=True, ratio=1.5), label="Who we are"),
-        statement=C.STATEMENT, feed=_feed()),
+        statement="".join('<span class="say__ln" data-words>%s</span>' % ln for ln in C.STATEMENT.split(". ", 1)).replace("happened</span>", "happened.</span>"),
+        line=C.STATEMENT_LINE, feed=_feed()),
 )
 
 PAGES = {"about.html": ABOUT}

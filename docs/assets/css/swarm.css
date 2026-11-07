@@ -1657,3 +1657,57 @@ input,textarea,select{caret-color:var(--gold-hi)}
 ::selection{background:var(--gold);color:var(--ink-0)}
 a{text-underline-offset:.22em}
 @media (max-aspect-ratio:1/1){ .regions__map{display:none} }   /* tall screens: the list needs the whole width; the map's own names would sit under it */
+
+/* ==========================================================================
+   Coachwork type (2026-11): Archivo at its widest, light, for display, the way
+   car and aviation marques letter their names; it echoes the wide SWARM
+   wordmark. Titles a step narrower and heavier. Body Archivo at normal width.
+   Saira stays for labels, buttons and navigation.
+   ========================================================================== */
+h1,h2,.h2ish,.say__t{font-variation-settings:"wdth" 125,"wght" 300 !important;letter-spacing:-.012em !important;line-height:1.06}
+h3,h4{font-variation-settings:"wdth" 112,"wght" 500 !important;letter-spacing:0 !important}
+h1{font-size:clamp(2.3rem,5.4vw,4.9rem)}
+h2,.scr h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
+.ih h1{font-size:clamp(2.3rem,5.2vw,4.5rem);max-width:15ch}
+.phero h1{font-size:clamp(2.1rem,4.6vw,3.8rem)}
+.is-quote .kx h1{font-size:clamp(1.8rem,3.3vw,2.9rem)}
+.tile__t b,.mx__t b{font-variation-settings:"wdth" 118,"wght" 400;letter-spacing:-.005em}
+.tile__t b{font-size:clamp(1rem,1.7vw,1.6rem)}
+.mx__t b{font-size:clamp(1.15rem,2vw,1.9rem)}
+.qf__step legend,.kx__tel,.reg li{font-variation-settings:"wdth" 112,"wght" 450}
+.story .s-ct{font-weight:normal;font-variation-settings:"wdth" 110,"wght" 500}
+.faq summary,.qx .faq summary{font-variation-settings:"wdth" 104,"wght" 550}
+
+/* home: one decision. The quote, and the open line beside it (signal orange) */
+.hx h1{font-size:min(calc((100vw - 2 * var(--gut)) / 10.5),7svh,74px);line-height:1.04}
+.hx__sub{margin:0;color:var(--bone-2);font-size:clamp(.95rem,1.12vw,1.1rem);line-height:1.6;max-width:44ch}
+.hx__act{display:flex;align-items:center;gap:clamp(18px,2.4vw,34px);margin-top:clamp(8px,1.6vh,16px);flex-wrap:wrap}
+.hx__act .btn{min-height:54px;padding:0 32px}
+.hx__call{display:inline-flex;flex-direction:column;gap:4px;text-decoration:none;color:var(--bone)}
+.hx__live{font-family:var(--display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--signal);
+  font-variation-settings:"wdth" 104,"wght" 650}
+.hx__live::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--signal);margin-right:9px;vertical-align:.12em}
+.hx__call b{font-weight:normal;font-variation-settings:"wdth" 112,"wght" 450;font-size:1.12rem;font-variant-numeric:tabular-nums;
+  letter-spacing:.01em;transition:color .2s var(--xo)}
+@media (hover:hover) and (pointer:fine){ .hx__call:hover b{color:var(--gold-hi)} }
+@media (max-width:699px){ .hx__act{display:none} .hx__sub{font-size:.95rem;max-width:34ch} }   /* the Call bar carries both on phones */
+
+/* Meet us: the brand line, then the fact under it */
+.say__l{margin:clamp(12px,2vh,20px) auto 0;max-width:44ch;color:var(--bone-2);text-align:center;font-size:clamp(.95rem,1.15vw,1.1rem);line-height:1.55;position:relative;z-index:2}
+.say--crew .say__t{font-size:clamp(1.9rem,3.6vw,3.3rem);max-width:22ch}
+/* the hero holds two lines: "Life is unpredictable." / "We aren't." */
+.hx h1{font-size:min(3.55vw,6.6svh,56px);white-space:nowrap}
+.hx h1 .hx__nw{display:block}
+@media (max-width:899px){ .hx h1{font-size:min(calc((100vw - 2 * var(--gut)) / 12.5),5.4svh,46px)} }
+.say--crew .say__t{max-width:20ch}
+.say--crew .say__t{max-width:21ch;text-wrap:wrap}   /* breaks after "happened." */
+/* the statement is two lines by structure, each lit word by word */
+.say__ln{display:block}
+.say--crew .say__t{max-width:none}
+/* the hero headline at full presence, still two lines */
+@media (min-width:900px){
+  .hx__copy{width:min(64%,1000px)}
+  .hx h1{font-size:min(4.15vw,8.4svh,84px)}
+}
+@media (max-width:699px){ .is-quote .kx h1{font-size:1.65rem} }
+@media (max-width:699px){ .is-quote .kx h1{font-size:1.5rem} }

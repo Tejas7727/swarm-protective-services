@@ -35,8 +35,7 @@ def srcset(sizes):
 
 def welcome(scene):
     P = {p["id"]: p for p in scene["plates"]}
-    first, rest = C.HOME["motto"].split(", ", 1)
-    rest = rest.replace(C.HOME["gold"], "<em>%s</em>" % C.HOME["gold"], 1)
+    first, rest = C.HOME["headline"]
     wide = P["crew"]
     # for the camera: each plate's size, the centre of its portal (the dark jacket
     # under the emblem) and the object-position the styles give it
@@ -60,16 +59,17 @@ def welcome(scene):
 </div>
 <section class="scr hx" id="top" data-label="Welcome" aria-labelledby="h-home">
 <div class="hx__copy">
-<h1 id="h-home">{first},<br> <span class="hx__nw">{rest}</span></h1>
-<nav class="doors" aria-label="Where to start">
-<a class="btn doors__q" href="quote.html"><span>Get a quote</span></a>
-<a class="btn btn--glass" href="about.html"><span>Meet the crew</span></a>
-<a class="btn btn--glass" href="#services"><span>Our services</span></a>
-</nav>
+<h1 id="h-home">{first}<br> <span class="hx__nw">{rest}</span></h1>
+<p class="hx__sub">{sub}</p>
+<div class="hx__act">
+<a class="btn" href="quote.html"><span>Get a quote</span></a>
+<a class="hx__call" href="tel:{tel}"><span class="hx__live">Call 24/7</span> <b>{phone}</b></a>
+</div>
 </div>
 </section>""".format(up=cinema.UPRIGHT, mid=cinema.MIDDLE, mset=srcset(P["crew-m"]["sizes"]),
                      tset=srcset(P["crew-t"]["sizes"]), src=wide["sizes"][1]["src"], wset=srcset(wide["sizes"]),
-                     w=wide["w"], h=wide["h"], plates=plates, line=C.HOME["line"],
+                     w=wide["w"], h=wide["h"], plates=plates, line=C.HOME["line"], sub=C.HOME["sub"],
+                     tel=BIZ["phone_tel"], phone=BIZ["phone_ui"],
                      where=C.HOME["where"].replace("&", "&amp;"), first=first, rest=rest, lede=C.HOME["lede"])
 
 
@@ -85,7 +85,7 @@ def services():
         for i, s in enumerate(SERVICES))
     return """<section class="scr sx" id="services" data-label="Services" aria-labelledby="h-services">
 <div class="wrap scr__in sx__in">
-<h2 id="h-services">Services</h2>
+<h2 id="h-services">Choose your cover</h2>
 <ul class="tiles">{tiles}</ul>
 </div>
 </section>""".format(tiles=tiles)
@@ -141,8 +141,8 @@ def quote(tag="h2"):
     return """<section class="scr kx" id="contact" data-label="Get a quote" aria-labelledby="h-contact">
 <div class="wrap scr__in kx__in">
 <div class="kx__side">
-<{tag} id="h-contact">Tell us what you need</{tag}>
-<p class="kx__lede">Three short steps. Answered the same day.</p>
+<{tag} id="h-contact">Tell us the date. We'll do the rest.</{tag}>
+<p class="kx__lede">Three short steps. A written quote, usually the same day.</p>
 <a class="kx__tel" href="tel:{tel}">{i_phone}<span>{phone}</span></a>
 <p class="kx__note"><span class="kx__live">Answered 24/7</span> or email <a href="mailto:{email}">{email}</a></p>
 <figure class="crew crew--pair" aria-hidden="true"><img class="crew__still" src="assets/cine/pair-poster.webp" alt="" width="720" height="880" loading="lazy" decoding="async"><video class="crew__vid" muted playsinline preload="none" width="720" height="880" data-play data-alpha><source src="assets/cine/pair.webm" type='video/webm; codecs="vp09.00.10.08"'></video></figure>

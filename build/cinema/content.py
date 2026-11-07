@@ -16,7 +16,11 @@ Replace it with real content and it renders as a real card.
 HOME = {
     "line": "Licensed security service",           # the client's words, kept as written
     "where": "Toronto & the GTA",
-    "motto": "Life is unpredictable, let us protect you",   # sentence case on the page
+    "motto": "Life is unpredictable, let us protect you",   # the client's motto (schema slogan)
+    # the hero turns the motto into a promise (brand-copy scorecard 10/12; runner-up
+    # "Nothing happened. That's the job." 11/12, used as the Meet us statement)
+    "headline": ("Life is unpredictable.", "We aren't."),
+    "sub": "PSISA-licensed protection for Toronto's venues, events and executives. Quoted the same day.",
     "gold": "protect",                              # the one word of the motto set in gold
     "lede": "Close protection, event and venue security, party bus and limousine details, and monitoring.",
 }
@@ -68,8 +72,11 @@ ELITE = {
 }
 
 # Meet us: the statement (deck slide 2), lit word by word
-STATEMENT = ("Peace of mind is our product. We deliver it through proactive planning, skilled "
-             "communication, and unyielding professionalism.")
+# was "Peace of mind is our product. We deliver it through proactive planning, skilled
+# communication, and unyielding professionalism." (the client's; "peace of mind" is banned by
+# the brand voice). Same idea, said as the brand line.
+STATEMENT = "Nothing happened. That is the product."
+STATEMENT_LINE = "Every job is planned before the day and written up before the crew leaves."
 
 # Home: how it works (deck slide 6)
 STEPS = {
