@@ -1310,16 +1310,6 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
   .faq__a{padding:0 16px 16px}
 }
 
-/* Meet us: the statement beside the crew, drawn as a graphic (a Remotion film) */
-.say__in{display:grid !important;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,5vw,80px);align-items:center}
-.say__art{margin:0;height:min(68svh,640px);aspect-ratio:3/4;justify-self:center;overflow:hidden;background:#0A0C0E}
-.say__vid{width:100%;height:100%;object-fit:cover;display:block}
-@media (max-width:899px){
-  .say__in{grid-template-columns:1fr;gap:18px;align-content:center}
-  .say__art{width:100%;height:clamp(170px,30svh,300px);aspect-ratio:auto}
-  .say__vid{object-position:50% 62%}
-}
-
 /* Meet us: the feed, one photograph at a time with the next one showing */
 .job__in{justify-content:center}
 .feed{overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;
@@ -1405,11 +1395,6 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
 }
 
 /* questions: a real job beside them (home), the crew at the car (answers), the other services (service pages) */
-.qx__pic{margin:clamp(16px,3vh,30px) 0 0;overflow:hidden;background:var(--ink-2)}
-.qx__pic img{width:100%;height:100%;object-fit:cover;display:block}
-.qx__pic--tall{height:min(50svh,470px);aspect-ratio:4/5;max-width:100%}
-.qx__pic--tall img{object-position:50% 35%}
-#answers .qx__pic{margin:0 0 clamp(18px,3.4vh,34px);aspect-ratio:2.33}
 .qx__side .others{margin-top:clamp(18px,3.4vh,34px)}
 .qx__side .others ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .qx__side .others li:first-child{grid-column:1/-1}
@@ -1418,17 +1403,10 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
 .qx__side .olink{overflow:hidden}
 @media (hover:hover) and (pointer:fine){ .qx__side .olink:hover img{filter:brightness(1)} }
 @media (max-width:899px){
-  .qx__pic--tall{width:100%;height:clamp(92px,14.5svh,170px);aspect-ratio:auto;margin-top:4px}
-  .qx__pic--tall img{object-position:50% 18%}
   .qx__side .others ul{display:flex;flex-wrap:wrap}
 }
 
-/* the quote: two of the crew standing by under the phone number (a cut-out, so they stand on the page) */
 .kx__side{display:flex;flex-direction:column}
-.kx__crew{margin:clamp(18px,3.6vh,36px) 0 0;height:min(40svh,380px);
-  -webkit-mask-image:linear-gradient(#000 78%,transparent);mask-image:linear-gradient(#000 78%,transparent)}
-.kx__crew img{height:100%;width:auto;display:block;filter:brightness(.9)}
-@media (max-width:899px){ .kx__crew{display:none} }
 
 /* 404: the route that ends at a wall */
 .nf{min-height:72svh;display:flex;align-items:center}
@@ -1457,6 +1435,122 @@ html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
              linear-gradient(90deg,rgba(8,9,10,.6),transparent 70%)}
 .phero:has(.phero__media) .wrap{position:relative;z-index:1;width:100%}
 .phero:has(.phero__media) .lede{color:var(--bone-2);max-width:56ch}
-@media (max-width:899px){ #answers .qx__pic{display:none} }   /* stacked, the questions need the room */
 /* the lines under the list travel with its last row, so nothing overlaps while the screen arrives */
 .fx7 .gx--plan .whofor,.fx7 .gx--plan .go{transform:translate3d(0,calc(var(--d,0) * (3.6 * 2.6vh + 2vh)),0)}
+
+/* ==========================================================================
+   Makeover (2026-11): pictures belong to the page, lighter headlines, the crew
+   on film. References: minimal.gallery, awwwards SOTD (ESR, Spyker), refs.gallery.
+   ========================================================================== */
+/* headlines: Archivo, a little condensed, sentence case; Saira stays for the
+   logo, labels, buttons and navigation */
+h1,h2,h3,h4,.h2ish{font-family:var(--body) !important;text-transform:none !important;
+  font-variation-settings:"wdth" 90,"wght" 520 !important;letter-spacing:-.032em !important;line-height:1.02}
+h3,h4{font-variation-settings:"wdth" 96,"wght" 600 !important;letter-spacing:-.012em !important;line-height:1.16}
+h1{font-size:clamp(2.8rem,7.4vw,6.2rem)}
+h2,.scr h2{font-size:clamp(2rem,4.4vw,3.7rem)}
+.ih h1{font-size:clamp(2.7rem,7vw,5.9rem);max-width:13ch}
+.hx h1{font-size:min(calc((100vw - 2 * var(--gut)) / 8.6),7.4svh,86px);line-height:1;letter-spacing:-.035em !important}
+.is-quote .kx h1{font-size:clamp(2rem,4.4vw,3.7rem)}
+.phero h1{font-size:clamp(2.4rem,6.2vw,4.8rem)}
+.tile__t b,.mx__t b{font-family:var(--body);text-transform:none;font-variation-settings:"wdth" 92,"wght" 560;letter-spacing:-.02em}
+.tile__t b{font-size:clamp(1.05rem,2vw,1.9rem)}
+.mx__t b{font-size:clamp(1.3rem,2.4vw,2.3rem)}
+.say__t{font-family:var(--body);text-transform:none;font-variation-settings:"wdth" 90,"wght" 480;letter-spacing:-.03em}
+
+/* the service and know-us grids: one mosaic whose outer edges dissolve into the page */
+.tiles,.mx__list{gap:3px}
+.tile,.mx__p{background:transparent}
+.tile img,.mx__p img{--ml:#000;--mr:#000;--mt:#000;--mb:#000;
+  -webkit-mask-image:linear-gradient(90deg,var(--ml),#000 22%,#000 78%,var(--mr)),linear-gradient(180deg,var(--mt),#000 22%,#000 78%,var(--mb));
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,var(--ml),#000 22%,#000 78%,var(--mr)),linear-gradient(180deg,var(--mt),#000 22%,#000 78%,var(--mb));
+  mask-composite:intersect}
+.tiles li:nth-child(odd) img{--ml:transparent}
+.tiles li:nth-child(even) img{--mr:transparent}
+.tiles li:nth-child(-n+2) img{--mt:transparent}
+.tiles li:nth-last-child(-n+2) img{--mb:transparent}
+.mx__list li img{--mt:transparent;--mb:transparent}
+.mx__list li:first-child img{--ml:transparent}
+.mx__list li:last-child img{--mr:transparent}
+.tile::after,.mx__p::after{background:linear-gradient(180deg,rgba(8,9,10,0) 40%,rgba(8,9,10,.7) 100%)}
+@media (max-width:899px){ .mx__list li img{--ml:transparent;--mr:transparent} }
+
+/* opening photographs fade as the page moves on, instead of shrinking into a frame */
+.fx7 .ih__media{clip-path:none;opacity:calc(1 - var(--up,0) * .85)}
+.fx7 .ih__media img{transform:scale(calc(1 + .05 * var(--up,0)))}
+
+/* questions: the photograph sits behind the heading and dissolves into the page */
+.qx{isolation:isolate}
+.qx__bg{position:absolute;left:0;top:0;bottom:0;width:min(52vw,860px);margin:0;z-index:-1;pointer-events:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 25%,transparent 96%),linear-gradient(180deg,transparent 2%,#000 26%,#000 66%,transparent 98%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,#000 25%,transparent 96%),linear-gradient(180deg,transparent 2%,#000 26%,#000 66%,transparent 98%);
+  mask-composite:intersect}
+.qx__bg img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:brightness(.5) saturate(.8)}
+.fx7 .qx__bg{opacity:calc(1 - var(--ad,0) * 1.2)}
+@media (max-width:899px){
+  .qx__bg{width:100%;bottom:auto;height:46%;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 30%,#000 50%,transparent);mask-image:linear-gradient(180deg,transparent,#000 30%,#000 50%,transparent)}
+  .qx__bg img{object-position:50% 20%;filter:brightness(.42) saturate(.8)}
+}
+
+/* the crew films: transparent, so the people stand on the page */
+.crew{margin:0;position:relative;pointer-events:none}
+.crew__still,.crew__vid{display:block;width:100%;height:auto}
+.crew__vid{position:absolute;inset:0;opacity:0}
+.crew.is-live .crew__vid{opacity:1}
+.crew.is-live .crew__still{opacity:0}
+/* Meet us: the statement above, the line-up standing along the bottom of the screen */
+.say--crew{justify-content:flex-start;overflow:hidden}
+.say--crew .say__in{display:block !important;position:relative;z-index:2;text-align:center;flex:0 0 auto;
+  padding-top:clamp(6px,3vh,40px)}
+.say--crew .say__t{max-width:22ch;margin:0 auto;font-size:clamp(1.6rem,3.4vw,3.1rem);line-height:1.08}
+.crew--lineup{position:absolute;left:50%;bottom:0;translate:-50% 0;width:min(1100px,92vw,calc((100svh - 300px) * 1.64));z-index:1}
+@media (max-width:699px){ .crew--lineup{width:132vw} .say--crew .say__t{font-size:1.55rem} }
+/* the quote: two of the crew standing by under the phone number */
+.crew--pair{width:min(340px,26vw);margin-top:clamp(10px,2vh,24px)}
+@media (max-width:899px){ .crew--pair{display:none} }
+
+/* journal: no boxes; each photograph fades into its card */
+.posts{background:none;border:0;gap:clamp(28px,3.4vw,52px)}
+.post{background:none !important;padding:0}
+.post__pic{margin:0 0 4px;background:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 50%,transparent);mask-image:linear-gradient(180deg,#000 50%,transparent)}
+.qx__side .olink img{-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)}
+/* makeover, pass 2: looser tracking (words were touching), the statement clear of the heads,
+   the other services as one small mosaic with their names on the pictures */
+h1,h2,h3,h4,.h2ish{font-variation-settings:"wdth" 96,"wght" 520 !important;letter-spacing:-.02em !important}
+h3,h4{font-variation-settings:"wdth" 98,"wght" 600 !important;letter-spacing:-.008em !important}
+.hx h1{letter-spacing:-.022em !important}
+.tile__t b,.mx__t b,.say__t{letter-spacing:-.012em;font-variation-settings:"wdth" 96,"wght" 540}
+.say--crew .say__t{max-width:30ch;font-size:clamp(1.45rem,2.6vw,2.5rem);line-height:1.12}
+.crew--lineup{width:min(1000px,90vw,calc((100svh - 330px) * 1.64))}
+.qx__side .others ul{gap:3px}
+.qx__side .olink{position:relative;display:block;color:var(--bone)}
+.qx__side .olink img{display:block;width:100%;--ml:#000;--mr:#000;--mt:#000;--mb:#000;
+  -webkit-mask-image:linear-gradient(90deg,var(--ml),#000 24%,#000 76%,var(--mr)),linear-gradient(180deg,var(--mt),#000 24%,#000 76%,var(--mb));
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,var(--ml),#000 24%,#000 76%,var(--mr)),linear-gradient(180deg,var(--mt),#000 24%,#000 76%,var(--mb));
+  mask-composite:intersect;filter:brightness(.6)}
+.qx__side .olink b{position:absolute;left:14px;bottom:10px;font-size:.84rem;color:var(--bone);text-shadow:0 1px 12px rgba(0,0,0,.8)}
+.qx__side .others li:nth-child(1) img{--mt:transparent;--ml:transparent;--mr:transparent}
+.qx__side .others li:nth-child(2n) img{--ml:transparent}
+.qx__side .others li:nth-child(2n+3) img{--mr:transparent}
+.qx__side .others li:nth-last-child(-n+2) img{--mb:transparent}
+@media (max-width:899px){
+  .qx__side .olink img{display:none}
+  .qx__side .olink{display:flex;padding:6px 10px;border:1px solid var(--rule)}
+  .qx__side .olink b{position:static;font-size:.8rem;text-shadow:none}
+  .tl__in .plan{height:clamp(70px,11svh,160px)}
+}
+/* coverage: the list of cities over the film's GTA frame, dissolving into the page */
+.regions{isolation:isolate;overflow:hidden}
+.regions__map{position:absolute;inset:0 0 0 38%;z-index:-1;pointer-events:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 40%),linear-gradient(180deg,transparent,#000 20%,#000 80%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent,#000 40%),linear-gradient(180deg,transparent,#000 20%,#000 80%,transparent);mask-composite:intersect}
+.regions__map img{width:100%;height:100%;object-fit:cover;object-position:22% 50%;opacity:.7}
+@media (max-aspect-ratio:1/1){ .regions__map{inset:0} .regions__map img{opacity:.16} }   /* the map's own labels would fight the list */
+/* phones: the line-up stands larger along the bottom */
+@media (max-width:699px){ .crew--lineup{width:min(170vw,calc((100svh - 260px) * 1.64))} }

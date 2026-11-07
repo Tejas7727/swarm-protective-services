@@ -5,7 +5,7 @@
                        by the scroll: close on Toronto ("Based in Toronto"), out
                        to the GTA as routes run to 17 cities ("Across the GTA"),
                        out to Canada as arcs draw coast to coast ("Anywhere in Canada")
-    4    every city    the 18, grouped by direction from downtown
+    4    every city    the 18, grouped by direction from downtown, over the film's GTA frame
 
 The film is rendered in Remotion with MapLibre on OpenFreeMap tiles
 (ai-studio/remotion/src/projects/SwarmCoverage.tsx): 72 frames for wide screens
@@ -57,6 +57,10 @@ def body():
 </div>
 
 <section class="scr regions" id="cities" data-label="Every city" aria-labelledby="h-reg">
+<picture class="regions__map" aria-hidden="true">
+<source media="(max-aspect-ratio:1/1)" srcset="assets/cine/cov-t/f40.webp">
+<img src="assets/cine/cov-w/f40.webp" alt="" width="1440" height="810" loading="lazy" decoding="async">
+</picture>
 <div class="wrap scr__in">
 <h2 id="h-reg">Eighteen cities, one dispatch</h2>
 <div class="regions__grid">{regions}</div>

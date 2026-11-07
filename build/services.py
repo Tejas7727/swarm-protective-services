@@ -2,7 +2,7 @@
 """The six service pages — what the home page's one-liners actually mean.
 
 The home page sells; these pages answer. Each one says what you get (beside a
-plan of that kind of job), who it is for, and the two or three questions people ask about
+plan of that kind of job) and the two or three questions people ask about
 that service specifically. No prices: every job is quoted.
 
 Edit the copy here. `build/service_art.py` exports the photographs.
@@ -14,7 +14,7 @@ import plans
 QUOTE = "quote.html?service=%s"
 
 # slug, name, art, title, h1, lede, includes, steps, for_whom, faq
-# ("steps" is not drawn any more: the three steps live on process.html; kept as the
+# ("steps", "for_whom" and the "includes" details are not drawn any more: the three steps live on process.html; kept as the
 #  per-service wording for the quote follow-up)
 SERVICES = [
     {
@@ -26,8 +26,7 @@ SERVICES = [
         "desc": "Licensed close protection in Toronto and the GTA: executives, artists, visiting "
                 "clients and families. Advance work, discreet officers, secure transport, same-day quotes.",
         "h1": "Close protection",
-        "lede": "A licensed officer at your side, or a team around you. Suited, briefed, and boring "
-                "to look at. That is the point.",
+        "lede": "Suited, briefed, and boring to look at. That is the point.",
         "includes": [
             ("A named lead", "One person owns your detail and is reachable for the whole booking."),
             ("Advance on the location", "We walk the venue, the route and the exits before you arrive."),
@@ -65,8 +64,7 @@ SERVICES = [
         "desc": "Licensed event security across Toronto and the GTA: concerts, weddings, galas, "
                 "festivals and private parties. Door, barrier, floor and close-out, quoted per event.",
         "h1": "Event security",
-        "lede": "From a 60-person wedding to a room of two thousand: the right number of licensed "
-                "officers, in the right places, from load-in to lock-up.",
+        "lede": "The right number of officers, in the right places.",
         "includes": [
             ("A plan before the day", "Headcount, entry points, bar positions, close-out and the what-if list."),
             ("Door and ID checks", "Guest lists, wristbands and ID, handled politely and quickly."),
@@ -101,8 +99,7 @@ SERVICES = [
         "desc": "Licensed door staff and floor security for Toronto bars, clubs and lounges. The same "
                 "crew every week, trained to de-escalate, with a written incident report every night.",
         "h1": "Venue security",
-        "lede": "Door, floor and close. The same faces every week, so the regulars are known and the "
-                "trouble is spotted before it starts.",
+        "lede": "Door, floor and close. The same faces every week.",
         "includes": [
             ("The same crew weekly", "Continuity is the service. Your room gets learned, not re-learned."),
             ("Door and ID", "Capacity counts, ID checks, dress and entry policy as you set it."),
@@ -136,7 +133,7 @@ SERVICES = [
         "desc": "Licensed security on party buses and group transport in Toronto and the GTA: on board, "
                 "at each stop, and at the door of every venue on the route. Quoted per night.",
         "h1": "Party bus security",
-        "lede": "A moving room with a bar in it and a new door every hour. We ride with it.",
+        "lede": "A moving room with a bar in it. We ride with it.",
         "includes": [
             ("An officer on board", "On the bus for the whole route, not meeting you at the venue."),
             ("Every stop covered", "Off the bus first, on the bus last, at each door on the route."),
@@ -171,8 +168,7 @@ SERVICES = [
         "desc": "Chauffeured limousine and executive transport in Toronto and the GTA with a licensed "
                 "security officer on the detail: airport runs, events, nights out and client visits.",
         "h1": "Limousine service",
-        "lede": "The car, the driver, and an officer who travels with it. One booking, one number, "
-                "one person responsible for the whole trip.",
+        "lede": "The car, the driver, and an officer who travels with it.",
         "includes": [
             ("Chauffeured vehicle", "Sedan, SUV or stretch depending on the party and the occasion."),
             ("A licensed officer", "Optional on every trip, standard on close protection details."),
@@ -207,7 +203,7 @@ SERVICES = [
         "desc": "Monitoring and patrols for homes, businesses, sites and vacant property across Toronto "
                 "and the GTA: scheduled checks, alarm response support and a written log every visit.",
         "h1": "Monitoring",
-        "lede": "Somebody checks. On a schedule you set, with a record you can show an insurer.",
+        "lede": "Somebody checks, on the schedule you set.",
         "includes": [
             ("Scheduled checks", "Nightly, weekly or to a pattern you choose: doors, windows, gates, lights."),
             ("Vacant and renovation property", "The cases insurers ask about, covered properly."),
@@ -241,8 +237,8 @@ BY_SLUG = {s["slug"]: s for s in SERVICES}
 
 def gets(items):
     """What you get: every item on one screen, arriving in a gentle stagger."""
-    return "".join('<li style="--k:%d"><h3>%s</h3><p>%s</p></li>'
-                   % (i % 3 + i // 3, t, d) for i, (t, d) in enumerate(items))
+    return "".join('<li style="--k:%d"><h3>%s</h3></li>'
+                   % (i % 3 + i // 3, t) for i, (t, d) in enumerate(items))
 
 
 
@@ -268,7 +264,6 @@ def _body(s):
     ctas = ('<div class="hero__cta"><a class="btn" href="{q}"><span>Get a quote</span></a>'
             '<a class="btn btn--ghost" href="tel:{tel}"><span>Call {phone}</span></a></div>'
             .format(q=quote, tel=BIZ["phone_tel"], phone=BIZ["phone_ui"]))
-    who = "".join("<li>%s</li>" % w for w in s["for_whom"])
     return "\n".join([
         ihero(crumb_html([("Home", "index.html"), ("Services", "index.html#services"), (s["name"], "")]),
               s["h1"], s["lede"],
@@ -279,13 +274,12 @@ def _body(s):
 <div class="gx__text">
 <p class="eyebrow">What you get</p><h2 id="h-gets">In every booking</h2>
 <ol class="gx__list">{gets}</ol>
-<div class="whofor"><p class="eyebrow">Who it is for</p><ul>{who}</ul></div>
 <a class="go" href="{q}">Get a quote for {name_l}</a>
 </div>
 <figure class="plan">{plan}</figure>
 </div>
 </section>""".format(gets=gets(s["includes"]), q=quote, name_l=s["name"].lower(),
-                    plan=plans.SERVICE[s["slug"]](), who=who),
+                    plan=plans.SERVICE[s["slug"]]()),
         """<section class="scr qx" id="questions" data-label="Questions" aria-labelledby="h-q">
 <div class="wrap scr__in qx__in">
 <div class="qx__side"><h2 id="h-q">Asked about {name_l}</h2>

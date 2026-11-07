@@ -98,8 +98,9 @@ ANSWERS = page(
     bodyattr=' class="screens"',
     body="""{hero}
 <section class="scr qx" id="answers" data-label="The answers" aria-label="The answers">
+<figure class="qx__bg">{pic}</figure>
 <div class="wrap scr__in qx__in">
-<div class="qx__side"><figure class="qx__pic">{pic}</figure><p class="eyebrow">Still unsure?</p><h2>Ask us directly</h2>
+<div class="qx__side"><p class="eyebrow">Still unsure?</p><h2>Ask us directly</h2>
 <p class="lede">Call <a href="tel:{tel}">{phone}</a>, answered 24/7, or
 <a href="quote.html">send the date and the place</a>.</p></div>
 {faq}

@@ -277,7 +277,7 @@ PAGE = """<!DOCTYPE html>
 <link rel="manifest" href="{p}site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@75..125,400..900&family=Archivo:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@75..125,400..900&family=Archivo:wdth,wght@62..125,300..800&display=swap">
 <link rel="stylesheet" href="{p}assets/css/swarm.css?v={cssv}">
 {head}
 <script type="application/ld+json">{org}</script>

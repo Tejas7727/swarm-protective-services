@@ -2,8 +2,8 @@
 """Meet us: who we are, in few words. Three screens, one scroll each.
 
     1  who we are     one photograph, the client's own line
-    2  one statement  the client's words, lit word by word, beside the crew drawn
-                      as a graphic (a Remotion film that plays as the screen arrives)
+    2  one statement  the client's words, lit word by word, over the crew line-up
+                      (a transparent Remotion film, SwarmLineup, that plays as the screen arrives)
     3  on the job     a feed: one photograph at a time, the next one showing, a
                       caption under each; swipe, drag or tap the next one
 
@@ -49,13 +49,11 @@ def _feed():
 
 BODY = """{hero}
 
-<section class="scr say" id="why" data-label="Our product">
+<section class="scr say say--crew" id="why" data-label="Our product">
 <div class="wrap scr__in say__in">
-<figure class="say__art" aria-hidden="true"><video class="say__vid" muted playsinline preload="none"
- poster="assets/cine/crew-poster.webp" width="540" height="720" data-play><source src="assets/cine/crew.mp4"
- type="video/mp4"></video></figure>
 <p class="say__t" data-words>{statement}</p>
 </div>
+<figure class="crew crew--lineup" aria-hidden="true"><img class="crew__still" src="assets/cine/lineup-poster.webp" alt="" width="1312" height="800" loading="lazy" decoding="async"><video class="crew__vid" muted playsinline preload="none" width="1312" height="800" data-play data-alpha><source src="assets/cine/lineup.webm" type='video/webm; codecs="vp09.00.10.08"'></video></figure>
 </section>
 
 <section class="scr job" id="on-the-job" data-label="On the job" aria-labelledby="h-job">

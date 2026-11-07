@@ -62,7 +62,6 @@ def welcome(scene):
 <div class="hx__copy">
 <p class="hx__line">{line}<span class="hx__dot" aria-hidden="true"> &middot; </span> <span class="hx__where">{where}</span></p>
 <h1 id="h-home">{first},<br> <span class="hx__nw">{rest}</span></h1>
-<p class="hx__lede">{lede}</p>
 <nav class="doors" aria-label="Where to start">
 <a class="btn doors__q" href="quote.html"><span>Get a quote</span></a>
 <a class="btn btn--glass" href="about.html"><span>Meet the crew</span></a>
@@ -82,7 +81,7 @@ def services():
         '<img src="assets/img/{art}-800.webp" srcset="assets/img/{art}-800.webp 800w, '
         'assets/img/{art}-1600.webp 1600w" sizes="(max-width:899px) 50vw, 34vw" alt="" width="800" height="547" '
         'loading="lazy" decoding="async">'
-        '<span class="tile__t"><b>{name}</b><span>{line}</span></span></a></li>'.format(
+        '<span class="tile__t"><b>{name}</b></span></a></li>'.format(
             k=i // 2, slug=s["slug"], art=s["art"], name=s["name"], line=lines.get(s["slug"], ""))
         for i, s in enumerate(SERVICES))
     return """<section class="scr sx" id="services" data-label="Services" aria-labelledby="h-services">
@@ -96,7 +95,7 @@ def services():
 def more():
     """Three ways deeper, each a whole panel: the people, the process, the map."""
     panel = ('<li style="--k:{k}"><a class="mx__p" href="{href}">{art}'
-             '<span class="mx__t"><b>{t}</b><span>{d}</span></span></a></li>')
+             '<span class="mx__t"><b>{t}</b></span></a></li>')
     panels = "".join([
         panel.format(k=0, href="about.html", t="Who we are", d="The people and the standard they keep",
                      art=img("stock-guard", (800, 1600), "(max-width:899px) 100vw, 40vw",
@@ -119,8 +118,9 @@ def more():
 def faq():
     Q = C.FAQ
     return """<section class="scr qx" id="faq" data-label="Questions" aria-labelledby="h-faq">
+<figure class="qx__bg">{pic}</figure>
 <div class="wrap scr__in qx__in">
-<div class="qx__side"><h2 id="h-faq">{h}</h2><figure class="qx__pic qx__pic--tall">{pic}</figure></div>
+<div class="qx__side"><h2 id="h-faq">{h}</h2></div>
 {faq}
 </div>
 </section>""".format(h=Q["h"], faq=faq_html(Q["items"]),
@@ -143,10 +143,10 @@ def quote(tag="h2"):
 <div class="wrap scr__in kx__in">
 <div class="kx__side">
 <{tag} id="h-contact">Tell us what you need</{tag}>
-<p class="kx__lede">Three short steps. You get a written plan and one point of contact, usually the same day.</p>
+<p class="kx__lede">Three short steps. Answered the same day.</p>
 <a class="kx__tel" href="tel:{tel}">{i_phone}<span>{phone}</span></a>
 <p class="kx__note">Answered 24/7, or email <a href="mailto:{email}">{email}</a></p>
-<figure class="kx__crew" aria-hidden="true"><img src="assets/img/own-pair-cut-1000.webp" srcset="assets/img/own-pair-cut-600.webp 600w, assets/img/own-pair-cut-1000.webp 1000w" sizes="16vw" alt="" width="1000" height="1535" loading="lazy" decoding="async"></figure>
+<figure class="crew crew--pair" aria-hidden="true"><img class="crew__still" src="assets/cine/pair-poster.webp" alt="" width="720" height="880" loading="lazy" decoding="async"><video class="crew__vid" muted playsinline preload="none" width="720" height="880" data-play data-alpha><source src="assets/cine/pair.webm" type='video/webm; codecs="vp09.00.10.08"'></video></figure>
 </div>
 <form class="qf" data-quote data-to="{email}" aria-labelledby="h-contact">
 <p class="qf__prog" aria-live="polite"><span data-prog>Three short steps</span><i aria-hidden="true"><b></b></i></p>

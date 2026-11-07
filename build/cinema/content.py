@@ -16,8 +16,8 @@ Replace it with real content and it renders as a real card.
 HOME = {
     "line": "Licensed security service",           # the client's words, kept as written
     "where": "Toronto & the GTA",
-    "motto": "Life is unpredictable, Let us Protect you",
-    "gold": "Protect",                              # the one word of the motto set in gold
+    "motto": "Life is unpredictable, let us protect you",   # sentence case on the page
+    "gold": "protect",                              # the one word of the motto set in gold
     "lede": "Close protection, event and venue security, party bus and limousine details, and monitoring.",
 }
 

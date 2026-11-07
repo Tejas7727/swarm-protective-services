@@ -446,8 +446,19 @@
     }, { rootMargin: '0px 0px -30% 0px' }).observe(kx);
   }
 
-  /* --- Meet us: the crew film plays as its screen arrives ------------------ */
-  var vids = [].slice.call(document.querySelectorAll('video[data-play]'));
+  /* --- the crew films play as their screen arrives ---------------------------
+     The crew films are transparent (WebM, VP9 with alpha): where that cannot
+     play (Safari), the film is removed and its last frame, a transparent still,
+     stays. The still gives way only once the film is actually playing. */
+  var noAlpha = /^((?!chrome|android|crios|fxios|edg).)*safari/i.test(navigator.userAgent);
+  var vids = [].slice.call(document.querySelectorAll('video[data-play]')).filter(function (v) {
+    if (v.hasAttribute('data-alpha') && (noAlpha || !v.canPlayType('video/webm; codecs="vp09.00.10.08"'))) {
+      v.parentNode.removeChild(v);
+      return false;
+    }
+    v.addEventListener('playing', function () { v.parentNode.classList.add('is-live'); });
+    return true;
+  });
   if (vids.length && !reduced && 'IntersectionObserver' in window) {
     var vo = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
