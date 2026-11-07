@@ -25,6 +25,7 @@ import content as C                                              # noqa: E402
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "motion"))
 from cov_toronto import toronto                                  # noqa: E402
+from cov_routes import svg as routes_svg                         # noqa: E402
 
 REGIONS = [
     ("Toronto", ["Toronto", "Etobicoke", "North York", "Scarborough"]),
@@ -36,11 +37,10 @@ FRAMES = 72
 
 
 def cine_version():
-    """One content hash over the film's frames and hold films. /assets/cine is cached as
-    immutable, so a re-render only reaches returning visitors under a new ?v=."""
+    """One content hash over the film's frames. /assets/cine is cached as immutable,
+    so a re-render only reaches returning visitors under a new ?v=."""
     h = hashlib.sha1()
-    for f in sorted(glob.glob(os.path.join(OUTDIR, "assets", "cine", "cov-*", "*.webp"))
-                    + glob.glob(os.path.join(OUTDIR, "assets", "cine", "cov-hold-*.mp4"))):
+    for f in sorted(glob.glob(os.path.join(OUTDIR, "assets", "cine", "cov-*", "*.webp"))):
         with open(f, "rb") as fh:
             h.update(fh.read())
     return h.hexdigest()[:8]
@@ -58,7 +58,7 @@ def body():
 </picture>
 <canvas class="cov__film" data-n="{n}" data-v="{cv}" data-wide="assets/cine/cov-w/" data-tall="assets/cine/cov-t/"
  data-hq-wide="{hqw}" data-hq-tall="{hqt}"></canvas>
-<video class="cov__hold" muted playsinline preload="none" data-pattern="assets/cine/cov-hold-{{beat}}-{{shape}}.mp4"></video>
+{routes}
 <div class="cov__ripple"><i></i><i></i><i></i></div>
 <p class="cov__credit">Map &copy; <a href="https://openfreemap.org" rel="noopener">OpenFreeMap</a>,
 <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> contributors</p>
@@ -84,7 +84,7 @@ def body():
 <h2 id="h-reg">Eighteen cities, one dispatch</h2>
 <div class="regions__grid">{regions}</div>
 </div>
-</section>""".format(n=FRAMES, last=FRAMES - 1, cv=cine_version(),
+</section>""".format(n=FRAMES, last=FRAMES - 1, cv=cine_version(), routes=routes_svg("w") + routes_svg("t"),
                     hqw=" ".join("%.4f,%.4f" % p for p in toronto("w", FRAMES)),
                     hqt=" ".join("%.4f,%.4f" % p for p in toronto("t", FRAMES)), line=C.COVERAGE["line"], national=C.COVERAGE["national"],
                      regions=regions)

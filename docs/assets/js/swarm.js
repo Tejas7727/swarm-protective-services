@@ -184,6 +184,7 @@
           ctx.drawImage(im, (W - w) / 2, (H - h) / 2, w, h);
           cv.classList.add('is-live');
           place(k, im);
+          zone(k);
         };
         var load = function () {
           var b = cv.getAttribute(innerWidth <= innerHeight ? 'data-tall' : 'data-wide');
@@ -215,48 +216,23 @@
           rp.style.setProperty('--rs', (280 * (im.naturalHeight > im.naturalWidth ? 1.75 : 1) * s).toFixed(1) + 'px');
           rp.classList.add('is-live');
         };
-        // the hold films (Remotion, the beat's own framing): once the scroll rests on the GTA or
-        // Canada, the routes curve out slowly over the frame, then hold. Coming back, they are
-        // already drawn. Scrolling hands back to the frames.
-        var hv = cov.querySelector('.cov__hold'), lastC = -1, moved = 0, beat = '', seen = {}, wait = 0;
-        var BEATS = { gta: 0.5, canada: 1 };
-        var beatOf = function (c) {
-          for (var k in BEATS) { if (Math.abs(c - BEATS[k]) < 0.012) { return k; } }
-          return '';
+        // the routes (motion/cov_routes.py): SVG over the film, one set per beat, each carried
+        // onto the drawn frame by that frame's matrix, so the lines stay pinned to the map while
+        // the camera eases in and out. A set draws out the moment its window opens (the camera
+        // still arriving) and draws back as it closes.
+        var gr = [].map.call(cov.querySelectorAll('.cov__routes g'), function (g) {
+          var on = g.getAttribute('data-on').split(' ');
+          return { el: g, k0: +g.getAttribute('data-k0'), a: +on[0], b: +on[1], x: g.getAttribute('data-x').split(';') };
+        });
+        var zone = function (k) {
+          gr.forEach(function (g) {
+            var m = g.x[k - g.k0];
+            if (m) { g.el.setAttribute('transform', 'matrix(' + m.split(' ').join(',') + ')'); }
+            g.el.classList.toggle('is-on', k >= g.a && k <= g.b);
+          });
         };
-        var hide = function () {
-          if (!hv || !hv.classList.contains('is-live')) { return; }
-          hv.classList.remove('is-live');
-          setTimeout(function () { if (!hv.classList.contains('is-live')) { hv.pause(); } }, 450);
-        };
-        var show = function (b) {
-          var src = hv.getAttribute('data-pattern').replace('{beat}', b).replace('{shape}', innerWidth <= innerHeight ? 't' : 'w') + ver;
-          if (hv.getAttribute('src') !== src) { hv.preload = 'auto'; hv.src = src; hv.load(); wait = 0; }
-          var go = function () {
-            wait = 0;
-            if (beat !== b) { return; }
-            if (seen[b]) {
-              try { hv.currentTime = Math.max(0, hv.duration - 0.05); } catch (e) { /* not seekable yet */ }
-            } else {
-              seen[b] = 1;
-              try { hv.currentTime = 0; } catch (e) { /* not seekable yet */ }
-              var p = hv.play(); if (p && p.catch) { p.catch(function () {}); }
-            }
-            hv.classList.add('is-live');
-          };
-          if (hv.readyState >= 2) { go(); } else if (!wait) { wait = 1; hv.addEventListener('loadeddata', go, { once: true }); }
-        };
-        if (hv && !reduced) {
-          setInterval(function () {
-            var b = beatOf(lastC);
-            if (b && performance.now() - moved > 220) {
-              if (b !== beat || !hv.classList.contains('is-live')) { beat = b; show(b); }
-            } else if (!b || performance.now() - moved < 120) { beat = ''; hide(); }
-          }, 110);
-        }
         return {
           draw: function (c) {
-            if (Math.abs(c - lastC) > 0.0008) { moved = performance.now(); lastC = c; }
             draw(Math.round(c * (n - 1)));
           },
           size: function () {

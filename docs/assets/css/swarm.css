@@ -1830,9 +1830,19 @@ html.pf-shoulders .pz__big{font-family:'Big Shoulders Display',system-ui,sans-se
 .nf h1{font-size:inherit;line-height:1}
 .nf h1 .pz__sub{margin-top:.3em}
 .hx .hx__sub{margin-top:auto}   /* the body copy and the actions sit together at the foot */
-/* coverage: the hold film over the frames once the scroll rests on a beat (swarm.js) */
-.cov__hold{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s var(--xo);pointer-events:none}
-.cov__hold.is-live{opacity:1}
+/* coverage: the routes, live SVG over the film (swarm.js turns a beat's set on as soon as its
+   framing starts arriving). Each line draws out in turn, sweeping round the emblem, moving from
+   the first frame (a fast-start curve); leaving, the set fades out and resets. The viewBox is the frame, `slice` is the canvas's cover crop. */
+.cov__routes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none;overflow:visible}
+.cov__routes--w{display:block}
+@media (orientation:portrait){ .cov__routes--w{display:none} .cov__routes--t{display:block} }
+.cov__routes path{fill:none;stroke:#C9A35E;stroke-width:2;stroke-linecap:round;opacity:.92;
+  stroke-dasharray:1 2;stroke-dashoffset:1.02;transition:stroke-dashoffset 0s .22s}
+.cov__routes g{opacity:0;transition:opacity .22s linear}
+.cov__routes g.is-on{opacity:1;transition:none}
+.cov__routes--t path{stroke-width:3.3}
+.cov__routes g.is-on path{stroke-dashoffset:0;transition:stroke-dashoffset 1.5s cubic-bezier(.2,.65,.3,1) calc(var(--i) * .12s)}
+@media (prefers-reduced-motion:reduce){ .cov__routes path,.cov__routes g.is-on path{transition:none} }
 /* coverage: the ripple around the emblem, live over the film (placed per frame by swarm.js).
    Three rings leave the emblem in turn and fade as they widen; negative delays so the
    pulse is already running the moment the page arrives. */
