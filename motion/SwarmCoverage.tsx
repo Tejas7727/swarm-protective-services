@@ -158,10 +158,13 @@ export const SwarmCoverage: React.FC<{ hold?: Beat }> = ({ hold }) => {
       m.addSource("can", { type: "geojson", data: none });
       m.addLayer({ id: "can", type: "line", source: "can", layout: { "line-cap": "round" },
         paint: { "line-color": GOLD, "line-width": portrait ? 2.6 : 2.2, "line-opacity": 0.95 } });
-      m.addSource("dots", { type: "geojson", data: turf.featureCollection(GTA.map(([n, p]) => turf.point(p, { n }))) });
+      // a dot only where a route ends: no loose dots on the map
+      const gtaKeep = portrait ? GTA_LABELS_TALL : GTA_LABELS;
+      const canKeep = portrait ? new Set([...CAN_ROUTES].filter((n) => CAN_LABELS_TALL.has(n))) : CAN_ROUTES;
+      m.addSource("dots", { type: "geojson", data: turf.featureCollection(routesTo(GTA, gtaKeep).map(([n, p]) => turf.point(p, { n }))) });
       m.addLayer({ id: "dots", type: "circle", source: "dots",
         paint: { "circle-color": GOLD, "circle-radius": portrait ? 4.5 : 3.6, "circle-opacity": 0 } });
-      m.addSource("cdots", { type: "geojson", data: turf.featureCollection(CANADA.map(([n, p]) => turf.point(p, { n }))) });
+      m.addSource("cdots", { type: "geojson", data: turf.featureCollection(routesTo(CANADA, canKeep).map(([n, p]) => turf.point(p, { n }))) });
       m.addLayer({ id: "cdots", type: "circle", source: "cdots",
         paint: { "circle-color": GOLD, "circle-radius": portrait ? 5.5 : 4.5, "circle-opacity": 0 } });
       m.jumpTo(camera(0, portrait));

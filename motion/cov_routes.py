@@ -9,12 +9,16 @@ to the map while the camera eases in and out. They draw over a window of frames
 as its viewBox with `slice`, the same cover crop the canvas draws.
 
 Geometry mirrors SwarmCoverage.tsx: a gentle bow to each GTA city (westward routes
-bow north), great circles across Canada, routes only to named cities, each starting
-just outside the emblem. Change the two together.
+bow north), great circles across Canada, routes only to named cities. Each route
+starts where it leaves the emblem's own outline (its alpha, plus a hair of gap), so
+the lines almost touch the shield. Change the two together.
 
     svg(shape) -> '<svg ...>...</svg>'   shape "w" (1440x810) or "t" (720x1280)
 """
 import math
+import os
+
+from PIL import Image, ImageFilter
 
 from cov_toronto import CAM, T_BEAR, T_POS, T_ZOOM, TORONTO, _interp, _merc
 
@@ -99,15 +103,38 @@ def carry(shape, tb, tk):
     return a, b, c, d, e, f
 
 
-def clip_from(pts, o, R):
-    """The polyline from where it first leaves the circle of radius R around o."""
+EMBLEM = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "assets", "logo", "emblem-216.webp")
+
+
+def shield(o, s, gap=3.0):
+    """inside(x, y): is this frame point on the emblem (drawn 46*s wide, centred on o and
+    lifted 54% as SwarmCoverage.tsx draws it), grown by `gap` frame pixels?"""
+    im = Image.open(EMBLEM).convert("RGBA")
+    f = 46 * s / im.width                                        # frame px per image px
+    grow = max(1, round(gap / f)) * 2 + 1
+    a = im.getchannel("A").point(lambda v: 255 if v > 40 else 0).filter(ImageFilter.MaxFilter(grow))
+    left, top = o[0] - im.width * f / 2, o[1] - im.height * f * 0.54
+
+    def inside(x, y):
+        u, v = int((x - left) / f), int((y - top) / f)
+        return 0 <= u < im.width and 0 <= v < im.height and a.getpixel((u, v)) > 0
+    return inside
+
+
+def clip_shield(pts, inside, step=0.25):
+    """The polyline from where it last leaves the shield (walked in small steps)."""
+    out = None
     for i in range(1, len(pts)):
-        if math.dist(pts[i], o) >= R:
-            a, b = pts[i - 1], pts[i]
-            da, db = math.dist(a, o), math.dist(b, o)
-            u = 0 if db == da else (R - da) / (db - da)
-            return [(a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u)] + pts[i:]
-    return pts[-1:]
+        a, b = pts[i - 1], pts[i]
+        n = max(1, int(math.dist(a, b) / step))
+        for j in range(n + 1):
+            q = (a[0] + (b[0] - a[0]) * j / n, a[1] + (b[1] - a[1]) * j / n)
+            if inside(*q):
+                out = (i, q)
+    if out is None:
+        return pts
+    i, q = out
+    return [q] + pts[i:]
 
 
 def svg(shape):
@@ -117,11 +144,12 @@ def svg(shape):
     for beat, cities in ROUTES[shape].items():
         proj = projector(shape, BEAT_T[beat])
         o = proj(TORONTO)
+        inside = shield(o, s)
         lines = []
         for name in cities:
             p = GTA[name] if beat == "gta" else CANADA[name]
             geo = bow(TORONTO, p) if beat == "gta" else great(TORONTO, p)
-            pts = clip_from([proj(q) for q in geo], o, 40 * s)
+            pts = clip_shield([proj(q) for q in geo], inside)
             ang = math.atan2(pts[-1][1] - o[1], pts[-1][0] - o[0])
             lines.append((ang, "M" + " ".join("%.1f %.1f" % q for q in pts)))
         # they draw in a sweep around the emblem, west first, then north, then east

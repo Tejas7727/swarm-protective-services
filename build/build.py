@@ -6,6 +6,7 @@
 """
 import os
 import re
+import shutil
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -123,6 +124,8 @@ def main():
           % "\n".join(urls))
 
     write("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % base)
+    # browsers and crawlers ask for /favicon.ico whatever the page declares
+    shutil.copyfile(os.path.join(OUT, "assets", "icon", "favicon.ico"), os.path.join(OUT, "favicon.ico"))
 
     write("llms.txt", llms_txt(base))
 

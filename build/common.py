@@ -67,8 +67,9 @@ ICONS = {
 # relative-path helpers
 # ---------------------------------------------------------------------------
 def pfx(depth):
-    """'' at the site root, '../' one folder down, and so on."""
-    return "../" * depth
+    """'' at the site root, '../' one folder down, and so on; -1 is root-absolute ('/'),
+    for the 404 page, which Cloudflare serves at whatever address was asked for."""
+    return "/" if depth < 0 else "../" * depth
 
 
 def home(depth, anchor=""):

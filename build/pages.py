@@ -65,7 +65,7 @@ have your own counsel review it before launch.</p>
 )
 
 NOT_FOUND = page(
-    path="/404.html", depth=0, noindex=True,
+    path="/404.html", depth=-1, noindex=True,
     title="Not found | Swarm Protective Services",
     desc="That page does not exist. Licensed door staff, event security and close protection "
          "across the Greater Toronto Area. Dispatch answered 24 hours.",
@@ -76,8 +76,8 @@ NOT_FOUND = page(
 <h1><span class="pz__big" data-fit=".9">404</span> <span class="pz__sub">Nothing here.</span></h1>
 <p class="lede">Usually a good sign. Not this time. The page you asked for does not exist.</p>
 <div class="hero__cta">
-<a class="btn" href="index.html"><span>Back to the home page</span></a>
-<a class="btn btn--ghost" href="quote.html"><span>Get a quote</span></a>
+<a class="btn" href="/"><span>Back to the home page</span></a>
+<a class="btn btn--ghost" href="/quote"><span>Get a quote</span></a>
 </div>
 </div>
 <figure class="plan">%s</figure>
