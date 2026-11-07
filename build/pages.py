@@ -12,7 +12,6 @@ PRIVACY = page(
     og="/assets/og/og-default.jpg",
     body="""<section class="phero">
 <div class="wrap">
-<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Privacy</span></div>
 <h1>Privacy.</h1>
 <p class="lede">Short version: we collect what we need to quote and staff your job, we keep
 incident records because the law and your insurer require it, and we sell nothing to anyone.</p>
@@ -103,7 +102,7 @@ ANSWERS = page(
 <a href="quote.html">send the date and the place</a>.</p></div>
 {faq}
 </div>
-</section>""".format(hero=ihero('<div class="crumbs"><a href="index.html">Home</a><i>/</i><span>Answers</span></div>',
+</section>""".format(hero=ihero('',
                            "What people ask before they book",
                            "Clear answers about cost, staffing, safety and what happens on the day.",
                            img("svc-venue-security", (800, 1600), "100vw",

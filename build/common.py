@@ -373,14 +373,9 @@ def picture(desktop, mobile, alt, sizes="100vw", loading="lazy", priority=False,
 
 
 def crumb_html(items):
-    """items: [(label, href), ...] — the last entry renders as plain text."""
-    parts = []
-    for i, (label, href) in enumerate(items):
-        if i == len(items) - 1:
-            parts.append("<span>%s</span>" % label)
-        else:
-            parts.append('<a href="%s">%s</a>' % (href, label))
-    return '<div class="crumbs">%s</div>' % "<i>/</i>".join(parts)
+    """Visible breadcrumbs are off (2026-11: they read as clutter on a site this
+    shallow); the BreadcrumbList schema (breadcrumbs()) still describes the path."""
+    return ""
 
 
 def ihero(crumbs, h1, lede, pic, ctas="", label="Overview"):
