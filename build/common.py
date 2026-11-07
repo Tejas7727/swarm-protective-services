@@ -343,8 +343,10 @@ def plain(html):
 
 
 def faq_html(pairs):
+    """Questions where one answer is open at a time: opening another closes it
+    (the shared `name`; swarm.js does the same where a browser does not)."""
     return '<div class="faq">%s</div>' % "".join(
-        '<details><summary>%s</summary><div class="faq__a">%s</div></details>' % (q, a)
+        '<details name="faq"><summary>%s</summary><div class="faq__a">%s</div></details>' % (q, a)
         for q, a in pairs)
 
 

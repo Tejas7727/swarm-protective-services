@@ -455,6 +455,15 @@
     }, { rootMargin: '0px 0px -30% 0px' }).observe(kx);
   }
 
+  /* --- questions: one answer open at a time (for browsers without <details name>) */
+  [].slice.call(document.querySelectorAll('.faq')).forEach(function (list) {
+    list.addEventListener('toggle', function (e) {
+      var d = e.target;
+      if (!d.open) { return; }
+      [].slice.call(list.querySelectorAll('details[open]')).forEach(function (o) { if (o !== d) { o.open = false; } });
+    }, true);
+  });
+
   /* --- the crew films play as their screen arrives ---------------------------
      The crew films are transparent (WebM, VP9 with alpha): where that cannot
      play (Safari), the film is removed and its last frame, a transparent still,
